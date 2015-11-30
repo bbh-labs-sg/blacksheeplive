@@ -1,0 +1,17 @@
+html, body, #root {
+	height: 100%;
+	margin: 0;
+	background: black;
+}
+
+* {
+	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+a {
+	text-decoration: none;
+}
+
+.white {
+	color: white;
+}

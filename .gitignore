@@ -1,0 +1,7 @@
+blacksheeplive
+*~
+*.swp
+node_modules
+bundle.js
+public/js/components/build
+projects.json
