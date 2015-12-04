@@ -178,6 +178,8 @@ func loadProjects() error {
 		return err
 	}
 
+	file.Close()
+
 	return nil
 }
 
@@ -190,5 +192,8 @@ func saveProjects() error {
 	if err := json.NewEncoder(file).Encode(projects); err != nil {
 		return err
 	}
+
+	file.Close()
+
 	return nil
 }
