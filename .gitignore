@@ -3,3 +3,4 @@ blacksheeplive
 *.swp
 node_modules
 projects.json
+public/images/projects
