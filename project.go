@@ -184,7 +184,7 @@ func loadProjects() error {
 }
 
 func saveProjects() error {
-	file, err := os.OpenFile("projects.json", os.O_CREATE | os.O_WRONLY, 0666)
+	file, err := os.OpenFile("projects.json", os.O_CREATE | os.O_WRONLY | os.O_TRUNC, 0666)
 	if err != nil {
 		return err
 	}
