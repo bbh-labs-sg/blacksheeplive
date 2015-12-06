@@ -43,6 +43,7 @@ func (_ projectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		if err := os.MkdirAll("public/images/projects", os.ModeDir | os.ModePerm); err != nil {
 			if !os.IsExist(err) {
+				log.Println(err)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
@@ -51,12 +52,14 @@ func (_ projectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		posterURL := "images/projects/" + posterImageHeader.Filename
 		file, err := os.OpenFile("public/"+posterURL, os.O_CREATE | os.O_WRONLY, 0666)
 		if err != nil {
+			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		defer file.Close()
 
 		if _, err := io.Copy(file, posterImage); err != nil {
+			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -72,6 +75,7 @@ func (_ projectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		id, err := generateID()
 		if err != nil {
+			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -98,6 +102,7 @@ func (_ projectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 		posterImage, posterImageHeader, err := r.FormFile("posterImage")
 		if err != nil {
+			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -107,6 +112,7 @@ func (_ projectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 			if err := os.MkdirAll("public/images/projects", os.ModeDir | os.ModePerm); err != nil {
 				if !os.IsExist(err) {
+					log.Println(err)
 					w.WriteHeader(http.StatusInternalServerError)
 					return
 				}
@@ -115,12 +121,14 @@ func (_ projectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			posterURL := "images/projects/" + posterImageHeader.Filename
 			file, err := os.OpenFile("public/"+posterURL, os.O_CREATE | os.O_WRONLY, 0666)
 			if err != nil {
+				log.Println(err)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
 			project.PosterURL = posterURL
 
 			if _, err := io.Copy(file, posterImage); err != nil {
+				log.Println(err)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
