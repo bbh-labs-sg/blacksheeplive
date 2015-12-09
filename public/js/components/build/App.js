@@ -220,7 +220,7 @@ App.Content.Home.Project = React.createClass({
 				),
 				React.createElement(
 					'div',
-					{ ref: 'poster', className: 'flex one align-center justify-center poster', style: style, onClick: this.props.onClick },
+					{ ref: 'poster', className: 'flex one column align-center justify-center poster', style: style, onClick: this.props.onClick },
 					React.createElement(
 						'h1',
 						null,
@@ -233,7 +233,7 @@ App.Content.Home.Project = React.createClass({
 					),
 					React.createElement(
 						'button',
-						null,
+						{ onClick: this.gotoVideo },
 						'Play'
 					)
 				)
@@ -274,6 +274,12 @@ App.Content.Home.Project = React.createClass({
 	},
 	deselectProject: function () {
 		dispatcher.dispatch({ type: 'deselectProject' });
+	},
+	gotoVideo: function () {
+		//open(this.props.project.url);
+		if (this.props.project.url) {
+			open(this.props.project.url);
+		}
 	}
 });
 

@@ -5,101 +5,130 @@
 <head>
 	<meta charset='utf-8' />
 	<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-	<link rel='stylesheet' href='css/flex.css' />
+	<link rel='stylesheet' href='vendors/foundation-6/css/foundation.min.css' />
 	<link rel='stylesheet' href='css/admin.css' />
 </head>
 <body>
-	<h1 class='white'>NEW PROJECT</h1>
-	<form class='form new' action='/project' method='POST' enctype='multipart/form-data'>
-		<div>
-			<label class='white' for='name'>Name</label>
-			<input id='name' name='name' type='text' />
-		</div>
-		<div>
-			<label class='white' for='description'>Description</label>
-			<input id='description' name='description' type='text' />
-		</div>
-		<div>
-			<label class='white' for='poster-image'>Poster Image</label>
-			<input id='poster-image' name='posterImage' type='file' accept='image/*' />
-		</div>
-		<div>
-			<label class='white' for='url'>URL</label>
-			<input id='url' name='url' type='text' />
-		</div>
-		<button type='submit'>Submit</button>
-	</form>
+	<div class='row'>
+		<h1 class='white'>NEW PROJECT</h1>
+		<form class='form new' action='/project' method='POST' enctype='multipart/form-data'>
+			<div class='row'>
+				<label class='white' for='name'>Name
+					<input id='name' name='name' type='text' />
+				</label>
+			</div>
+			<div class='row'>
+				<label class='white' for='description'>Description
+					<input id='description' name='description' type='text' />
+				</label>
+			</div>
+			<div class='row'>
+				<label class='white' for='poster-image'>Poster Image
+					<input id='poster-image' name='posterImage' type='file' accept='image/*' />
+				</label>
+			</div>
+			<div class='row'>
+				<label class='white' for='url'>URL
+					<input id='url' name='url' type='text' />
+				</label>
+			</div>
+			<div class='row'>
+				<button class='button' type='submit'>Submit</button>
+			</div>
+		</form>
+	</div>
 
-	<h1 class='white'>EDIT PROJECTS</h1>
-	{{ range $key, $value := .Projects }}
-	<form class='form edit' action='/project' data-id='{{ $key }}' data-name='{{ .Name }}' data-description='{{ .Description }}' data-url='{{ .URL }}'>
-		<div class='group'>
-			<label class='white' for='name'>Name</label>
-			<input name='name' type='text' value='{{ .Name }}' />
-		</div>
-		<div class='group'>
-			<label class='white' for='description'>Description</label>
-			<textarea name='description' type='text'>{{ .Description }}</textarea>
-		</div>
-		<div class='group'>
-			<label class='white' for='posterImage'>Poster Image</label>
-			<input name='posterImage' type='file' accept='image/*' />
-		</div>
-		<div class='group'>
-			<label class='white' for='url'>URL</label>
-			<input name='url' type='text' value='{{ .URL }}' />
-		</div>
-		<button class='button update'>Update</button>
-		<button class='button delete'>Delete</button>
-	</form>
-	{{ end }}
+	<div class='row'>
+		<h1 class='white'>EDIT PROJECTS</h1>
+		<ul class='accordion' data-accordion role='tablist' data-allow-all-closed='true'>
+			{{ range $key, $value := .Projects }}
+			<li class='accordion-item'>
+				<a href='#panel-{{ $key }}' role='tab' class='accordion-title' id='panel-{{ $key }}-heading' aria-controls='panel-{{ $key }}'>{{ .Name }}</a>
+				<div id='panel-{{ $key }}' class='accordion-content' role='tabpanel' data-tab-content aria-labelledby='panel-{{ $key }}-heading'>
+					<form class='form edit' action='/project' data-id='{{ $key }}' data-name='{{ .Name }}' data-description='{{ .Description }}' data-url='{{ .URL }}'>
+						<div class='row'>
+							<label for='name'>Name
+								<input name='name' type='text' value='{{ .Name }}' />
+							</label>
+						</div>
+						<div class='row'>
+							<label for='description'>Description
+								<textarea name='description' type='text'>{{ .Description }}</textarea>
+							</label>
+						</div>
+						<div class='row'>
+							<label for='url'>URL
+								<input name='url' type='text' value='{{ .URL }}' />
+							</label>
+						</div>
+						<div class='row'>
+							<label for='posterImage'>Poster Image
+								<input name='posterImage' type='file' accept='image/*' />
+							</label>
+						</div>
+						<div class='row'>
+							<button class='button update'>Update</button>
+							<button class='button delete'>Delete</button>
+						</div>
+					</form>
+				</div>
+			</li>
+			{{ end }}
+		</ul>
+	</div>
 
-<script src='vendors/jquery/jquery.min.js'></script>
+<script src='vendors/foundation-6/js/vendor/jquery.min.js'></script>
+<script src='vendors/foundation-6/js/vendor/what-input.min.js'></script>
+<script src='vendors/foundation-6/js/foundation.min.js'></script>
 <script>
-$('.form.edit').each(function(i, el) {
-	var id = $(el).data('id');
-	var nameElement = $(el).find('input[name=name]')[0];
-	var descriptionElement = $(el).find('textarea[name=description]')[0];
-	var posterImageElement = $(el).find('input[name=posterImage]')[0];
-	var urlElement = $(el).find('input[name=url]')[0];
+$(document).ready(function() {
+	$(document).foundation();
 
-	var updateButton = $(el).find('.button.update')[0];
-	$(updateButton).click(function(event) {
-		event.preventDefault();
+	$('.form.edit').each(function(i, el) {
+		var id = $(el).data('id');
+		var nameElement = $(el).find('input[name=name]')[0];
+		var descriptionElement = $(el).find('textarea[name=description]')[0];
+		var posterImageElement = $(el).find('input[name=posterImage]')[0];
+		var urlElement = $(el).find('input[name=url]')[0];
 
-		var formdata = new FormData();
-		formdata.append('id', id);
-		formdata.append('name', nameElement.value);
-		formdata.append('description', descriptionElement.value);
-		formdata.append('url', urlElement.value);
-		if (posterImageElement.files.length > 0) {
-			formdata.append('posterImage', posterImageElement.files[0]);
-		}
+		var updateButton = $(el).find('.button.update')[0];
+		$(updateButton).click(function(event) {
+			event.preventDefault();
 
-		$.ajax({
-			url: '/project',
-			method: 'PATCH',
-			data: formdata,
-			processData: false,
-			contentType: false,
-		}).done(function() {
-			window.location.reload();
-		}).fail(function() {
-			alert('Failed to update this project!');
+			var formdata = new FormData();
+			formdata.append('id', id);
+			formdata.append('name', nameElement.value);
+			formdata.append('description', descriptionElement.value);
+			formdata.append('url', urlElement.value);
+			if (posterImageElement.files.length > 0) {
+				formdata.append('posterImage', posterImageElement.files[0]);
+			}
+
+			$.ajax({
+				url: '/project',
+				method: 'PATCH',
+				data: formdata,
+				processData: false,
+				contentType: false,
+			}).done(function() {
+				window.location.reload();
+			}).fail(function() {
+				alert('Failed to update this project!');
+			});
 		});
-	});
 
-	var deleteButton = $(el).find('.button.delete')[0];
-	$(deleteButton).click(function(event) {
-		event.preventDefault();
+		var deleteButton = $(el).find('.button.delete')[0];
+		$(deleteButton).click(function(event) {
+			event.preventDefault();
 
-		$.ajax({
-			url: '/project?' + $.param({ id: id }),
-			method: 'DELETE',
-		}).done(function() {
-			window.location.reload();
-		}).fail(function() {
-			alert('Failed to delete this project!');
+			$.ajax({
+				url: '/project?' + $.param({ id: id }),
+				method: 'DELETE',
+			}).done(function() {
+				window.location.reload();
+			}).fail(function() {
+				alert('Failed to delete this project!');
+			});
 		});
 	});
 });

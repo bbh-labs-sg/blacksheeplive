@@ -101,7 +101,7 @@ func (_ projectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 
 		posterImage, posterImageHeader, err := r.FormFile("posterImage")
-		if err != nil {
+		if err != nil && err != http.ErrMissingFile {
 			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return

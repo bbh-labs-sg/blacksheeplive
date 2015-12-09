@@ -1,0 +1,20 @@
+{
+  "name": "blacksheeplive",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "babel-preset-react": "^6.3.13",
+    "classnames": "^2.2.1",
+    "flux": "^2.1.1",
+    "jquery": "^2.1.4",
+    "react": "^0.14.3",
+    "react-dom": "^0.14.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jacky Boen",
+  "license": "GPL-2.0"
+}

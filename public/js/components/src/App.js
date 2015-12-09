@@ -179,10 +179,10 @@ App.Content.Home.Project = React.createClass({
 					<div className='close'>
 						<span className='symbol' onClick={this.deselectProject}>X</span>
 					</div>
-					<div ref='poster' className='flex one align-center justify-center poster' style={style} onClick={this.props.onClick}>
+					<div ref='poster' className='flex one column align-center justify-center poster' style={style} onClick={this.props.onClick}>
 						<h1>{project.name}</h1>
 						<p>{project.description}</p>
-						<button>Play</button>
+						<button onClick={this.gotoVideo}>Play</button>
 					</div>
 				</div>
 			)
@@ -216,6 +216,12 @@ App.Content.Home.Project = React.createClass({
 	},
 	deselectProject: function() {
 		dispatcher.dispatch({ type: 'deselectProject' });
+	},
+	gotoVideo: function() {
+		//open(this.props.project.url);
+		if (this.props.project.url) {
+			open(this.props.project.url);
+		}
 	},
 });
 
