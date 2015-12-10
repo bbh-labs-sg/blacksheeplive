@@ -58,7 +58,8 @@ a {
 	position: relative;
 	margin-left: auto;
 	margin-right: auto;
-	width: 50%;
+	width: 80vm;
+	width: 80vmin;
 }
 
 #content > .page > .inner::after {
