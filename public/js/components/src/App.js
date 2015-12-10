@@ -185,7 +185,10 @@ var Poster = React.createClass({
 			var scale = SCALES[index] * devicePixelRatio * this.props.minWidth / SCALE_BASELINE_PIXELS;
 			var posX = POSITIONS[index].x * 100 + 'vw';
 			var posY = POSITIONS[index].y * 100 + 'vh';
-			style = { background: 'url(' + project.posterURL + ') center / cover', transform: 'translate(' + posX + ',' + posY + ') scale(' + scale + ')' };
+			style = { transform: 'translate(' + posX + ',' + posY + ') scale(' + scale + ')' };
+			if (!hovering) {
+				style.background = 'url(' + project.posterURL + ') center / cover';
+			}
 			onClick = this.props.onClick;
 			onMouseOver = this.setHovering.bind(this, true);
 			onMouseOut = this.setHovering.bind(this, false);
