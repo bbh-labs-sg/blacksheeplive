@@ -87,6 +87,7 @@ a {
 #content .menu .close .symbol img{
 	width: 24px;
 	height: 24px;
+	cursor: pointer;
 }
 
 #content .menu .item:hover {
@@ -180,6 +181,7 @@ a {
 	height: 80px;
 	margin: auto;
 	margin-top: 40px;
+	cursor: pointer;
 }
 
 #content .home .bubble .poster:hover .info {
@@ -215,6 +217,7 @@ a {
 #content .home .bubble .close .symbol img{
 	width: 24px;
 	height: 24px;
+	cursor: pointer;
 }
 
 

@@ -17,7 +17,7 @@ var POSITIONS = [
 	{ x: 0.31, y: 0.12 },
 ];
 
-var SCALES = [ 0.4, 0.3, 0.2, 0.3, 0.2, 0.2, 0.2, 0.2, 0.15 ];
+var SCALES = [ 0.2, 0.15, 0.1, 0.15, 0.1, 0.1, 0.1, 0.1, 0.075 ];
 var SCALE_BASELINE_PIXELS = 1000;
 
 var App = React.createClass({
@@ -182,7 +182,7 @@ var Poster = React.createClass({
 		var onClick, onMouseOver, onMouseOut;
 		if (!this.props.selected) {
 			var index = this.props.index;
-			var scale = SCALES[index] * this.props.minWidth / SCALE_BASELINE_PIXELS;
+			var scale = SCALES[index] * devicePixelRatio * this.props.minWidth / SCALE_BASELINE_PIXELS;
 			var posX = POSITIONS[index].x * 100 + 'vw';
 			var posY = POSITIONS[index].y * 100 + 'vh';
 			style = { background: 'url(' + project.posterURL + ') center / cover', transform: 'translate(' + posX + ',' + posY + ') scale(' + scale + ')' };
