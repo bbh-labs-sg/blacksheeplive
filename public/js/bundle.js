@@ -342,6 +342,7 @@
 					this.player.playVideo();
 				} else {
 					this.player.seekTo(0);
+					this.player.stopVideo();
 				}
 			}
 		},
