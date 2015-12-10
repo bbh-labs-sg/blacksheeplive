@@ -210,20 +210,18 @@ var Poster = React.createClass({
 
 	render: function () {
 		var project = this.props.project;
-		var style = { background: 'url(' + project.posterURL + ') center / cover' };
+		var style;
 		var key = 'video-' + this.props.projectID;
 		var hovering = this.state.hovering;
 		var expanded = this.state.expanded;
 		var classnames = cx('flex column one poster align-center justify-center', hovering && 'playing', expanded && 'expanded');
 		var onClick, onMouseOver, onMouseOut;
-		if (this.props.selected) {
-			style = { background: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + project.posterURL + ') center / cover' };
-		} else {
+		if (!this.props.selected) {
 			var index = this.props.index;
 			var scale = SCALES[index] * this.props.minWidth / SCALE_BASELINE_PIXELS;
 			var posX = POSITIONS[index].x * 100 + 'vw';
 			var posY = POSITIONS[index].y * 100 + 'vh';
-			style.transform = 'translate(' + posX + ',' + posY + ') scale(' + scale + ')';
+			style = { background: 'url(' + project.posterURL + ') center / cover', transform: 'translate(' + posX + ',' + posY + ') scale(' + scale + ')' };
 			onClick = this.props.onClick;
 			onMouseOver = this.setHovering.bind(this, true);
 			onMouseOut = this.setHovering.bind(this, false);
