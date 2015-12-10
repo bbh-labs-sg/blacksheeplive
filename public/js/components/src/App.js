@@ -18,6 +18,7 @@ var POSITIONS = [
 ];
 
 var SCALES = [ 0.3, 0.2, 0.2, 0.2, 0.15, 0.15, 0.15, 0.15, 0.12 ];
+var SCALE_BASELINE_PIXELS = 1000;
 
 var App = React.createClass({
 	render: function() {
@@ -81,10 +82,10 @@ App.Header = React.createClass({
 App.Content = React.createClass({
 	render: function() {
 		return (
-			<div id='content' className='flex one column'>{
-				this.props.showMenu ? <App.Content.Menu toggleMenu={this.props.toggleMenu} showMenu={this.props.showMenu} /> :
-						      <App.Content.Home projects={this.props.projects} selectedProject={this.props.selectedProject} />
-			}</div>
+			<div id='content' className='flex one column'>
+				<App.Content.Home projects={this.props.projects} selectedProject={this.props.selectedProject} />
+				<App.Content.Menu toggleMenu={this.props.toggleMenu} showMenu={this.props.showMenu} />
+			</div>
 		)
 	},
 	getInitialState: function() {
@@ -95,7 +96,7 @@ App.Content = React.createClass({
 App.Content.Menu = React.createClass({
 	render: function() {
 		return (
-			<div className='flex one column menu align-center justify-center'>
+			<div className={cx('flex one column menu align-center justify-center', this.props.showMenu && 'displayed')}>
 				<div className='flex close justify-end'>
 					<span className='symbol' onClick={this.closeMenu}>X</span>
 				</div>
@@ -142,16 +143,11 @@ App.Content.Home = React.createClass({
 		}
 
 		var selectedProject = this.props.selectedProject;
-		if (selectedProject >= 0) {
-			var p = projects[selectedProject];
-			return <App.Content.Home.Project key={selectedProject} project={p} projectID={selectedProject} selected={true} />
-		}
-
 		var elems = [];
 		var index = 0;
 		for (var i in projects) {
 			var p = projects[i];
-			elems.push(<App.Content.Home.Project key={i} project={p} projectID={i} index={index++} selected={false} onClick={this.selectProject.bind(this, i)} minWidth={this.state.minWidth} />);
+			elems.push(<App.Content.Home.Project key={i} project={p} projectID={i} index={index++} selected={i == selectedProject} onClick={this.selectProject.bind(this, i)} minWidth={this.state.minWidth} />);
 		}
 		return elems;
 	},
@@ -171,25 +167,24 @@ App.Content.Home = React.createClass({
 var Poster = React.createClass({
 	render: function() {
 		var project = this.props.project;
-		var selected = this.props.selected;
 		var style = { background: 'url(' + project.posterURL + ') center / cover' };
 		var key = 'video-' + this.props.projectID;
-		var classnames = cx('flex column one poster align-center justify-center', selected && 'selected', this.state.hovering && 'playing', this.state.expanded && 'expanded' );
-		if (selected) {
-			return (
-				<div ref='poster' key={key} className={classnames} style={style} onClick={this.props.onClick}>
-					<div id={key}></div>
-					<Poster.Info project={project} expand={this.expand} />
-				</div>
-			);
+		var hovering = this.state.hovering;
+		var expanded = this.state.expanded;
+		var classnames = cx('flex column one poster align-center justify-center', hovering && 'playing', expanded && 'expanded' );
+		var onClick, onMouseOver, onMouseOut;
+		if (!this.props.selected) {
+			var index = this.props.index;
+			var scale = SCALES[index] * this.props.minWidth / SCALE_BASELINE_PIXELS;
+			var posX = POSITIONS[index].x * 100 + 'vw';
+			var posY = POSITIONS[index].y * 100 + 'vh';
+			style.transform = 'translate(' + posX + ',' + posY + ') scale(' + scale + ')';
+			onClick = this.props.onClick;
+			onMouseOver = this.setHovering.bind(this, true);
+			onMouseOut = this.setHovering.bind(this, false);
 		}
-		var index = this.props.index;
-		var scale = SCALES[index] * this.props.minWidth / 1000;
-		var posX = POSITIONS[index].x * 100 + 'vw';
-		var posY = POSITIONS[index].y * 100 + 'vh';
-		style.transform = 'translate(' + posX + ',' + posY + ') scale(' + scale + ')';
 		return (
-			<div ref='poster' key={key} className={classnames} style={style} onClick={this.props.onClick} onMouseOver={ this.setHovering.bind(this, true) } onMouseOut={ this.setHovering.bind(this, false) }>
+			<div ref='poster' key={key} className={classnames} style={style} onClick={onClick} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
 				<div id={key}></div>
 			</div>
 		);
@@ -201,7 +196,6 @@ var Poster = React.createClass({
 		var project = this.props.project;
 		var posterHeight = this.refs.poster.offsetHeight;
 		this.refs.poster.style.width = posterHeight + 'px';
-
 		window.addEventListener('resize', this.resize);
 
 		this.player = new YT.Player( 'video-' + this.props.projectID, {
@@ -234,9 +228,11 @@ var Poster = React.createClass({
 		this.refs.poster.style.width = posterHeight + 'px';
 
 		if (this.state.hovering) {
-			if (this.player && this.player.getPlayerState() != YT.PlayerState.PLAYING) {
-				this.player.seekTo(0);
-				this.player.playVideo();
+			if (this.player) {
+				if (this.player.getPlayerState() != YT.PlayerState.PLAYING) {
+					this.player.seekTo(0);
+					this.player.playVideo();
+				}
 			}
 		} else {
 			if (this.player) {
@@ -251,8 +247,12 @@ var Poster = React.createClass({
 		dispatcher.unregister(this.listenerID);
 	},
 	onPlayerReady: function() {
-		if (this.state.hovering) {
-			this.player.playVideo();
+		if (this.player) {
+			if (this.state.hovering) {
+				this.player.playVideo();
+			} else {
+				this.player.seekTo(0);
+			}
 		}
 	},
 	onPlayerStateChange: function(event) {
@@ -268,34 +268,29 @@ var Poster = React.createClass({
 	},
 	resize: function() {
 		var player = document.getElementById('video-' + this.props.projectID);
-		var playerWidth, playerHeight, playerX, playerY, maxWidth, minWidth;
+		var container;
 		if (this.props.selected) {
-			var content = document.getElementById('content');
-			var multiplier = content.offsetHeight / (player.offsetWidth * 9 / 16);
-			playerWidth = content.offsetWidth * multiplier;
-			playerHeight = content.offsetHeight;
-			console.log(playerWidth, player.offsetWidth);
-			maxWidth = Math.max(playerWidth, player.offsetWidth);
-			minWidth = Math.min(playerWidth, player.offsetWidth);
-			playerX = -(maxWidth - minWidth) * 0.5;
-			playerY = -(playerHeight - player.offsetHeight) * 0.5;
+			container = $('.home')[0];
 		} else {
-			var parent = $(player).parent().get(0);
-			var multiplier = parent.offsetHeight / (player.offsetWidth * 9 / 16);
-			playerWidth = parent.offsetWidth * multiplier;
-			playerHeight = parent.offsetHeight;
-			maxWidth = Math.max(playerWidth, player.offsetWidth);
-			minWidth = Math.min(playerWidth, player.offsetWidth);
-			playerX = -(maxWidth - minWidth) * 0.5;
-			playerY = -(playerHeight - player.offsetHeight) * 0.5;
+			container = $(player).parent()[0];
 		}
-		if (playerX != 0) {
-			$(player)
-				.width(maxWidth)
-				.height(playerHeight)
+
+		var newPlayerWidth, newPlayerHeight, newPlayerX, newPlayerY;
+		var maxWidth, minWidth;
+
+		var multiplier = container.offsetHeight / (player.offsetWidth * 9 / 16);
+		newPlayerWidth = container.offsetWidth * multiplier;
+		newPlayerHeight = container.offsetHeight;
+		maxWidth = Math.max(newPlayerWidth, player.offsetWidth);
+		minWidth = Math.min(newPlayerWidth, player.offsetWidth);
+		newPlayerX = -(maxWidth - minWidth) * 0.5;
+		newPlayerY = -(newPlayerHeight - player.offsetHeight) * 0.5;
+		if (newPlayerX != 0) {
+			$(player).width(maxWidth)
+				.height(newPlayerHeight)
 				.css({
-					left: playerX,
-					top: playerY,
+					left: newPlayerX,
+					top: newPlayerY,
 				});
 		}
 	},

@@ -2,6 +2,7 @@ html, body, #root {
 	height: 100%;
 	margin: 0;
 	background: black;
+	overflow-x: hidden;
 }
 
 * {
@@ -24,6 +25,7 @@ a {
 
 #header .menu {
 	color: red;
+	z-index: 10000;
 }
 
 #content {
@@ -35,10 +37,16 @@ a {
 }
 
 #content .menu {
-	position: relative;
+	position: absolute;
 	background: red;
 	width: 100%;
 	height: 100%;
+	display: none;
+}
+
+#content .menu.displayed {
+	display: flex;
+	z-index: 10000;
 }
 
 #content .menu .inner {
@@ -70,6 +78,7 @@ a {
 }
 
 #content .home {
+	position: absolute;
 	width: 100%;
 	height: 100%;
 }
@@ -78,7 +87,14 @@ a {
 	position: absolute;
 	width: 100%;
 	height: 100%;
+	background: rgba(0, 0, 0, 0);
+	transition: background .4s;
 	pointer-events: none;
+}
+
+#content .home .bubble.selected {
+	z-index: 1001;
+	background: rgba(0, 0, 0, 1);
 }
 
 #content .home .bubble .poster {
@@ -91,9 +107,10 @@ a {
 	overflow: hidden;
 }
 
-#content .home .bubble .poster.selected {
+#content .home .bubble.selected .poster {
 	opacity: 1;
 	cursor: auto;
+	z-index: 9999;
 }
 
 #content .home .bubble .poster.expanded {
