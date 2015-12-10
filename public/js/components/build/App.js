@@ -7,7 +7,7 @@ var cx = require('classnames');
 
 var POSITIONS = [{ x: -0.12, y: 0.13 }, { x: -0.27, y: -0.20 }, { x: -0.32, y: 0.10 }, { x: 0.03, y: -0.20 }, { x: 0.08, y: 0.10 }, { x: 0.20, y: 0.00 }, { x: 0.20, y: 0.25 }, { x: 0.31, y: -0.20 }, { x: 0.31, y: 0.12 }];
 
-var SCALES = [0.4, 0.3, 0.2, 0.3, 0.2, 0.2, 0.2, 0.2, 0.15];
+var SCALES = [0.8, 0.6, 0.4, 0.6, 0.4, 0.4, 0.4, 0.4, 0.3];
 var SCALE_BASELINE_PIXELS = 1000;
 
 var App = React.createClass({
@@ -255,7 +255,17 @@ App.Content.About = React.createClass({
 					React.createElement(
 						'h1',
 						null,
-						'About'
+						'About us'
+					),
+					React.createElement(
+						'p',
+						null,
+						'We’re an agile production company; creating engaging content for brands and their audiences across all digital and social channels. We work directly with client organisations and also in support of their agency partners.'
+					),
+					React.createElement(
+						'p',
+						null,
+						'We have teams in Singapore, Shanghai and Mumbai, creating content for clients such as Nike, IKEA, Google, British Airways, Skoda and Coca-Cola. We’re flexible in our approach, maximizing budgets and delivering effective solutions at pace.'
 					)
 				)
 			)
@@ -269,7 +279,7 @@ App.Content.Services = React.createClass({
 	render: function () {
 		return React.createElement(
 			'div',
-			{ ref: 'about', className: 'page services flex row align-center justify-center' },
+			{ ref: 'services', className: 'page services flex row align-center justify-center' },
 			React.createElement(
 				'div',
 				{ className: 'inner' },
@@ -280,6 +290,16 @@ App.Content.Services = React.createClass({
 						'h1',
 						null,
 						'Services'
+					),
+					React.createElement(
+						'h3',
+						null,
+						'Production'
+					),
+					React.createElement(
+						'p',
+						null,
+						'We have an experienced and dedicated core team of film-makers, photographers, editors, developers and content writers in addition to links with like-minded specialists around the region.'
 					)
 				)
 			)
@@ -304,6 +324,26 @@ App.Content.Contact = React.createClass({
 						'h1',
 						null,
 						'Contact'
+					),
+					React.createElement(
+						'h3',
+						null,
+						'Singapore'
+					),
+					React.createElement(
+						'p',
+						null,
+						'Blacksheep Live '
+					),
+					React.createElement(
+						'p',
+						null,
+						'5 Magazine Road, #03-03 Central Mall,'
+					),
+					React.createElement(
+						'p',
+						null,
+						'Singapore 059571'
 					)
 				)
 			)

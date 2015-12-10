@@ -4,7 +4,7 @@ html, body, #root {
 	margin: 0;
 	background: black;
 	overflow-x: hidden;
-	font-family: 'Oswald', sans-serif;
+	font-family: 'Dosis', sans-serif;
 }
 
 * {
@@ -74,7 +74,7 @@ a {
 	bottom: 0;
 	left: 0;
 	border-radius: 50%;
-	background: red;
+	background: #fb1f25;
 }
 
 #content .menu .inner .item {
@@ -84,7 +84,6 @@ a {
 	padding: 16px;
 	font-weight: 100;
 	letter-spacing: 5px;
-	font-family: 'Dosis', sans-serif;
 	cursor: pointer;
 	pointer-events: auto;
 }
@@ -121,7 +120,6 @@ a {
 }
 
 #content .home .welcome {
-	font-family: 'Dosis', sans-serif;
 	color: #fff;
 	font-weight: 100;
 	padding-left: 12px;
@@ -266,9 +264,71 @@ a {
 	border-radius: 50%;
 }
 
+
+#content .about, #content .services, #content .contact, #content .showreel{
+	background-color: #fb1f25;
+}
+
+#content .about .content, #content .services .content, #content .contact .content, #content .showreel .content{
+	background-color: #fff;
+	width: 80%;
+	height: 80%;
+	margin: auto;
+	padding: auto;
+}
+
+
+#content .about .content h1{
+	text-transform: uppercase;
+	font-weight: 400;
+}
+#content .services .content h1{
+	text-transform: uppercase;
+	font-weight: 400;
+}
+#content .contact .content h1{
+	text-transform: uppercase;
+	font-weight: 400;
+}
+#content .showreel .content h1{
+	text-transform: uppercase;
+	font-weight: 400;
+}
+
+#content .about .content p{
+	font-size: 12pt;
+	text-transform: none;
+	max-width: 320px;
+	text-align: center;
+}
+#content .services .content p{
+	font-size: 12pt;
+	text-transform: none;
+	max-width: 320px;
+	text-align: center;
+}
+#content .services .content h3{
+	font-size: 18pt;
+	max-width: 320px;
+	max-height: 0px;
+	text-align: center;
+}
+#content .contact .content h3{
+	font-size: 18pt;
+	max-width: 320px;
+	max-height: 20px;
+	text-align: center;
+}
+#content .contact .content p{
+	font-size: 12pt;
+	text-transform: none;
+	max-width: 320px;
+	max-height: 0px;
+	text-align: center;
+}
+
 #footer .copyright {
 	font-size: 8pt;
-	font-family: 'Dosis', sans-serif;
 }
 
 #footer .copyright img{
