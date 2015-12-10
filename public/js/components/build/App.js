@@ -197,7 +197,7 @@ App.Content.Home = React.createClass({
 	},
 	onWindowResize: function (event) {
 		var home = this.refs.home;
-		var minWidth = Math.max(home.offsetWidth, home.offsetHeight);
+		var minWidth = Math.min(home.offsetWidth, home.offsetHeight);
 		this.setState({ minWidth: minWidth });
 	},
 	selectProject: function (i) {
