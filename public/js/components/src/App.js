@@ -6,18 +6,18 @@ var $ = require('jquery');
 var cx = require('classnames');
 
 var POSITIONS = [
-	{ x: -0.15, y: 0.10 },
-	{ x: -0.20, y: -0.23 },
-	{ x: -0.30, y: -0.05 },
-	{ x: 0.05, y: -0.20 },
-	{ x: 0.10, y: 0.15 },
-	{ x: 0.20, y: 0.05 },
-	{ x: 0.20, y: 0.27 },
-	{ x: 0.28, y: -0.15 },
-	{ x: 0.30, y: 0.17 },
+	{ x: -0.12, y: 0.13 },
+	{ x: -0.27, y: -0.20 },
+	{ x: -0.32, y: 0.10 },
+	{ x: 0.03, y: -0.20 },
+	{ x: 0.08, y: 0.10 },
+	{ x: 0.20, y: 0.00 },
+	{ x: 0.20, y: 0.25 },
+	{ x: 0.31, y: -0.20 },
+	{ x: 0.31, y: 0.12 },
 ];
 
-var SCALES = [ 0.3, 0.2, 0.2, 0.2, 0.15, 0.15, 0.15, 0.15, 0.12 ];
+var SCALES = [ 0.4, 0.3, 0.2, 0.3, 0.2, 0.2, 0.2, 0.2, 0.15 ];
 var SCALE_BASELINE_PIXELS = 1000;
 
 var App = React.createClass({
@@ -69,7 +69,7 @@ App.Header = React.createClass({
 		return (
 			<div id='header' className='flex'>
 				<div className='flex one justify-start'>
-					<img className='logo flex align-center' src='images/icons/dummy.png' />
+					<img className='logo flex align-center' src='images/bsl_logo.png' />
 				</div>
 				<div className='flex one justify-end'>
 					<a className='menu flex align-center' href='#' onClick={this.props.toggleMenu}>MENU</a>
@@ -120,6 +120,10 @@ App.Content.Home = React.createClass({
 	render: function() {
 		return (
 			<div ref='home' className='home'>
+				<div className='welcome flex one justify-start'>
+					<p>Welcome to</p>
+					<img className='logo flex align-center' src='images/bsl_logo_text_w.png' />
+				</div>
 				{ this.projectElements() }
 			</div>
 		)
@@ -173,7 +177,9 @@ var Poster = React.createClass({
 		var expanded = this.state.expanded;
 		var classnames = cx('flex column one poster align-center justify-center', hovering && 'playing', expanded && 'expanded' );
 		var onClick, onMouseOver, onMouseOut;
-		if (!this.props.selected) {
+		if (this.props.selected) {
+			style = { background: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + project.posterURL + ') center / cover' };
+		} else {
 			var index = this.props.index;
 			var scale = SCALES[index] * this.props.minWidth / SCALE_BASELINE_PIXELS;
 			var posX = POSITIONS[index].x * 100 + 'vw';
@@ -186,6 +192,7 @@ var Poster = React.createClass({
 		return (
 			<div ref='poster' key={key} className={classnames} style={style} onClick={onClick} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
 				<div id={key}></div>
+				{ this.props.selected ? <Poster.Info project={project} expand={this.expand} /> : null }
 			</div>
 		);
 	},
@@ -307,7 +314,7 @@ Poster.Info = React.createClass({
 			<div className='info'>
 				<h1>{ project.name }</h1>
 				<p>{ project.description }</p>
-				<button onClick={this.props.expand}>PLAY</button>
+				<img onClick={this.props.expand} className='logo flex align-center' src='images/icons/play_icon_w.png' />
 			</div>
 		)
 	},
@@ -333,13 +340,13 @@ App.Footer = React.createClass({
 	render: function() {
 		return (
 			<div id='footer' className='flex'>
-				<p className='flex one align-center justify-start copyright'>COPYRIGHT (C) 2015 BLACKSHEEPLIVE</p>
+				<p className='flex one align-center justify-start copyright'>COPYRIGHT (C) 2015 <img className='logo flex align-center ' src='images/bsl_logo_text_b.png' /></p>
 				<span className='flex one align-center justify-end social'>
-					<a className='link' href='#'><img src='images/icons/dummy.png' /></a>
-					<a className='link' href='#'><img src='images/icons/dummy.png' /></a>
-					<a className='link' href='#'><img src='images/icons/dummy.png' /></a>
-					<a className='link' href='#'><img src='images/icons/dummy.png' /></a>
-					<a className='link' href='#'><img src='images/icons/dummy.png' /></a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/facebook.png' /></a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/instagram.png' /></a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/linkedin.png' /></a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/twitter.png' /></a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/youtube.png' /></a>
 				</span>
 			</div>
 		)

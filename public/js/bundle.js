@@ -51,9 +51,9 @@
 	var $ = __webpack_require__(162);
 	var cx = __webpack_require__(163);
 
-	var POSITIONS = [{ x: -0.15, y: 0.10 }, { x: -0.20, y: -0.23 }, { x: -0.30, y: -0.05 }, { x: 0.05, y: -0.20 }, { x: 0.10, y: 0.15 }, { x: 0.20, y: 0.05 }, { x: 0.20, y: 0.27 }, { x: 0.28, y: -0.15 }, { x: 0.30, y: 0.17 }];
+	var POSITIONS = [{ x: -0.12, y: 0.13 }, { x: -0.27, y: -0.20 }, { x: -0.32, y: 0.10 }, { x: 0.03, y: -0.20 }, { x: 0.08, y: 0.10 }, { x: 0.20, y: 0.00 }, { x: 0.20, y: 0.25 }, { x: 0.31, y: -0.20 }, { x: 0.31, y: 0.12 }];
 
-	var SCALES = [0.3, 0.2, 0.2, 0.2, 0.15, 0.15, 0.15, 0.15, 0.12];
+	var SCALES = [0.4, 0.3, 0.2, 0.3, 0.2, 0.2, 0.2, 0.2, 0.15];
 	var SCALE_BASELINE_PIXELS = 1000;
 
 	var App = React.createClass({
@@ -112,7 +112,7 @@
 				React.createElement(
 					'div',
 					{ className: 'flex one justify-start' },
-					React.createElement('img', { className: 'logo flex align-center', src: 'images/icons/dummy.png' })
+					React.createElement('img', { className: 'logo flex align-center', src: 'images/bsl_logo.png' })
 				),
 				React.createElement(
 					'div',
@@ -199,6 +199,16 @@
 			return React.createElement(
 				'div',
 				{ ref: 'home', className: 'home' },
+				React.createElement(
+					'div',
+					{ className: 'welcome flex one justify-start' },
+					React.createElement(
+						'p',
+						null,
+						'Welcome to'
+					),
+					React.createElement('img', { className: 'logo flex align-center', src: 'images/bsl_logo_text_w.png' })
+				),
 				this.projectElements()
 			);
 		},
@@ -252,7 +262,9 @@
 			var expanded = this.state.expanded;
 			var classnames = cx('flex column one poster align-center justify-center', hovering && 'playing', expanded && 'expanded');
 			var onClick, onMouseOver, onMouseOut;
-			if (!this.props.selected) {
+			if (this.props.selected) {
+				style = { background: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(' + project.posterURL + ') center / cover' };
+			} else {
 				var index = this.props.index;
 				var scale = SCALES[index] * this.props.minWidth / SCALE_BASELINE_PIXELS;
 				var posX = POSITIONS[index].x * 100 + 'vw';
@@ -265,7 +277,8 @@
 			return React.createElement(
 				'div',
 				{ ref: 'poster', key: key, className: classnames, style: style, onClick: onClick, onMouseOver: onMouseOver, onMouseOut: onMouseOut },
-				React.createElement('div', { id: key })
+				React.createElement('div', { id: key }),
+				this.props.selected ? React.createElement(Poster.Info, { project: project, expand: this.expand }) : null
 			);
 		},
 		getInitialState: function () {
@@ -395,11 +408,7 @@
 					null,
 					project.description
 				),
-				React.createElement(
-					'button',
-					{ onClick: this.props.expand },
-					'PLAY'
-				)
+				React.createElement('img', { onClick: this.props.expand, className: 'logo flex align-center', src: 'images/icons/play_icon_w.png' })
 			);
 		}
 	});
@@ -438,35 +447,36 @@
 				React.createElement(
 					'p',
 					{ className: 'flex one align-center justify-start copyright' },
-					'COPYRIGHT (C) 2015 BLACKSHEEPLIVE'
+					'COPYRIGHT (C) 2015 ',
+					React.createElement('img', { className: 'logo flex align-center ', src: 'images/bsl_logo_text_b.png' })
 				),
 				React.createElement(
 					'span',
 					{ className: 'flex one align-center justify-end social' },
 					React.createElement(
 						'a',
-						{ className: 'link', href: '#' },
-						React.createElement('img', { src: 'images/icons/dummy.png' })
+						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { src: 'images/icons/facebook.png' })
 					),
 					React.createElement(
 						'a',
-						{ className: 'link', href: '#' },
-						React.createElement('img', { src: 'images/icons/dummy.png' })
+						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { src: 'images/icons/instagram.png' })
 					),
 					React.createElement(
 						'a',
-						{ className: 'link', href: '#' },
-						React.createElement('img', { src: 'images/icons/dummy.png' })
+						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { src: 'images/icons/linkedin.png' })
 					),
 					React.createElement(
 						'a',
-						{ className: 'link', href: '#' },
-						React.createElement('img', { src: 'images/icons/dummy.png' })
+						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { src: 'images/icons/twitter.png' })
 					),
 					React.createElement(
 						'a',
-						{ className: 'link', href: '#' },
-						React.createElement('img', { src: 'images/icons/dummy.png' })
+						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { src: 'images/icons/youtube.png' })
 					)
 				)
 			);
