@@ -144,7 +144,7 @@ App.Content.Home = React.createClass({
 		var selectedProject = this.props.selectedProject;
 		if (selectedProject >= 0) {
 			var p = projects[selectedProject];
-			return <App.Content.Home.Project key={selectedProject} project={p} selected={true} />
+			return <App.Content.Home.Project key={selectedProject} project={p} projectID={selectedProject} selected={true} />
 		}
 
 		var elems = [];
@@ -168,60 +168,161 @@ App.Content.Home = React.createClass({
 	},
 });
 
-App.Content.Home.Project = React.createClass({
+var Poster = React.createClass({
 	render: function() {
 		var project = this.props.project;
 		var selected = this.props.selected;
 		var style = { background: 'url(' + project.posterURL + ') center / cover' };
+		var key = 'video-' + this.props.projectID;
+		var classnames = cx('flex column one poster align-center justify-center', selected && 'selected', this.state.hovering && 'playing', this.state.expanded && 'expanded' );
 		if (selected) {
 			return (
-				<div className='flex column bubble align-center selected'>
-					<div className='close'>
-						<span className='symbol' onClick={this.deselectProject}>X</span>
-					</div>
-					<div ref='poster' className='flex one column align-center justify-center poster' style={style} onClick={this.props.onClick}>
-						<h1>{project.name}</h1>
-						<p>{project.description}</p>
-						<button onClick={this.gotoVideo}>Play</button>
-					</div>
+				<div ref='poster' key={key} className={classnames} style={style} onClick={this.props.onClick}>
+					<div id={key}></div>
+					<Poster.Info project={project} expand={this.expand} />
 				</div>
-			)
+			);
 		}
 		var index = this.props.index;
 		var scale = SCALES[index] * this.props.minWidth / 1000;
 		var posX = POSITIONS[index].x * 100 + 'vw';
 		var posY = POSITIONS[index].y * 100 + 'vh';
-		var classnames = cx('flex column one poster', this.props.selected && 'selected');
-		style = $.extend(!selected && {
-			transform: 'translate(' + posX + ',' + posY + ') scale(' + scale + ')',
-		}, {
-			background: 'url(' + project.posterURL + ') center / cover',
-		});
+		style.transform = 'translate(' + posX + ',' + posY + ') scale(' + scale + ')';
 		return (
-			<div className='flex column bubble align-center'>
-				<div className='close'>
-					<span className='symbol' onClick={this.deselectProject}>X</span>
-				</div>
-				<div ref='poster' className={classnames} style={style} onClick={this.props.onClick}></div>
+			<div ref='poster' key={key} className={classnames} style={style} onClick={this.props.onClick} onMouseOver={ this.setHovering.bind(this, true) } onMouseOut={ this.setHovering.bind(this, false) }>
+				<div id={key}></div>
 			</div>
-		)
+		);
+	},
+	getInitialState: function() {
+		return { hovering: false, expanded: false };
 	},
 	componentDidMount: function() {
+		var project = this.props.project;
 		var posterHeight = this.refs.poster.offsetHeight;
 		this.refs.poster.style.width = posterHeight + 'px';
+
+		this.player = new YT.Player( 'video-' + this.props.projectID, {
+			width: '1280',
+			height: '720',
+			videoId: project.url.substring( project.url.length - 11, project.url.length ),
+			playerVars: {
+				controls: 0,
+				showinfo: 0,
+				modestbranding: 1,
+				wmode: 'transparent',
+			},
+			events: {
+				'onReady': this.onPlayerReady,
+				'onStateChange': this.onPlayerStateChange,
+			},
+		});
+
+		this.listenerID = dispatcher.register(function(payload) {
+			switch (payload.type) {
+			case 'deselectProject':
+				this.player.stopVideo();
+				this.setState({ hovering: false, expanded: false });
+				break;
+			}
+		}.bind(this));
 	},
 	componentDidUpdate: function() {
 		var posterHeight = this.refs.poster.offsetHeight;
 		this.refs.poster.style.width = posterHeight + 'px';
+
+		if (this.state.hovering) {
+			if (this.player && this.player.getPlayerState() != 1) {
+				this.player.seekTo(0);
+				this.player.playVideo();
+			}
+		} else {
+			if (this.player) {
+				this.player.stopVideo();
+			}
+		}
+	},
+	componentWillUnmount: function() {
+		dispatcher.unregister(this.listenerID);
+	},
+	onPlayerReady: function() {
+		if (this.state.hovering) {
+			this.player.playVideo();
+		}
+	},
+	onPlayerStateChange: function(event) {
+		//console.log('onPlayerStateChange');
+	},
+	setHovering: function(state) {
+		this.setState({ hovering: state });
+		this.resize();
+	},
+	resize: function() {
+		var player = document.getElementById('video-' + this.props.projectID);
+		var playerWidth, playerHeight, playerX, playerY, maxWidth, minWidth;
+		if (this.props.selected) {
+			var content = document.getElementById('content');
+			var multiplier = content.offsetHeight / (player.offsetWidth * 9 / 16);
+			playerWidth = content.offsetWidth * multiplier;
+			playerHeight = content.offsetHeight;
+			console.log(playerWidth, player.offsetWidth);
+			maxWidth = Math.max(playerWidth, player.offsetWidth);
+			minWidth = Math.min(playerWidth, player.offsetWidth);
+			playerX = -(maxWidth - minWidth) * 0.5;
+			playerY = -(playerHeight - player.offsetHeight) * 0.5;
+		} else {
+			var parent = $(player).parent().get(0);
+			var multiplier = parent.offsetHeight / (player.offsetWidth * 9 / 16);
+			playerWidth = parent.offsetWidth * multiplier;
+			playerHeight = parent.offsetHeight;
+			maxWidth = Math.max(playerWidth, player.offsetWidth);
+			minWidth = Math.min(playerWidth, player.offsetWidth);
+			playerX = -(maxWidth - minWidth) * 0.5;
+			playerY = -(playerHeight - player.offsetHeight) * 0.5;
+		}
+		console.log(playerX);
+		if (playerX != 0) {
+			$(player)
+				.width(maxWidth)
+				.height(playerHeight)
+				.css({
+					left: playerX,
+					top: playerY,
+				});
+		}
+	},
+	expand: function() {
+		var expanded = !this.state.expanded;
+		this.setState({ expanded: expanded });
+	},
+});
+
+Poster.Info = React.createClass({
+	render: function() {
+		var project = this.props.project;
+		return (
+			<div className='info'>
+				<h1>{ project.name }</h1>
+				<p>{ project.description }</p>
+				<button onClick={this.props.expand}>PLAY</button>
+			</div>
+		)
+	},
+});
+
+App.Content.Home.Project = React.createClass({
+	render: function() {
+		return (
+			<div className={cx('flex column bubble align-center', this.props.selected && 'selected')}>
+				<div className='close'>
+					<span className='symbol' onClick={ this.deselectProject }>X</span>
+				</div>
+				<Poster index={ this.props.index } project={ this.props.project } projectID={ this.props.projectID } selected={ this.props.selected } minWidth={ this.props.minWidth } onClick={ this.props.onClick } />
+			</div>
+		)
 	},
 	deselectProject: function() {
 		dispatcher.dispatch({ type: 'deselectProject' });
-	},
-	gotoVideo: function() {
-		//open(this.props.project.url);
-		if (this.props.project.url) {
-			open(this.props.project.url);
-		}
 	},
 });
 
@@ -242,4 +343,6 @@ App.Footer = React.createClass({
 	},
 });
 
-ReactDOM.render(<App />, document.getElementById('root'));
+render = function() {
+	ReactDOM.render(<App />, document.getElementById('root'));
+}
