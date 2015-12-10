@@ -84,6 +84,11 @@ a {
 	cursor: pointer;
 }
 
+#content .menu .close .symbol img{
+	width: 24px;
+	height: 24px;
+}
+
 #content .menu .item:hover {
 	color: black;
 	background: white;
@@ -203,13 +208,15 @@ a {
 
 #content .home .bubble .close .symbol {
 	position: relative;
-	color: white;
 	pointer-events: auto;
 	cursor: pointer;
-	font-weight: 100;
-	background-image: url("../images/icons/close_w.png");
-	background-size: 16px 16px;
 }
+
+#content .home .bubble .close .symbol img{
+	width: 24px;
+	height: 24px;
+}
+
 
 #content .home .bubble .poster iframe {
 	position: absolute;
@@ -248,7 +255,7 @@ a {
 }
 
 #footer .social .link {
-	margin: 0 8px;
+	margin: 0 4px;
 
 }
 

@@ -86,8 +86,11 @@
 			this.fetchProjects();
 		},
 		toggleMenu: function (event) {
-			var showMenu = this.state.showMenu;
-			this.setState({ showMenu: !showMenu });
+			var showMenu = !this.state.showMenu;
+			this.setState({ showMenu: showMenu });
+			if (showMenu) {
+				dispatcher.dispatch({ type: 'deselectProject' });
+			}
 		},
 		fetchProjects: function () {
 			$.ajax({
@@ -156,7 +159,7 @@
 					React.createElement(
 						'span',
 						{ className: 'symbol', onClick: this.closeMenu },
-						'X'
+						React.createElement('img', { src: 'images/icons/close_w.png' })
 					)
 				),
 				React.createElement(
@@ -425,7 +428,7 @@
 					React.createElement(
 						'span',
 						{ className: 'symbol', onClick: this.deselectProject },
-						'X'
+						React.createElement('img', { src: 'images/icons/close_w.png' })
 					)
 				),
 				React.createElement(Poster, { index: this.props.index, project: this.props.project, projectID: this.props.projectID, selected: this.props.selected, minWidth: this.props.minWidth, onClick: this.props.onClick })

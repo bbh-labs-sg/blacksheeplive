@@ -101,7 +101,7 @@ App.Content.Menu = React.createClass({
 		return (
 			<div className={cx('flex one column menu align-center justify-center', this.props.showMenu && 'displayed')}>
 				<div className='flex close justify-end'>
-					<span className='symbol' onClick={this.closeMenu}>X</span>
+					<span className='symbol' onClick={this.closeMenu}><img src='images/icons/close_w.png' /></span>
 				</div>
 				<div className='flex column inner'>
 					<a href='#' className='flex one item justify-center'>ABOUT US</a>
@@ -327,7 +327,7 @@ App.Content.Home.Project = React.createClass({
 		return (
 			<div className={cx('flex column bubble align-center', this.props.selected && 'selected')}>
 				<div className='close'>
-					<span className='symbol' onClick={ this.deselectProject }>X</span>
+					<span className='symbol' onClick={ this.deselectProject }><img src='images/icons/close_w.png' /></span>
 				</div>
 				<Poster index={ this.props.index } project={ this.props.project } projectID={ this.props.projectID } selected={ this.props.selected } minWidth={ this.props.minWidth } onClick={ this.props.onClick } />
 			</div>
