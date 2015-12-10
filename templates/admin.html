@@ -23,13 +23,13 @@
 				</label>
 			</div>
 			<div class='row'>
-				<label class='white' for='poster-image'>Poster Image
-					<input id='poster-image' name='posterImage' type='file' accept='image/*' />
+				<label class='white' for='url'>URL
+					<input id='url' name='url' type='text' placeholder='e.g. youtube.com/watch?v=2Chhr3ZQ58w or youtu.be/2Chhr3ZQ58w' pattern='(?:(youtube\.com|youtu\.be)\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})' />
 				</label>
 			</div>
 			<div class='row'>
-				<label class='white' for='url'>URL
-					<input id='url' name='url' type='text' />
+				<label class='white' for='poster-image'>Poster Image
+					<input id='poster-image' name='posterImage' type='file' accept='image/*' />
 				</label>
 			</div>
 			<div class='row'>
@@ -58,7 +58,7 @@
 						</div>
 						<div class='row'>
 							<label for='url'>URL
-								<input name='url' type='text' value='{{ .URL }}' />
+								<input name='url' type='text' value='{{ .URL }}' placeholder='e.g. youtube.com/watch?v=2Chhr3ZQ58w or youtu.be/2Chhr3ZQ58w' pattern='(?:(youtube\.com|youtu\.be)\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})' />
 							</label>
 						</div>
 						<div class='row'>

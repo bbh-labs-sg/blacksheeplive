@@ -280,6 +280,8 @@
 			var posterHeight = this.refs.poster.offsetHeight;
 			this.refs.poster.style.width = posterHeight + 'px';
 
+			window.addEventListener('resize', this.resize);
+
 			this.player = new YT.Player('video-' + this.props.projectID, {
 				width: '1280',
 				height: '720',
@@ -310,7 +312,7 @@
 			this.refs.poster.style.width = posterHeight + 'px';
 
 			if (this.state.hovering) {
-				if (this.player && this.player.getPlayerState() != 1) {
+				if (this.player && this.player.getPlayerState() != YT.PlayerState.PLAYING) {
 					this.player.seekTo(0);
 					this.player.playVideo();
 				}
@@ -321,6 +323,9 @@
 			}
 		},
 		componentWillUnmount: function () {
+			if (this.player) {
+				this.player.destroy();
+			}
 			dispatcher.unregister(this.listenerID);
 		},
 		onPlayerReady: function () {
@@ -329,7 +334,11 @@
 			}
 		},
 		onPlayerStateChange: function (event) {
-			//console.log('onPlayerStateChange');
+			switch (event.data) {
+				case YT.PlayerState.ENDED:
+					this.player.stopVideo();
+					break;
+			}
 		},
 		setHovering: function (state) {
 			this.setState({ hovering: state });
@@ -358,7 +367,6 @@
 				playerX = -(maxWidth - minWidth) * 0.5;
 				playerY = -(playerHeight - player.offsetHeight) * 0.5;
 			}
-			console.log(playerX);
 			if (playerX != 0) {
 				$(player).width(maxWidth).height(playerHeight).css({
 					left: playerX,
