@@ -63,13 +63,13 @@
 			return React.createElement(
 				'div',
 				{ id: 'app', className: 'flex column' },
-				React.createElement(App.Header, { toggleMenu: this.toggleMenu }),
-				React.createElement(App.Content, { projects: this.state.projects, selectedProject: this.state.selectedProject, toggleMenu: this.toggleMenu, showMenu: this.state.showMenu }),
+				React.createElement(App.Header, { togglePage: this.togglePage }),
+				React.createElement(App.Content, { projects: this.state.projects, page: this.state.page, selectedProject: this.state.selectedProject, togglePage: this.togglePage }),
 				React.createElement(App.Footer, null)
 			);
 		},
 		getInitialState: function () {
-			return { projects: [], showMenu: false, selectedProject: -1 };
+			return { projects: [], selectedProject: -1, page: null };
 		},
 		componentDidMount: function () {
 			this.listenerID = dispatcher.register((function (payload) {
@@ -85,12 +85,10 @@
 
 			this.fetchProjects();
 		},
-		toggleMenu: function (event) {
-			var showMenu = !this.state.showMenu;
-			this.setState({ showMenu: showMenu });
-			if (showMenu) {
-				dispatcher.dispatch({ type: 'deselectProject' });
-			}
+		togglePage: function (newPage) {
+			console.log(newPage);
+			var page = this.state.page;
+			this.setState({ page: page == newPage ? null : newPage });
 		},
 		fetchProjects: function () {
 			$.ajax({
@@ -122,11 +120,14 @@
 					{ className: 'flex one justify-end' },
 					React.createElement(
 						'a',
-						{ className: 'menu flex align-center', href: '#', onClick: this.props.toggleMenu },
+						{ className: 'menu flex align-center', href: '#', onClick: this.toggleMenu },
 						'MENU'
 					)
 				)
 			);
+		},
+		toggleMenu: function () {
+			this.props.togglePage('menu');
 		}
 	});
 
@@ -134,15 +135,52 @@
 		displayName: 'Content',
 
 		render: function () {
+			var page;
+
+			switch (this.props.page) {
+				case 'menu':
+					page = React.createElement(App.Content.Menu, { togglePage: this.props.togglePage });
+					break;
+				case 'about':
+					page = React.createElement(App.Content.About, null);
+					break;
+				case 'services':
+					page = React.createElement(App.Content.Services, null);
+					break;
+				case 'contact':
+					page = React.createElement(App.Content.Contact, null);
+					break;
+				case 'showreel':
+					page = React.createElement(App.Content.Showreel, null);
+					break;
+				default:
+					page = null;
+			}
+
 			return React.createElement(
 				'div',
 				{ id: 'content', className: 'flex one column' },
 				React.createElement(App.Content.Home, { projects: this.props.projects, selectedProject: this.props.selectedProject }),
-				React.createElement(App.Content.Menu, { toggleMenu: this.props.toggleMenu, showMenu: this.props.showMenu })
+				page,
+				React.createElement(
+					'div',
+					{ className: cx('flex close justify-end', this.props.page ? '' : 'hide') },
+					React.createElement(
+						'span',
+						{ className: 'symbol', onClick: this.closePage },
+						React.createElement('img', { src: 'images/icons/close_w.png' })
+					)
+				)
 			);
 		},
 		getInitialState: function () {
 			return { project: null };
+		},
+		toggleMenu: function () {
+			this.props.togglePage('menu');
+		},
+		closePage: function (event) {
+			this.props.togglePage(null);
 		}
 	});
 
@@ -150,48 +188,43 @@
 		displayName: 'Menu',
 
 		render: function () {
+			var togglePage = this.props.togglePage;
 			return React.createElement(
 				'div',
-				{ className: cx('flex one column menu align-center justify-center', this.props.showMenu && 'displayed') },
-				React.createElement(
-					'div',
-					{ className: 'flex close justify-end' },
-					React.createElement(
-						'span',
-						{ className: 'symbol', onClick: this.closeMenu },
-						React.createElement('img', { src: 'images/icons/close_w.png' })
-					)
-				),
+				{ className: 'flex one column menu align-center justify-center' },
 				React.createElement(
 					'div',
 					{ className: 'flex column inner' },
 					React.createElement(
 						'a',
-						{ href: '#', className: 'flex one item justify-center' },
+						{ href: '#', className: 'flex one item justify-center', onClick: function () {
+								togglePage('about');
+							} },
 						'ABOUT US'
 					),
 					React.createElement(
 						'a',
-						{ href: '#', className: 'flex one item justify-center' },
+						{ href: '#', className: 'flex one item justify-center', onClick: function () {
+								togglePage('services');
+							} },
 						'SERVICES'
 					),
 					React.createElement(
 						'a',
-						{ href: '#', className: 'flex one item justify-center' },
+						{ href: '#', className: 'flex one item justify-center', onClick: function () {
+								togglePage('contact');
+							} },
 						'CONTACT'
 					),
 					React.createElement(
 						'a',
-						{ href: '#', className: 'flex one item justify-center' },
+						{ href: '#', className: 'flex one item justify-center', onClick: function () {
+								togglePage('showreel');
+							} },
 						'SHOWREEL'
 					)
 				)
 			);
-		},
-		closeMenu: function (event) {
-			if (this.props.showMenu) {
-				this.props.toggleMenu();
-			}
 		}
 	});
 
@@ -251,6 +284,102 @@
 				type: 'selectProject',
 				projectID: i
 			});
+		}
+	});
+
+	App.Content.About = React.createClass({
+		displayName: 'About',
+
+		render: function () {
+			return React.createElement(
+				'div',
+				{ ref: 'about', className: 'page about' },
+				React.createElement(
+					'div',
+					{ className: 'inner' },
+					React.createElement(
+						'div',
+						{ className: 'content flex column align-center justify-center' },
+						React.createElement(
+							'h1',
+							null,
+							'About'
+						)
+					)
+				)
+			);
+		}
+	});
+
+	App.Content.Services = React.createClass({
+		displayName: 'Services',
+
+		render: function () {
+			return React.createElement(
+				'div',
+				{ ref: 'about', className: 'page services' },
+				React.createElement(
+					'div',
+					{ className: 'inner' },
+					React.createElement(
+						'div',
+						{ className: 'content flex column align-center justify-center' },
+						React.createElement(
+							'h1',
+							null,
+							'Services'
+						)
+					)
+				)
+			);
+		}
+	});
+
+	App.Content.Contact = React.createClass({
+		displayName: 'Contact',
+
+		render: function () {
+			return React.createElement(
+				'div',
+				{ ref: 'contact', className: 'page contact' },
+				React.createElement(
+					'div',
+					{ className: 'inner' },
+					React.createElement(
+						'div',
+						{ className: 'content flex column align-center justify-center' },
+						React.createElement(
+							'h1',
+							null,
+							'Contact'
+						)
+					)
+				)
+			);
+		}
+	});
+
+	App.Content.Showreel = React.createClass({
+		displayName: 'Showreel',
+
+		render: function () {
+			return React.createElement(
+				'div',
+				{ ref: 'showreel', className: 'page showreel' },
+				React.createElement(
+					'div',
+					{ className: 'inner' },
+					React.createElement(
+						'div',
+						{ className: 'content flex column align-center justify-center' },
+						React.createElement(
+							'h1',
+							null,
+							'Showreel'
+						)
+					)
+				)
+			);
 		}
 	});
 

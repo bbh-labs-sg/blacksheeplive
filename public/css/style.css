@@ -43,22 +43,37 @@ a {
 
 #content > * {
 	position: absolute;
-}
-
-#content .menu {
-	position: absolute;
-	background: red;
 	width: 100%;
 	height: 100%;
-	display: none;
-}
-
-#content .menu.displayed {
-	display: flex;
+	background: black;
 	z-index: 10000;
 }
 
-#content .menu .inner {
+#content .menu {
+	background: red;
+}
+
+#content > .page > .inner {
+	position: relative;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#content > .page > .inner:before {
+	content: "";
+	display: block;
+	padding-top: 100%;
+	margin-top: 10px;
+}
+
+#content > * > .inner > .content {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	border-radius: 50%;
+	background: red;
 }
 
 #content .menu .inner .item {
@@ -69,23 +84,31 @@ a {
 	font-weight: 100;
 	letter-spacing: 5px;
 	font-family: 'Dosis', sans-serif;
+	cursor: pointer;
+	pointer-events: auto;
 }
 
-
-#content .menu .close {
+#content .close {
+	position: absolute;
 	width: 100%;
 	height: 100%;
-	position: absolute;
 	top: 0;
+	background: none;
+	pointer-events: none;
 }
 
-#content .menu .close .symbol {
+#content .close.hide {
+	display: none;
+}
+
+#content .close .symbol {
 	color: white;
 	padding: 16px;
 	cursor: pointer;
+	pointer-events: auto;
 }
 
-#content .menu .close .symbol img{
+#content .close .symbol img {
 	width: 24px;
 	height: 24px;
 	cursor: pointer;
@@ -96,13 +119,7 @@ a {
 	background: white;
 }
 
-#content .home {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-}
-
-#content .home .welcome{
+#content .home .welcome {
 	font-family: 'Dosis', sans-serif;
 	color: #fff;
 	font-weight: 100;
@@ -111,7 +128,7 @@ a {
 	font-size: 12pt;
 }
 
-#content .home .welcome img{
+#content .home .welcome img {
 	width: 140px;
 	height: 14px;
 	padding-top: 20px;
@@ -149,7 +166,7 @@ a {
 	margin: 20px;
 }
 
-#content .home .bubble .poster .info h1{
+#content .home .bubble .poster .info h1 {
 	color: white;
 	text-transform: uppercase;
 	font-family: 'Dosis', sans-serif;
@@ -157,7 +174,8 @@ a {
 	letter-spacing: 3pt;
 	font-size: 32pt;
 }
-#content .home .bubble .poster .info  p{
+
+#content .home .bubble .poster .info  p {
 	color: white;
 	font-family: 'Dosis', sans-serif;
 	font-weight: 100;
@@ -177,7 +195,7 @@ a {
 	transition: opacity .4s;
 }
 
-#content .home .bubble .poster .info img{
+#content .home .bubble .poster .info img {
 	width: 80px;
 	height: 80px;
 	margin: auto;

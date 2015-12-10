@@ -24,14 +24,14 @@ var App = React.createClass({
 	render: function() {
 		return (
 			<div id='app' className='flex column'>
-				<App.Header toggleMenu={this.toggleMenu} />
-				<App.Content projects={this.state.projects} selectedProject={this.state.selectedProject} toggleMenu={this.toggleMenu} showMenu={this.state.showMenu} />
+				<App.Header togglePage={this.togglePage} />
+				<App.Content projects={this.state.projects} page={this.state.page} selectedProject={this.state.selectedProject} togglePage={this.togglePage} />
 				<App.Footer />
 			</div>
 		)
 	},
 	getInitialState: function() {
-		return { projects: [], showMenu: false, selectedProject: -1 };
+		return { projects: [], selectedProject: -1, page: null };
 	},
 	componentDidMount: function() {
 		this.listenerID = dispatcher.register(function(payload) {
@@ -47,12 +47,10 @@ var App = React.createClass({
 
 		this.fetchProjects();
 	},
-	toggleMenu: function(event) {
-		var showMenu = !this.state.showMenu;
-		this.setState({ showMenu: showMenu });
-		if (showMenu) {
-			dispatcher.dispatch({ type: 'deselectProject' });
-		}
+	togglePage: function(newPage) {
+		console.log(newPage);
+		var page = this.state.page;
+		this.setState({ page: page == newPage ? null : newPage });
 	},
 	fetchProjects: function() {
 		$.ajax({
@@ -75,47 +73,74 @@ App.Header = React.createClass({
 					<img className='logo flex align-center' src='images/bsl_logo.png' />
 				</div>
 				<div className='flex one justify-end'>
-					<a className='menu flex align-center' href='#' onClick={this.props.toggleMenu}>MENU</a>
+					<a className='menu flex align-center' href='#' onClick={this.toggleMenu}>MENU</a>
 				</div>
 			</div>
 		)
+	},
+	toggleMenu: function() {
+		this.props.togglePage('menu');
 	},
 });
 
 App.Content = React.createClass({
 	render: function() {
+		var page;
+
+		switch (this.props.page) {
+		case 'menu':
+			page = <App.Content.Menu togglePage={this.props.togglePage} />;
+			break;
+		case 'about':
+			page = <App.Content.About />
+			break;
+		case 'services':
+			page = <App.Content.Services />
+			break;
+		case 'contact':
+			page = <App.Content.Contact />
+			break;
+		case 'showreel':
+			page = <App.Content.Showreel />
+			break;
+		default:
+			page = null;
+		}
+
 		return (
 			<div id='content' className='flex one column'>
 				<App.Content.Home projects={this.props.projects} selectedProject={this.props.selectedProject} />
-				<App.Content.Menu toggleMenu={this.props.toggleMenu} showMenu={this.props.showMenu} />
+				{ page }
+				<div className={cx('flex close justify-end', this.props.page ? '' : 'hide')}>
+					<span className='symbol' onClick={this.closePage}><img src='images/icons/close_w.png' /></span>
+				</div>
 			</div>
 		)
 	},
 	getInitialState: function() {
 		return { project: null };
 	},
+	toggleMenu: function() {
+		this.props.togglePage('menu');
+	},
+	closePage: function(event) {
+		this.props.togglePage(null);
+	},
 });
 
 App.Content.Menu = React.createClass({
 	render: function() {
+		var togglePage = this.props.togglePage;
 		return (
-			<div className={cx('flex one column menu align-center justify-center', this.props.showMenu && 'displayed')}>
-				<div className='flex close justify-end'>
-					<span className='symbol' onClick={this.closeMenu}><img src='images/icons/close_w.png' /></span>
-				</div>
+			<div className='flex one column menu align-center justify-center'>
 				<div className='flex column inner'>
-					<a href='#' className='flex one item justify-center'>ABOUT US</a>
-					<a href='#' className='flex one item justify-center'>SERVICES</a>
-					<a href='#' className='flex one item justify-center'>CONTACT</a>
-					<a href='#' className='flex one item justify-center'>SHOWREEL</a>
+					<a href='#' className='flex one item justify-center' onClick={function() { togglePage('about'); }}>ABOUT US</a>
+					<a href='#' className='flex one item justify-center' onClick={function() { togglePage('services'); }}>SERVICES</a>
+					<a href='#' className='flex one item justify-center' onClick={function() { togglePage('contact'); }}>CONTACT</a>
+					<a href='#' className='flex one item justify-center' onClick={function() { togglePage('showreel'); }}>SHOWREEL</a>
 				</div>
 			</div>
 		)
-	},
-	closeMenu: function(event) {
-		if (this.props.showMenu) {
-			this.props.toggleMenu();
-		}
 	},
 });
 
@@ -168,6 +193,62 @@ App.Content.Home = React.createClass({
 			type: 'selectProject',
 			projectID: i,
 		});
+	},
+});
+
+App.Content.About = React.createClass({
+	render: function() {
+		return (
+			<div ref='about' className='page about'>
+				<div className='inner'>
+					<div className='content flex column align-center justify-center'>
+						<h1>About</h1>
+					</div>
+				</div>
+			</div>
+		)
+	},
+});
+
+App.Content.Services = React.createClass({
+	render: function() {
+		return (
+			<div ref='about' className='page services'>
+				<div className='inner'>
+					<div className='content flex column align-center justify-center'>
+						<h1>Services</h1>
+					</div>
+				</div>
+			</div>
+		)
+	},
+});
+
+App.Content.Contact = React.createClass({
+	render: function() {
+		return (
+			<div ref='contact' className='page contact'>
+				<div className='inner'>
+					<div className='content flex column align-center justify-center'>
+						<h1>Contact</h1>
+					</div>
+				</div>
+			</div>
+		)
+	},
+});
+
+App.Content.Showreel = React.createClass({
+	render: function() {
+		return (
+			<div ref='showreel' className='page showreel'>
+				<div className='inner'>
+					<div className='content flex column align-center justify-center'>
+						<h1>Showreel</h1>
+					</div>
+				</div>
+			</div>
+		)
 	},
 });
 
