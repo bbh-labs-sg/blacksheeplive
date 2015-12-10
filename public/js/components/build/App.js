@@ -245,7 +245,7 @@ App.Content.About = React.createClass({
 	render: function () {
 		return React.createElement(
 			'div',
-			{ ref: 'about', className: 'page about' },
+			{ ref: 'about', className: 'page about flex column align-center justify-center' },
 			React.createElement(
 				'div',
 				{ className: 'inner' },
@@ -269,7 +269,7 @@ App.Content.Services = React.createClass({
 	render: function () {
 		return React.createElement(
 			'div',
-			{ ref: 'about', className: 'page services' },
+			{ ref: 'about', className: 'page services flex row align-center justify-center' },
 			React.createElement(
 				'div',
 				{ className: 'inner' },
@@ -293,7 +293,7 @@ App.Content.Contact = React.createClass({
 	render: function () {
 		return React.createElement(
 			'div',
-			{ ref: 'contact', className: 'page contact' },
+			{ ref: 'contact', className: 'page contact flex row align-center justify-center' },
 			React.createElement(
 				'div',
 				{ className: 'inner' },
@@ -317,7 +317,7 @@ App.Content.Showreel = React.createClass({
 	render: function () {
 		return React.createElement(
 			'div',
-			{ ref: 'showreel', className: 'page showreel' },
+			{ ref: 'showreel', className: 'page showreel flex row align-center justify-center' },
 			React.createElement(
 				'div',
 				{ className: 'inner' },

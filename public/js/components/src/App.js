@@ -196,7 +196,7 @@ App.Content.Home = React.createClass({
 App.Content.About = React.createClass({
 	render: function() {
 		return (
-			<div ref='about' className='page about'>
+			<div ref='about' className='page about flex column align-center justify-center'>
 				<div className='inner'>
 					<div className='content flex column align-center justify-center'>
 						<h1>About</h1>
@@ -210,7 +210,7 @@ App.Content.About = React.createClass({
 App.Content.Services = React.createClass({
 	render: function() {
 		return (
-			<div ref='about' className='page services'>
+			<div ref='about' className='page services flex row align-center justify-center'>
 				<div className='inner'>
 					<div className='content flex column align-center justify-center'>
 						<h1>Services</h1>
@@ -224,7 +224,7 @@ App.Content.Services = React.createClass({
 App.Content.Contact = React.createClass({
 	render: function() {
 		return (
-			<div ref='contact' className='page contact'>
+			<div ref='contact' className='page contact flex row align-center justify-center'>
 				<div className='inner'>
 					<div className='content flex column align-center justify-center'>
 						<h1>Contact</h1>
@@ -238,7 +238,7 @@ App.Content.Contact = React.createClass({
 App.Content.Showreel = React.createClass({
 	render: function() {
 		return (
-			<div ref='showreel' className='page showreel'>
+			<div ref='showreel' className='page showreel flex row align-center justify-center'>
 				<div className='inner'>
 					<div className='content flex column align-center justify-center'>
 						<h1>Showreel</h1>

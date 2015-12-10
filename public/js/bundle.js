@@ -291,7 +291,7 @@
 		render: function () {
 			return React.createElement(
 				'div',
-				{ ref: 'about', className: 'page about' },
+				{ ref: 'about', className: 'page about flex column align-center justify-center' },
 				React.createElement(
 					'div',
 					{ className: 'inner' },
@@ -315,7 +315,7 @@
 		render: function () {
 			return React.createElement(
 				'div',
-				{ ref: 'about', className: 'page services' },
+				{ ref: 'about', className: 'page services flex row align-center justify-center' },
 				React.createElement(
 					'div',
 					{ className: 'inner' },
@@ -339,7 +339,7 @@
 		render: function () {
 			return React.createElement(
 				'div',
-				{ ref: 'contact', className: 'page contact' },
+				{ ref: 'contact', className: 'page contact flex row align-center justify-center' },
 				React.createElement(
 					'div',
 					{ className: 'inner' },
@@ -363,7 +363,7 @@
 		render: function () {
 			return React.createElement(
 				'div',
-				{ ref: 'showreel', className: 'page showreel' },
+				{ ref: 'showreel', className: 'page showreel flex row align-center justify-center' },
 				React.createElement(
 					'div',
 					{ className: 'inner' },
