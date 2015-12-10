@@ -53,7 +53,7 @@
 
 	var POSITIONS = [{ x: -0.12, y: 0.13 }, { x: -0.27, y: -0.20 }, { x: -0.32, y: 0.10 }, { x: 0.03, y: -0.20 }, { x: 0.08, y: 0.10 }, { x: 0.20, y: 0.00 }, { x: 0.20, y: 0.25 }, { x: 0.31, y: -0.20 }, { x: 0.31, y: 0.12 }];
 
-	var SCALES = [0.2, 0.15, 0.1, 0.15, 0.1, 0.1, 0.1, 0.1, 0.075];
+	var SCALES = [0.4, 0.3, 0.2, 0.3, 0.2, 0.2, 0.2, 0.2, 0.15];
 	var SCALE_BASELINE_PIXELS = 1000;
 
 	var App = React.createClass({
@@ -267,7 +267,7 @@
 			var onClick, onMouseOver, onMouseOut;
 			if (!this.props.selected) {
 				var index = this.props.index;
-				var scale = SCALES[index] * devicePixelRatio * this.props.minWidth / SCALE_BASELINE_PIXELS;
+				var scale = SCALES[index] * this.props.minWidth / SCALE_BASELINE_PIXELS;
 				var posX = POSITIONS[index].x * 100 + 'vw';
 				var posY = POSITIONS[index].y * 100 + 'vh';
 				style = { transform: 'translate(' + posX + ',' + posY + ') scale(' + scale + ')' };
