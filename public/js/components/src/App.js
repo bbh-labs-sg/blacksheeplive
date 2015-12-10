@@ -48,7 +48,6 @@ var App = React.createClass({
 		this.fetchProjects();
 	},
 	togglePage: function(newPage) {
-		console.log(newPage);
 		var page = this.state.page;
 		this.setState({ page: page == newPage ? null : newPage });
 	},
@@ -162,8 +161,6 @@ App.Content.Home = React.createClass({
 	componentDidMount: function() {
 		this.onWindowResize();
 		window.addEventListener('resize', this.onWindowResize, false);
-	},
-	componentDidUpdate: function() {
 	},
 	componentWillUnmount: function() {
 		window.removeEventListener('resize', this.onWindowResize, false);
@@ -288,28 +285,14 @@ var Poster = React.createClass({
 		var project = this.props.project;
 		var posterHeight = this.refs.poster.offsetHeight;
 		this.refs.poster.style.width = posterHeight + 'px';
+
 		window.addEventListener('resize', this.resize);
-
-		this.player = new YT.Player( 'video-' + this.props.projectID, {
-			width: '1280',
-			height: '720',
-			videoId: project.url.substring( project.url.length - 11, project.url.length ),
-			playerVars: {
-				controls: 0,
-				showinfo: 0,
-				modestbranding: 1,
-				wmode: 'transparent',
-			},
-			events: {
-				'onReady': this.onPlayerReady,
-				'onStateChange': this.onPlayerStateChange,
-			},
-		});
-
 		this.listenerID = dispatcher.register(function(payload) {
 			switch (payload.type) {
 			case 'deselectProject':
-				this.player.stopVideo();
+				if (this.player) {
+					this.player.stopVideo();
+				}
 				this.setState({ hovering: false, expanded: false });
 				break;
 			}
@@ -325,7 +308,25 @@ var Poster = React.createClass({
 					this.player.seekTo(0);
 					this.player.playVideo();
 				}
+			} else {
+				var project = this.props.project;
+				this.player = new YT.Player( 'video-' + this.props.projectID, {
+					width: '1280',
+					height: '720',
+					videoId: project.url.substring( project.url.length - 11, project.url.length ),
+					playerVars: {
+						controls: 0,
+						showinfo: 0,
+						modestbranding: 1,
+						wmode: 'transparent',
+					},
+					events: {
+						'onReady': this.onPlayerReady,
+						'onStateChange': this.onPlayerStateChange,
+					},
+				});
 			}
+
 		} else {
 			if (this.player) {
 				this.player.stopVideo();
@@ -340,6 +341,7 @@ var Poster = React.createClass({
 	},
 	onPlayerReady: function() {
 		if (this.player) {
+			this.resize();
 			if (this.state.hovering) {
 				this.player.playVideo();
 			} else {
@@ -351,7 +353,9 @@ var Poster = React.createClass({
 	onPlayerStateChange: function(event) {
 		switch (event.data) {
 		case YT.PlayerState.ENDED:
-			this.player.stopVideo();
+			if (this.player) {
+				this.player.stopVideo();
+			}
 			break;
 		}
 	},
