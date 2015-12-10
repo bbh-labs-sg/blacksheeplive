@@ -48,8 +48,11 @@ var App = React.createClass({
 		this.fetchProjects();
 	},
 	toggleMenu: function(event) {
-		var showMenu = this.state.showMenu;
-		this.setState({ showMenu: !showMenu });
+		var showMenu = !this.state.showMenu;
+		this.setState({ showMenu: showMenu });
+		if (showMenu) {
+			dispatcher.dispatch({ type: 'deselectProject' });
+		}
 	},
 	fetchProjects: function() {
 		$.ajax({
