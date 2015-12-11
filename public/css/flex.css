@@ -116,3 +116,8 @@
 	-ms-justify-content: space-around;
 	justify-content: space-around;
 }
+
+.flex.wrap {
+	-webkit-flex-wrap: wrap;
+	flex-wrap: wrap;
+}

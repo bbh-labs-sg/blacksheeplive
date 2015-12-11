@@ -330,6 +330,7 @@ var Poster = React.createClass({
 	componentWillUnmount: function() {
 		if (this.player) {
 			this.player.destroy();
+			this.player = null;
 		}
 		dispatcher.unregister(this.listenerID);
 	},
@@ -367,16 +368,19 @@ var Poster = React.createClass({
 		}
 
 		var newPlayerWidth, newPlayerHeight, newPlayerX, newPlayerY;
-		var maxWidth, minWidth;
+		var maxWidth, minWidth, maxHeight, minHeight;
 
 		var multiplier = container.offsetHeight / (player.offsetWidth * 9 / 16);
 		newPlayerWidth = container.offsetWidth * multiplier;
-		newPlayerHeight = container.offsetHeight;
+		newPlayerHeight = container.offsetHeight * multiplier;
 		maxWidth = Math.max(newPlayerWidth, player.offsetWidth);
 		minWidth = Math.min(newPlayerWidth, player.offsetWidth);
+		maxHeight = Math.max(newPlayerHeight, player.offsetHeight);
+		minHeight = Math.min(newPlayerHeight, player.offsetHeight);
 		newPlayerX = -(maxWidth - minWidth) * 0.5;
-		newPlayerY = -(newPlayerHeight - player.offsetHeight) * 0.5;
-		if (newPlayerX != 0) {
+		//newPlayerY = -(newPlayerHeight - player.offsetHeight) * 0.5;
+		newPlayerY = -(maxHeight - minHeight) * 0.5;
+		if (isFinite(newPlayerX) && isFinite(newPlayerY) && newPlayerX != 0 && newPlayerY != 0) {
 			$(player).width(maxWidth)
 				.height(newPlayerHeight)
 				.css({
@@ -424,13 +428,26 @@ App.Footer = React.createClass({
 	render: function() {
 		return (
 			<div id='footer' className='flex'>
-				<p className='flex one align-center justify-start copyright'>COPYRIGHT (C) 2015 <img className='logo flex align-center ' src='images/bsl_logo_text_b.png' /></p>
+				<p className='copyright flex one align-center justify-start wrap'>
+					COPYRIGHT (C) 2015
+					<img className='logo flex align-center ' src='images/bsl_logo_text_b.png' />
+				</p>
 				<span className='flex one align-center justify-end social'>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/facebook.png' /></a>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/instagram.png' /></a>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/linkedin.png' /></a>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/twitter.png' /></a>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank"><img src='images/icons/youtube.png' /></a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img src='images/icons/facebook.png' />
+					</a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img src='images/icons/instagram.png' />
+					</a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img src='images/icons/linkedin.png' />
+					</a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img src='images/icons/twitter.png' />
+					</a>
+					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img src='images/icons/youtube.png' />
+					</a>
 				</span>
 			</div>
 		)

@@ -457,6 +457,7 @@ var Poster = React.createClass({
 	componentWillUnmount: function () {
 		if (this.player) {
 			this.player.destroy();
+			this.player = null;
 		}
 		dispatcher.unregister(this.listenerID);
 	},
@@ -494,16 +495,19 @@ var Poster = React.createClass({
 		}
 
 		var newPlayerWidth, newPlayerHeight, newPlayerX, newPlayerY;
-		var maxWidth, minWidth;
+		var maxWidth, minWidth, maxHeight, minHeight;
 
 		var multiplier = container.offsetHeight / (player.offsetWidth * 9 / 16);
 		newPlayerWidth = container.offsetWidth * multiplier;
-		newPlayerHeight = container.offsetHeight;
+		newPlayerHeight = container.offsetHeight * multiplier;
 		maxWidth = Math.max(newPlayerWidth, player.offsetWidth);
 		minWidth = Math.min(newPlayerWidth, player.offsetWidth);
+		maxHeight = Math.max(newPlayerHeight, player.offsetHeight);
+		minHeight = Math.min(newPlayerHeight, player.offsetHeight);
 		newPlayerX = -(maxWidth - minWidth) * 0.5;
-		newPlayerY = -(newPlayerHeight - player.offsetHeight) * 0.5;
-		if (newPlayerX != 0) {
+		//newPlayerY = -(newPlayerHeight - player.offsetHeight) * 0.5;
+		newPlayerY = -(maxHeight - minHeight) * 0.5;
+		if (isFinite(newPlayerX) && isFinite(newPlayerY) && newPlayerX != 0 && newPlayerY != 0) {
 			$(player).width(maxWidth).height(newPlayerHeight).css({
 				left: newPlayerX,
 				top: newPlayerY
@@ -572,8 +576,8 @@ App.Footer = React.createClass({
 			{ id: 'footer', className: 'flex' },
 			React.createElement(
 				'p',
-				{ className: 'flex one align-center justify-start copyright' },
-				'COPYRIGHT (C) 2015 ',
+				{ className: 'copyright flex one align-center justify-start wrap' },
+				'COPYRIGHT (C) 2015',
 				React.createElement('img', { className: 'logo flex align-center ', src: 'images/bsl_logo_text_b.png' })
 			),
 			React.createElement(

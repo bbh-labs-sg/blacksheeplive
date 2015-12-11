@@ -7,11 +7,6 @@ html, body, #root {
 	font-family: 'Dosis', sans-serif;
 }
 
-* {
-
-
-}
-
 a {
 	text-decoration: none;
 }
@@ -32,7 +27,7 @@ a {
 	z-index: 10000;
 }
 
-#header .logo{
+#header .logo {
 	width: 70px;
 	height: 32px;
 }
@@ -58,7 +53,7 @@ a {
 	position: relative;
 	margin-left: auto;
 	margin-right: auto;
-	width: 80vm;
+	width: 80vm; /* IE9 */
 	width: 80vmin;
 }
 
@@ -74,8 +69,10 @@ a {
 	right: 0;
 	bottom: 0;
 	left: 0;
+	min-width: 200px;
 	border-radius: 50%;
 	background: #fb1f25;
+	background: rgba(251, 31, 37, 1);
 }
 
 #content .menu .inner .item {
@@ -121,10 +118,10 @@ a {
 }
 
 #content .home .welcome {
+	position: fixed;
 	color: #fff;
 	font-weight: 100;
 	padding-left: 12px;
-	position: absolute;
 	font-size: 12pt;
 }
 
@@ -173,15 +170,19 @@ a {
 	font-weight: 100;
 	letter-spacing: 3pt;
 	font-size: 32pt;
+	font-size: 5vm;
+	font-size: 5vmin;
 }
 
-#content .home .bubble .poster .info  p {
+#content .home .bubble .poster .info p {
 	color: white;
 	font-family: 'Dosis', sans-serif;
 	font-weight: 100;
 	max-width: 450px;
 	letter-spacing: 3pt;
 	font-size: 13pt;
+	font-size: 2.5vm;
+	font-size: 2.5vmin;
 }
 
 #content .home .bubble .poster.expanded {
@@ -220,7 +221,7 @@ a {
 	right: 0;
 	text-align: right;
 	margin: 16px;
-	z-index: 100;
+	pointer-events: none;
 }
 
 #content .home .bubble.selected .close {
@@ -228,12 +229,15 @@ a {
 }
 
 #content .home .bubble .close .symbol {
+	background: black;
+	background: rgba(0, 0, 0, 0.5);
 	position: relative;
 	pointer-events: auto;
 	cursor: pointer;
+	z-index: 10000;
 }
 
-#content .home .bubble .close .symbol img{
+#content .home .bubble .close .symbol img {
 	width: 24px;
 	height: 24px;
 	cursor: pointer;
@@ -266,61 +270,64 @@ a {
 }
 
 
-#content .about, #content .services, #content .contact, #content .showreel{
+#content .about, #content .services, #content .contact, #content .showreel {
 	background-color: #fb1f25;
 }
 
-#content .about .content, #content .services .content, #content .contact .content, #content .showreel .content{
+#content .about .content,
+#content .services .content,
+#content .contact .content,
+#content .showreel .content {
 	background-color: #fff;
+	background-color: rgba(255, 255, 255, 1);
 	width: 80%;
 	height: 80%;
 	margin: auto;
-	padding: auto;
+	transition: background-color .4s;
 }
 
+#content .about .content h1 {
+	text-transform: uppercase;
+	font-weight: 400;
+}
+#content .services .content h1 {
+	text-transform: uppercase;
+	font-weight: 400;
+}
+#content .contact .content h1 {
+	text-transform: uppercase;
+	font-weight: 400;
+}
+#content .showreel .content h1 {
+	text-transform: uppercase;
+	font-weight: 400;
+}
 
-#content .about .content h1{
-	text-transform: uppercase;
-	font-weight: 400;
-}
-#content .services .content h1{
-	text-transform: uppercase;
-	font-weight: 400;
-}
-#content .contact .content h1{
-	text-transform: uppercase;
-	font-weight: 400;
-}
-#content .showreel .content h1{
-	text-transform: uppercase;
-	font-weight: 400;
-}
-
-#content .about .content p{
+#content .about .content p {
 	font-size: 12pt;
 	text-transform: none;
 	max-width: 320px;
 	text-align: center;
 }
-#content .services .content p{
+#content .services .content p {
 	font-size: 12pt;
 	text-transform: none;
 	max-width: 320px;
 	text-align: center;
 }
-#content .services .content h3{
+#content .services .content h3 {
 	font-size: 18pt;
 	max-width: 320px;
 	max-height: 0px;
 	text-align: center;
 }
-#content .contact .content h3{
+#content .contact .content h3 {
 	font-size: 18pt;
 	max-width: 320px;
 	max-height: 20px;
 	text-align: center;
 }
-#content .contact .content p{
+#content .contact .content p {
 	font-size: 12pt;
 	text-transform: none;
 	max-width: 320px;
@@ -348,7 +355,6 @@ a {
 	height: 32px;
 }
 
-/* Project tranforms */
 @media (min-width: 720px) {
 	.bubble:nth-child(2):not(.selected) .poster { transform: translate(-12vw, 13vh) scale(0.4) }
 	.bubble:nth-child(3):not(.selected) .poster { transform: translate(-27vw, -20vh) scale(0.3) }
@@ -362,14 +368,54 @@ a {
 }
 
 @media (max-width: 720px) {
-	#content .home { max-width: 100%; overflow: auto; }
-	.bubble:nth-child(2):not(.selected) .poster { transform: translate(0%, 0) scale(0.6) }
-	.bubble:nth-child(3):not(.selected) .poster { transform: translate(100%, 0) scale(0.6) }
-	.bubble:nth-child(4):not(.selected) .poster { transform: translate(200%, 0) scale(0.6) }
-	.bubble:nth-child(5):not(.selected) .poster { transform: translate(300%, 0) scale(0.6) }
-	.bubble:nth-child(6):not(.selected) .poster { transform: translate(400%, 0) scale(0.6) }
-	.bubble:nth-child(7):not(.selected) .poster { transform: translate(500%, 0) scale(0.6) }
-	.bubble:nth-child(8):not(.selected) .poster { transform: translate(600%, 0) scale(0.6) }
-	.bubble:nth-child(9):not(.selected) .poster { transform: translate(700%, 0) scale(0.6) }
-	.bubble:nth-child(10):not(.selected) .poster { transform: translate(800%, 0) scale(0.6) }
+	#content .home {
+		max-width: 100%;
+	}
+	
+	#content .home {
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
+	#content > * > .inner > .content {
+		color: white;
+	}
+
+	#content .about .content,
+	#content .services .content,
+	#content .contact .content,
+	#content .showreel .content {
+		background-color: none;
+		background-color: rgba(255, 255, 255, 0);
+	}
+
+	.bubble:nth-child(2) { transform: translate(0%, 0) }
+	.bubble:nth-child(3) { transform: translate(100%, 0) }
+	.bubble:nth-child(4) { transform: translate(200%, 0) }
+	.bubble:nth-child(5) { transform: translate(300%, 0) }
+	.bubble:nth-child(6) { transform: translate(400%, 0) }
+	.bubble:nth-child(7) { transform: translate(500%, 0) }
+	.bubble:nth-child(8) { transform: translate(600%, 0) }
+	.bubble:nth-child(9) { transform: translate(700%, 0) }
+	.bubble:nth-child(10) { transform: translate(800%, 0) }
+
+	.bubble:nth-child(2):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(3):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(4):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(5):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(6):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(7):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(8):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(9):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(10):not(.selected) .poster { transform: scale(0.6) }
+}
+
+@media (max-width: 360px) {
+	#content .home {
+		overflow: auto;
+	}
+
+	#content .home .bubble .poster .info p {
+		max-width: 270px;
+	}
 }
