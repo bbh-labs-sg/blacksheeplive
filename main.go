@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,6 +14,15 @@ import (
 )
 
 var templates = template.Must(template.ParseGlob("templates/*.html"))
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		templates.ExecuteTemplate(w, "index", struct{ Projects map[string]Project }{ Projects: projects })
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
+}
 
 func init() {
 	c := make(chan os.Signal, 1)
@@ -34,8 +44,9 @@ func main() {
 	basicAuth := httpauth.SimpleBasicAuth("blacksheeplive", "abcd1234")
 
 	router := mux.NewRouter()
+	router.HandleFunc("/", indexHandler)
 	router.HandleFunc("/projects", projectsHandler)
-	router.Handle("/project", projectHandler{})
+	router.HandleFunc("/project", projectHandler)
 	router.Handle("/admin", basicAuth(adminHandler{}))
 
 	n := negroni.Classic()
