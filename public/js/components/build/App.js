@@ -397,7 +397,7 @@ App.Content.Showreel = React.createClass({
 					React.createElement('div', { id: 'video-showreel' }),
 					React.createElement(
 						'div',
-						{ 'class': 'info' },
+						{ className: 'info' },
 						React.createElement(
 							'h1',
 							null,

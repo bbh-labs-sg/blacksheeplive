@@ -387,16 +387,13 @@ a {
 	z-index: 10000;
 }
 
-#video-showreel + .info {
-	display: none;
+.page.showreel .content .info {
+	opacity: 0;
+	transition: opacity .4s;
 }
 
-#video-showreel:hover {
-	opacity: 0.5;
-}
-
-#video-showreel:not(.expanded):hover + .info {
-	display: block;
+.page.showreel .content:hover .info {
+	opacity: 1;
 }
 
 .carousel {

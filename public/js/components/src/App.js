@@ -259,7 +259,7 @@ App.Content.Showreel = React.createClass({
 				<div className='inner'>
 					<div className='content flex column align-center justify-center'>
 						<div id='video-showreel'></div>
-						<div class='info'>
+						<div className='info'>
 							<h1>Showreel</h1>
 							<button onClick={this.expand}>PLAY</button>
 						</div>
