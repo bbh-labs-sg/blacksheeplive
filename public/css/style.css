@@ -391,23 +391,6 @@ a {
 		background-color: rgba(255, 255, 255, 0);
 	}
 
-	.bubble:nth-child(2):not(.selected) .poster { transform: scale(0.6) }
-	.bubble:nth-child(3):not(.selected) .poster { transform: scale(0.6) }
-	.bubble:nth-child(4):not(.selected) .poster { transform: scale(0.6) }
-	.bubble:nth-child(5):not(.selected) .poster { transform: scale(0.6) }
-	.bubble:nth-child(6):not(.selected) .poster { transform: scale(0.6) }
-	.bubble:nth-child(7):not(.selected) .poster { transform: scale(0.6) }
-	.bubble:nth-child(8):not(.selected) .poster { transform: scale(0.6) }
-	.bubble:nth-child(9):not(.selected) .poster { transform: scale(0.6) }
-	.bubble:nth-child(10):not(.selected) .poster { transform: scale(0.6) }
-}
-
-@media (max-width: 720px) and (orientation: portrait) {
-	#content .home {
-		overflow-x: hidden;
-		overflow-y: auto;
-	}
-
 	.bubble:nth-child(2) { transform: translate(0, 0%) }
 	.bubble:nth-child(3) { transform: translate(0, 100%) }
 	.bubble:nth-child(4) { transform: translate(0, 200%) }
@@ -417,23 +400,16 @@ a {
 	.bubble:nth-child(8) { transform: translate(0, 600%) }
 	.bubble:nth-child(9) { transform: translate(0, 700%) }
 	.bubble:nth-child(10) { transform: translate(0, 800%) }
-}
 
-@media (max-width: 720px) and (orientation: landscape) {
-	#content .home {
-		overflow-x: auto;
-		overflow-y: hidden;
-	}
-
-	.bubble:nth-child(2) { transform: translate(0%, 0) }
-	.bubble:nth-child(3) { transform: translate(100%, 0) }
-	.bubble:nth-child(4) { transform: translate(200%, 0) }
-	.bubble:nth-child(5) { transform: translate(300%, 0) }
-	.bubble:nth-child(6) { transform: translate(400%, 0) }
-	.bubble:nth-child(7) { transform: translate(500%, 0) }
-	.bubble:nth-child(8) { transform: translate(600%, 0) }
-	.bubble:nth-child(9) { transform: translate(700%, 0) }
-	.bubble:nth-child(10) { transform: translate(800%, 0) }
+	.bubble:nth-child(2):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(3):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(4):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(5):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(6):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(7):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(8):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(9):not(.selected) .poster { transform: scale(0.6) }
+	.bubble:nth-child(10):not(.selected) .poster { transform: scale(0.6) }
 }
 
 @media (max-width: 360px) {
