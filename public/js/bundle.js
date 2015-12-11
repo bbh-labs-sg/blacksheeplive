@@ -50,6 +50,7 @@
 	var dispatcher = new Flux.Dispatcher();
 	var $ = __webpack_require__(162);
 	var cx = __webpack_require__(163);
+	var Carousel = __webpack_require__(164);
 
 	var cumulativeOffset = function (element) {
 		var top = 0,
@@ -125,7 +126,11 @@
 				React.createElement(
 					'div',
 					{ className: 'flex one justify-start' },
-					React.createElement('img', { className: 'logo flex align-center', src: 'images/bsl_logo.png' })
+					React.createElement(
+						'a',
+						{ href: '/' },
+						React.createElement('img', { className: 'logo flex align-center', src: 'images/bsl_logo.png' })
+					)
 				),
 				React.createElement(
 					'div',
@@ -317,14 +322,18 @@
 							'About us'
 						),
 						React.createElement(
-							'p',
-							null,
-							'We’re an agile production company; creating engaging content for brands and their audiences across all digital and social channels. We work directly with client organisations and also in support of their agency partners.'
-						),
-						React.createElement(
-							'p',
-							null,
-							'We have teams in Singapore, Shanghai and Mumbai, creating content for clients such as Nike, IKEA, Google, British Airways, Skoda and Coca-Cola. We’re flexible in our approach, maximizing budgets and delivering effective solutions at pace.'
+							Carousel,
+							{ className: 'carousel' },
+							React.createElement(
+								'p',
+								null,
+								'We’re an agile production company; creating engaging content for brands and their audiences across all digital and social channels. We work directly with client organisations and also in support of their agency partners.'
+							),
+							React.createElement(
+								'p',
+								null,
+								'We have teams in Singapore, Shanghai and Mumbai, creating content for clients such as Nike, IKEA, Google, British Airways, Skoda and Coca-Cola. We’re flexible in our approach, maximizing budgets and delivering effective solutions at pace.'
+							)
 						)
 					)
 				)
@@ -385,24 +394,32 @@
 							'Contact'
 						),
 						React.createElement(
-							'h3',
-							null,
-							'Singapore'
-						),
-						React.createElement(
-							'p',
-							null,
-							'Blacksheep Live '
-						),
-						React.createElement(
-							'p',
-							null,
-							'5 Magazine Road, #03-03 Central Mall,'
-						),
-						React.createElement(
-							'p',
-							null,
-							'Singapore 059571'
+							Carousel,
+							{ className: 'carousel' },
+							React.createElement(
+								'div',
+								null,
+								React.createElement(
+									'h3',
+									null,
+									'Singapore'
+								),
+								React.createElement(
+									'p',
+									null,
+									'Blacksheep Live '
+								),
+								React.createElement(
+									'p',
+									null,
+									'5 Magazine Road, #03-03 Central Mall,'
+								),
+								React.createElement(
+									'p',
+									null,
+									'Singapore 059571'
+								)
+							)
 						)
 					)
 				)
@@ -416,21 +433,102 @@
 		render: function () {
 			return React.createElement(
 				'div',
-				{ ref: 'showreel', className: 'page showreel flex row align-center justify-center' },
+				{ className: cx('page showreel flex row align-center justify-center', this.state.expanded && 'expanded') },
 				React.createElement(
 					'div',
 					{ className: 'inner' },
 					React.createElement(
 						'div',
 						{ className: 'content flex column align-center justify-center' },
+						React.createElement('div', { id: 'video-showreel' }),
 						React.createElement(
-							'h1',
-							null,
-							'Showreel'
+							'div',
+							{ 'class': 'info' },
+							React.createElement(
+								'h1',
+								null,
+								'Showreel'
+							),
+							React.createElement(
+								'button',
+								{ onClick: this.expand },
+								'PLAY'
+							)
 						)
 					)
 				)
 			);
+		},
+		getInitialState: function () {
+			return { expanded: false };
+		},
+		componentDidMount: function () {
+			this.player = new YT.Player('video-showreel', {
+				width: '1280',
+				height: '720',
+				videoId: 'EYkz_2HchLg',
+				playerVars: {
+					controls: 0,
+					showinfo: 0,
+					modestbranding: 1,
+					wmode: 'transparent'
+				},
+				events: {
+					'onReady': this.onPlayerReady,
+					'onStateChange': this.onPlayerStateChange
+				}
+			});
+
+			window.addEventListener('resize', this.resize);
+		},
+		componentDidUpdate: function () {
+			this.resize();
+		},
+		componentWillUnmount: function () {
+			if (this.player) {
+				this.player.destroy();
+				this.player = null;
+			}
+
+			window.removeEventListener('resize', this.resize);
+		},
+		onPlayerReady: function () {
+			if (this.player) {
+				this.player.playVideo();
+				this.resize();
+			}
+		},
+		onPlayerStateChange: function (event) {
+			switch (event.data) {
+				case YT.PlayerState.ENDED:
+					if (this.player) {
+						this.player.stopVideo();
+					}
+					break;
+			}
+		},
+		expand: function () {
+			this.setState({ expanded: true });
+		},
+		resize: function () {
+			var player = document.getElementById('video-showreel');
+			var header = document.getElementById('header');
+			var container;
+			if (this.state.expanded) {
+				container = $('.page.showreel')[0];
+			} else {
+				container = $(player).parent()[0];
+			}
+
+			var newPlayerHeight = container.offsetHeight;
+			var newPlayerWidth = 16 / 9 * newPlayerHeight;
+			var newPlayerX = -(newPlayerWidth - container.offsetWidth) * 0.5;
+			var newPlayerY = this.state.expanded ? header.offsetHeight : 0;
+			if (isFinite(newPlayerX) || newPlayerX != 0) {
+				console.log(newPlayerY);
+				$(player).width(newPlayerWidth).height(newPlayerHeight);
+				$(player).css({ left: newPlayerX, top: newPlayerY });
+			}
 		}
 	});
 
@@ -29834,6 +29932,999 @@
 		} else {
 			window.classNames = classNames;
 		}
+	}());
+
+
+/***/ },
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Carousel = __webpack_require__(165);
+
+	module.exports = Carousel;
+
+
+/***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(158);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _reactTweenState = __webpack_require__(166);
+
+	var _reactTweenState2 = _interopRequireDefault(_reactTweenState);
+
+	var _decorators = __webpack_require__(167);
+
+	var _decorators2 = _interopRequireDefault(_decorators);
+
+	var _objectAssign = __webpack_require__(168);
+
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+
+	var _exenv = __webpack_require__(169);
+
+	var _exenv2 = _interopRequireDefault(_exenv);
+
+	var addEvent = function addEvent(elem, type, eventHandle) {
+	  if (elem === null || typeof elem === 'undefined') {
+	    return;
+	  }
+	  if (elem.addEventListener) {
+	    elem.addEventListener(type, eventHandle, false);
+	  } else if (elem.attachEvent) {
+	    elem.attachEvent('on' + type, eventHandle);
+	  } else {
+	    elem['on' + type] = eventHandle;
+	  }
+	};
+
+	var removeEvent = function removeEvent(elem, type, eventHandle) {
+	  if (elem === null || typeof elem === 'undefined') {
+	    return;
+	  }
+	  if (elem.removeEventListener) {
+	    elem.removeEventListener(type, eventHandle, false);
+	  } else if (elem.detachEvent) {
+	    elem.detachEvent('on' + type, eventHandle);
+	  } else {
+	    elem['on' + type] = null;
+	  }
+	};
+
+	var Carousel = _react2['default'].createClass({
+	  displayName: 'Carousel',
+
+	  mixins: [_reactTweenState2['default'].Mixin],
+
+	  propTypes: {
+	    cellAlign: _react2['default'].PropTypes.oneOf(['left', 'center', 'right']),
+	    cellSpacing: _react2['default'].PropTypes.number,
+	    data: _react2['default'].PropTypes.func,
+	    decorators: _react2['default'].PropTypes.array,
+	    dragging: _react2['default'].PropTypes.bool,
+	    easing: _react2['default'].PropTypes.string,
+	    edgeEasing: _react2['default'].PropTypes.string,
+	    framePadding: _react2['default'].PropTypes.string,
+	    initialSlideHeight: _react2['default'].PropTypes.number,
+	    initialSlideWidth: _react2['default'].PropTypes.number,
+	    slidesToShow: _react2['default'].PropTypes.number,
+	    slidesToScroll: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.number, _react2['default'].PropTypes.oneOf(['auto'])]),
+	    slideWidth: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.string, _react2['default'].PropTypes.number]),
+	    speed: _react2['default'].PropTypes.number,
+	    vertical: _react2['default'].PropTypes.bool,
+	    width: _react2['default'].PropTypes.string
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      cellAlign: 'left',
+	      cellSpacing: 0,
+	      data: function data() {},
+	      decorators: _decorators2['default'],
+	      dragging: true,
+	      easing: 'easeOutCirc',
+	      edgeEasing: 'easeOutElastic',
+	      framePadding: '0px',
+	      slidesToShow: 1,
+	      slidesToScroll: 1,
+	      slideWidth: 1,
+	      speed: 500,
+	      vertical: false,
+	      width: '100%'
+	    };
+	  },
+
+	  getInitialState: function getInitialState() {
+	    return {
+	      currentSlide: 0,
+	      dragging: false,
+	      frameWidth: 0,
+	      left: 0,
+	      top: 0,
+	      slideCount: 0,
+	      slideWidth: 0,
+	      slidesToScroll: this.props.slidesToScroll
+	    };
+	  },
+
+	  componentWillMount: function componentWillMount() {
+	    this.setInitialDimensions();
+	  },
+
+	  componentDidMount: function componentDidMount() {
+	    this.setDimensions();
+	    this.bindEvents();
+	    this.setExternalData();
+	  },
+
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.setDimensions();
+	  },
+
+	  componentWillUnmount: function componentWillUnmount() {
+	    this.unbindEvents();
+	  },
+
+	  render: function render() {
+	    var self = this;
+	    var children = _react2['default'].Children.count(this.props.children) > 1 ? this.formatChildren(this.props.children) : this.props.children;
+	    return _react2['default'].createElement(
+	      'div',
+	      { className: ['slider', this.props.className || ''].join(' '), ref: 'slider', style: (0, _objectAssign2['default'])(this.getSliderStyles(), this.props.style || {}) },
+	      _react2['default'].createElement(
+	        'div',
+	        _extends({ className: 'slider-frame',
+	          ref: 'frame',
+	          style: this.getFrameStyles()
+	        }, this.getTouchEvents(), this.getMouseEvents(), {
+	          onClick: this.handleClick }),
+	        _react2['default'].createElement(
+	          'ul',
+	          { className: 'slider-list', ref: 'list', style: this.getListStyles() },
+	          children
+	        )
+	      ),
+	      this.props.decorators ? this.props.decorators.map(function (Decorator, index) {
+	        return _react2['default'].createElement(
+	          'div',
+	          {
+	            style: (0, _objectAssign2['default'])(self.getDecoratorStyles(Decorator.position), Decorator.style || {}),
+	            className: 'slider-decorator-' + index,
+	            key: index },
+	          _react2['default'].createElement(Decorator.component, {
+	            currentSlide: self.state.currentSlide,
+	            slideCount: self.state.slideCount,
+	            frameWidth: self.state.frameWidth,
+	            slideWidth: self.state.slideWidth,
+	            slidesToScroll: self.state.slidesToScroll,
+	            cellSpacing: self.props.cellSpacing,
+	            slidesToShow: self.props.slidesToShow,
+	            nextSlide: self.nextSlide,
+	            previousSlide: self.previousSlide,
+	            goToSlide: self.goToSlide })
+	        );
+	      }) : null,
+	      _react2['default'].createElement('style', { type: 'text/css', dangerouslySetInnerHTML: { __html: self.getStyleTagStyles() } })
+	    );
+	  },
+
+	  // Touch Events
+
+	  touchObject: {},
+
+	  getTouchEvents: function getTouchEvents() {
+	    var self = this;
+
+	    return {
+	      onTouchStart: function onTouchStart(e) {
+	        self.touchObject = {
+	          startX: e.touches[0].pageX,
+	          startY: e.touches[0].pageY
+	        };
+	      },
+	      onTouchMove: function onTouchMove(e) {
+	        var direction = self.swipeDirection(self.touchObject.startX, e.touches[0].pageX, self.touchObject.startY, e.touches[0].pageY);
+
+	        if (direction !== 0) {
+	          e.preventDefault();
+	        }
+
+	        self.touchObject = {
+	          startX: self.touchObject.startX,
+	          startY: self.touchObject.startY,
+	          endX: e.touches[0].pageX,
+	          endY: e.touches[0].pageY,
+	          length: Math.round(Math.sqrt(Math.pow(e.touches[0].pageX - self.touchObject.startX, 2))),
+	          direction: direction
+	        };
+
+	        self.setState({
+	          left: self.props.vertical ? 0 : (self.state.slideWidth * self.state.currentSlide + self.touchObject.length * self.touchObject.direction) * -1,
+	          top: self.props.vertical ? (self.state.slideWidth * self.state.currentSlide + self.touchObject.length * self.touchObject.direction) * -1 : 0
+	        });
+	      },
+	      onTouchEnd: function onTouchEnd(e) {
+	        self.handleSwipe(e);
+	      },
+	      onTouchCancel: function onTouchCancel(e) {
+	        self.handleSwipe(e);
+	      }
+	    };
+	  },
+
+	  clickSafe: true,
+
+	  getMouseEvents: function getMouseEvents() {
+	    var self = this;
+
+	    if (this.props.dragging === false) {
+	      return null;
+	    }
+
+	    return {
+	      onMouseDown: function onMouseDown(e) {
+	        self.touchObject = {
+	          startX: e.clientX,
+	          startY: e.clientY
+	        };
+
+	        self.setState({
+	          dragging: true
+	        });
+	      },
+	      onMouseMove: function onMouseMove(e) {
+	        if (!self.state.dragging) {
+	          return;
+	        }
+
+	        var direction = self.swipeDirection(self.touchObject.startX, e.clientX, self.touchObject.startY, e.clientY);
+
+	        if (direction !== 0) {
+	          e.preventDefault();
+	        }
+
+	        var length = self.props.vertical ? Math.round(Math.sqrt(Math.pow(e.clientY - self.touchObject.startY, 2))) : Math.round(Math.sqrt(Math.pow(e.clientX - self.touchObject.startX, 2)));
+
+	        self.touchObject = {
+	          startX: self.touchObject.startX,
+	          startY: self.touchObject.startY,
+	          endX: e.clientX,
+	          endY: e.clientY,
+	          length: length,
+	          direction: direction
+	        };
+
+	        self.setState({
+	          left: self.props.vertical ? 0 : self.getTargetLeft(self.touchObject.length * self.touchObject.direction),
+	          top: self.props.vertical ? self.getTargetLeft(self.touchObject.length * self.touchObject.direction) : 0
+	        });
+	      },
+	      onMouseUp: function onMouseUp(e) {
+	        if (!self.state.dragging) {
+	          return;
+	        }
+
+	        self.handleSwipe(e);
+	      },
+	      onMouseLeave: function onMouseLeave(e) {
+	        if (!self.state.dragging) {
+	          return;
+	        }
+
+	        self.handleSwipe(e);
+	      }
+	    };
+	  },
+
+	  handleClick: function handleClick(e) {
+	    if (this.clickSafe === true) {
+	      e.preventDefault();
+	      e.stopPropagation();
+	      e.nativeEvent.stopPropagation();
+	    }
+	  },
+
+	  handleSwipe: function handleSwipe(e) {
+	    if (typeof this.touchObject.length !== 'undefined' && this.touchObject.length > 44) {
+	      this.clickSafe = true;
+	    } else {
+	      this.clickSafe = false;
+	    }
+
+	    if (this.touchObject.length > this.state.slideWidth / this.props.slidesToShow / 5) {
+	      if (this.touchObject.direction === 1) {
+	        if (this.state.currentSlide >= _react2['default'].Children.count(this.props.children) - this.state.slidesToScroll) {
+	          this.animateSlide(_reactTweenState2['default'].easingTypes[this.props.edgeEasing]);
+	        } else {
+	          this.nextSlide();
+	        }
+	      } else if (this.touchObject.direction === -1) {
+	        if (this.state.currentSlide <= 0) {
+	          this.animateSlide(_reactTweenState2['default'].easingTypes[this.props.edgeEasing]);
+	        } else {
+	          this.previousSlide();
+	        }
+	      }
+	    } else {
+	      this.goToSlide(this.state.currentSlide);
+	    }
+
+	    this.touchObject = {};
+
+	    this.setState({
+	      dragging: false
+	    });
+	  },
+
+	  swipeDirection: function swipeDirection(x1, x2, y1, y2) {
+
+	    var xDist, yDist, r, swipeAngle;
+
+	    xDist = x1 - x2;
+	    yDist = y1 - y2;
+	    r = Math.atan2(yDist, xDist);
+
+	    swipeAngle = Math.round(r * 180 / Math.PI);
+	    if (swipeAngle < 0) {
+	      swipeAngle = 360 - Math.abs(swipeAngle);
+	    }
+	    if (swipeAngle <= 45 && swipeAngle >= 0) {
+	      return 1;
+	    }
+	    if (swipeAngle <= 360 && swipeAngle >= 315) {
+	      return 1;
+	    }
+	    if (swipeAngle >= 135 && swipeAngle <= 225) {
+	      return -1;
+	    }
+	    if (this.props.vertical === true) {
+	      if (swipeAngle >= 35 && swipeAngle <= 135) {
+	        return 1;
+	      } else {
+	        return -1;
+	      }
+	    }
+	    return 0;
+	  },
+
+	  // Action Methods
+
+	  goToSlide: function goToSlide(index) {
+	    var self = this;
+	    if (index >= _react2['default'].Children.count(this.props.children) || index < 0) {
+	      return;
+	    }
+	    this.setState({
+	      currentSlide: index
+	    }, function () {
+	      self.animateSlide();
+	      self.setExternalData();
+	    });
+	  },
+
+	  nextSlide: function nextSlide() {
+	    var self = this;
+	    if (this.state.currentSlide + this.state.slidesToScroll >= _react2['default'].Children.count(this.props.children)) {
+	      return;
+	    }
+	    this.setState({
+	      currentSlide: this.state.currentSlide + this.state.slidesToScroll
+	    }, function () {
+	      self.animateSlide();
+	      self.setExternalData();
+	    });
+	  },
+
+	  previousSlide: function previousSlide() {
+	    var self = this;
+	    if (this.state.currentSlide - this.state.slidesToScroll < 0) {
+	      return;
+	    }
+	    this.setState({
+	      currentSlide: this.state.currentSlide - this.state.slidesToScroll
+	    }, function () {
+	      self.animateSlide();
+	      self.setExternalData();
+	    });
+	  },
+
+	  // Animation
+
+	  animateSlide: function animateSlide(easing, duration, endValue) {
+	    this.tweenState(this.props.vertical ? 'top' : 'left', {
+	      easing: easing || _reactTweenState2['default'].easingTypes[this.props.easing],
+	      duration: duration || this.props.speed,
+	      endValue: endValue || this.getTargetLeft()
+	    });
+	  },
+
+	  getTargetLeft: function getTargetLeft(touchOffset) {
+	    var offset;
+	    switch (this.props.cellAlign) {
+	      case 'left':
+	        {
+	          offset = 0;
+	          offset -= this.props.cellSpacing * this.state.currentSlide;
+	          break;
+	        }
+	      case 'center':
+	        {
+	          offset = (this.state.frameWidth - this.state.slideWidth) / 2;
+	          offset -= this.props.cellSpacing * this.state.currentSlide;
+	          break;
+	        }
+	      case 'right':
+	        {
+	          offset = this.state.frameWidth - this.state.slideWidth;
+	          offset -= this.props.cellSpacing * this.state.currentSlide;
+	          break;
+	        }
+	    }
+
+	    if (this.props.vertical) {
+	      offset = offset / 2;
+	    }
+
+	    offset -= touchOffset || 0;
+
+	    return (this.state.slideWidth * this.state.currentSlide - offset) * -1;
+	  },
+
+	  // Bootstrapping
+
+	  bindEvents: function bindEvents() {
+	    var self = this;
+	    if (_exenv2['default'].canUseDOM) {
+	      addEvent(window, 'resize', self.onResize);
+	      addEvent(document, 'readystatechange', self.onReadyStateChange);
+	    }
+	  },
+
+	  onResize: function onResize() {
+	    this.setDimensions();
+	  },
+
+	  onReadyStateChange: function onReadyStateChange() {
+	    this.setDimensions();
+	  },
+
+	  unbindEvents: function unbindEvents() {
+	    var self = this;
+	    if (_exenv2['default'].canUseDOM) {
+	      removeEvent(window, 'resize', self.onResize);
+	      removeEvent(document, 'readystatechange', self.onReadyStateChange);
+	    }
+	  },
+
+	  formatChildren: function formatChildren(children) {
+	    var self = this;
+	    return _react2['default'].Children.map(children, function (child, index) {
+	      return _react2['default'].createElement(
+	        'li',
+	        { className: 'slider-slide', style: self.getSlideStyles(), key: index },
+	        child
+	      );
+	    });
+	  },
+
+	  setInitialDimensions: function setInitialDimensions() {
+	    var self = this,
+	        slideWidth,
+	        frameHeight,
+	        slideHeight;
+
+	    slideWidth = this.props.vertical ? this.props.initialSlideHeight || 0 : this.props.initialSlideWidth || 0;
+	    slideHeight = this.props.initialSlideHeight ? this.props.initialSlideHeight * this.props.slidesToShow : 0;
+
+	    frameHeight = slideHeight + this.props.cellSpacing / 2 * (this.props.slidesToShow - 1);
+
+	    this.setState({
+	      frameWidth: this.props.vertical ? frameHeight : '100%',
+	      slideCount: _react2['default'].Children.count(this.props.children),
+	      slideWidth: slideWidth
+	    }, function () {
+	      self.setLeft();
+	      self.setExternalData();
+	    });
+	  },
+
+	  setDimensions: function setDimensions() {
+	    var self = this,
+	        slideWidth,
+	        slidesToScroll,
+	        firstSlide,
+	        frame,
+	        frameWidth,
+	        frameHeight,
+	        slideHeight;
+
+	    slidesToScroll = this.props.slidesToScroll;
+	    frame = _reactDom2['default'].findDOMNode(this.refs.frame);
+	    firstSlide = frame.childNodes[0].childNodes[0];
+	    if (firstSlide) {
+	      firstSlide.style.height = 'auto';
+	      slideHeight = firstSlide.offsetHeight * this.props.slidesToShow;
+	    } else {
+	      slideHeight = 100;
+	    }
+
+	    if (typeof this.props.slideWidth !== 'number') {
+	      slideWidth = parseInt(this.props.slideWidth);
+	    } else {
+	      if (this.props.vertical) {
+	        slideWidth = slideHeight / this.props.slidesToShow * this.props.slideWidth;
+	      } else {
+	        slideWidth = frame.offsetWidth / this.props.slidesToShow * this.props.slideWidth;
+	      }
+	    }
+
+	    if (!this.props.vertical) {
+	      slideWidth -= this.props.cellSpacing * ((100 - 100 / this.props.slidesToShow) / 100);
+	    }
+
+	    frameHeight = slideHeight + this.props.cellSpacing / 2 * (this.props.slidesToShow - 1);
+	    frameWidth = this.props.vertical ? frameHeight : frame.offsetWidth;
+
+	    if (this.props.slidesToScroll === 'auto') {
+	      slidesToScroll = Math.floor(frameWidth / (slideWidth + this.props.cellSpacing));
+	    }
+
+	    this.setState({
+	      frameWidth: frameWidth,
+	      slideCount: _react2['default'].Children.count(this.props.children),
+	      slideWidth: slideWidth,
+	      slidesToScroll: slidesToScroll,
+	      left: this.props.vertical ? 0 : this.getTargetLeft(),
+	      top: this.props.vertical ? this.getTargetLeft() : 0
+	    }, function () {
+	      self.setLeft();
+	    });
+	  },
+
+	  setLeft: function setLeft() {
+	    this.setState({
+	      left: this.props.vertical ? 0 : this.getTargetLeft(),
+	      top: this.props.vertical ? this.getTargetLeft() : 0
+	    });
+	  },
+
+	  // Data
+
+	  setExternalData: function setExternalData() {
+	    if (this.props.data) {
+	      this.props.data();
+	    }
+	  },
+
+	  // Styles
+
+	  getListStyles: function getListStyles() {
+	    var listWidth = this.state.slideWidth * _react2['default'].Children.count(this.props.children);
+	    var spacingOffset = this.props.cellSpacing * _react2['default'].Children.count(this.props.children);
+	    return {
+	      position: 'relative',
+	      display: 'block',
+	      top: this.getTweeningValue('top'),
+	      left: this.getTweeningValue('left'),
+	      margin: this.props.vertical ? this.props.cellSpacing / 2 * -1 + 'px 0px' : '0px ' + this.props.cellSpacing / 2 * -1 + 'px',
+	      padding: 0,
+	      height: this.props.vertical ? listWidth + spacingOffset : 'auto',
+	      width: this.props.vertical ? 'auto' : listWidth + spacingOffset,
+	      cursor: this.state.dragging === true ? 'pointer' : 'inherit',
+	      transform: 'translate3d(0, 0, 0)',
+	      WebkitTransform: 'translate3d(0, 0, 0)',
+	      boxSizing: 'border-box',
+	      MozBoxSizing: 'border-box'
+	    };
+	  },
+
+	  getFrameStyles: function getFrameStyles() {
+	    return {
+	      position: 'relative',
+	      display: 'block',
+	      overflow: 'hidden',
+	      height: this.props.vertical ? this.state.frameWidth || 'initial' : 'auto',
+	      margin: this.props.framePadding,
+	      padding: 0,
+	      transform: 'translate3d(0, 0, 0)',
+	      WebkitTransform: 'translate3d(0, 0, 0)',
+	      boxSizing: 'border-box',
+	      MozBoxSizing: 'border-box'
+	    };
+	  },
+
+	  getSlideStyles: function getSlideStyles() {
+	    return {
+	      display: this.props.vertical ? 'block' : 'inline-block',
+	      listStyleType: 'none',
+	      verticalAlign: 'top',
+	      width: this.props.vertical ? '100%' : this.state.slideWidth,
+	      height: 'auto',
+	      boxSizing: 'border-box',
+	      MozBoxSizing: 'border-box',
+	      marginLeft: this.props.vertical ? 'auto' : this.props.cellSpacing / 2,
+	      marginRight: this.props.vertical ? 'auto' : this.props.cellSpacing / 2,
+	      marginTop: this.props.vertical ? this.props.cellSpacing / 2 : 'auto',
+	      marginBottom: this.props.vertical ? this.props.cellSpacing / 2 : 'auto'
+	    };
+	  },
+
+	  getSliderStyles: function getSliderStyles() {
+	    return {
+	      position: 'relative',
+	      display: 'block',
+	      width: this.props.width,
+	      height: 'auto',
+	      boxSizing: 'border-box',
+	      MozBoxSizing: 'border-box',
+	      visibility: this.state.slideWidth ? 'visible' : 'hidden'
+	    };
+	  },
+
+	  getStyleTagStyles: function getStyleTagStyles() {
+	    return '.slider-slide > img {width: 100%; display: block;}';
+	  },
+
+	  getDecoratorStyles: function getDecoratorStyles(position) {
+	    switch (position) {
+	      case 'TopLeft':
+	        {
+	          return {
+	            position: 'absolute',
+	            top: 0,
+	            left: 0
+	          };
+	        }
+	      case 'TopCenter':
+	        {
+	          return {
+	            position: 'absolute',
+	            top: 0,
+	            left: '50%',
+	            transform: 'translateX(-50%)',
+	            WebkitTransform: 'translateX(-50%)'
+	          };
+	        }
+	      case 'TopRight':
+	        {
+	          return {
+	            position: 'absolute',
+	            top: 0,
+	            right: 0
+	          };
+	        }
+	      case 'CenterLeft':
+	        {
+	          return {
+	            position: 'absolute',
+	            top: '50%',
+	            left: 0,
+	            transform: 'translateY(-50%)',
+	            WebkitTransform: 'translateY(-50%)'
+	          };
+	        }
+	      case 'CenterCenter':
+	        {
+	          return {
+	            position: 'absolute',
+	            top: '50%',
+	            left: '50%',
+	            transform: 'translate(-50%,-50%)',
+	            WebkitTransform: 'translate(-50%, -50%)'
+	          };
+	        }
+	      case 'CenterRight':
+	        {
+	          return {
+	            position: 'absolute',
+	            top: '50%',
+	            right: 0,
+	            transform: 'translateY(-50%)',
+	            WebkitTransform: 'translateY(-50%)'
+	          };
+	        }
+	      case 'BottomLeft':
+	        {
+	          return {
+	            position: 'absolute',
+	            bottom: 0,
+	            left: 0
+	          };
+	        }
+	      case 'BottomCenter':
+	        {
+	          return {
+	            position: 'absolute',
+	            bottom: 0,
+	            left: '50%',
+	            transform: 'translateX(-50%)',
+	            WebkitTransform: 'translateX(-50%)'
+	          };
+	        }
+	      case 'BottomRight':
+	        {
+	          return {
+	            position: 'absolute',
+	            bottom: 0,
+	            right: 0
+	          };
+	        }
+	      default:
+	        {
+	          return {
+	            position: 'absolute',
+	            top: 0,
+	            left: 0
+	          };
+	        }
+	    }
+	  }
+
+	});
+
+	Carousel.ControllerMixin = {
+	  getInitialState: function getInitialState() {
+	    return {
+	      carousels: {}
+	    };
+	  },
+	  setCarouselData: function setCarouselData(carousel) {
+	    var data = this.state.carousels;
+	    data[carousel] = this.refs[carousel];
+	    this.setState({
+	      carousels: data
+	    });
+	  }
+	};
+
+	exports['default'] = Carousel;
+	module.exports = exports['default'];
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	!function(e,n){ true?module.exports=n():"function"==typeof define&&define.amd?define([],n):"object"==typeof exports?exports.tweenState=n():e.tweenState=n()}(this,function(){return function(e){function n(r){if(t[r])return t[r].exports;var a=t[r]={exports:{},id:r,loaded:!1};return e[r].call(a.exports,a,a.exports,n),a.loaded=!0,a.exports}var t={};return n.m=e,n.c=t,n.p="",n(0)}({0:function(e,n,t){e.exports=t(90)},1:function(e,n){function t(){c=!1,o.length?s=o.concat(s):f=-1,s.length&&r()}function r(){if(!c){var e=setTimeout(t);c=!0;for(var n=s.length;n;){for(o=s,s=[];++f<n;)o&&o[f].run();f=-1,n=s.length}o=null,c=!1,clearTimeout(e)}}function a(e,n){this.fun=e,this.array=n}function u(){}var o,i=e.exports={},s=[],c=!1,f=-1;i.nextTick=function(e){var n=new Array(arguments.length-1);if(arguments.length>1)for(var t=1;t<arguments.length;t++)n[t-1]=arguments[t];s.push(new a(e,n)),1!==s.length||c||setTimeout(r,0)},a.prototype.run=function(){this.fun.apply(null,this.array)},i.title="browser",i.browser=!0,i.env={},i.argv=[],i.version="",i.versions={},i.on=u,i.addListener=u,i.once=u,i.off=u,i.removeListener=u,i.removeAllListeners=u,i.emit=u,i.binding=function(e){throw new Error("process.binding is not supported")},i.cwd=function(){return"/"},i.chdir=function(e){throw new Error("process.chdir is not supported")},i.umask=function(){return 0}},90:function(e,n,t){"use strict";function r(e){return e&&e.__esModule?e:{"default":e}}Object.defineProperty(n,"__esModule",{value:!0});var a=t(165),u=r(a),o=t(91),i=r(o),s="ADDITIVE",c=a.easeInOutQuad,f=300,l=0,h={ADDITIVE:"ADDITIVE",DESTRUCTIVE:"DESTRUCTIVE"},v={_rafID:null,getInitialState:function(){return{tweenQueue:[]}},componentWillUnmount:function(){i["default"].cancel(this._rafID),this._rafID=-1},tweenState:function(e,n){var t=this,r=n.easing,a=n.duration,u=n.delay,o=n.beginValue,v=n.endValue,d=n.onEnd,p=n.stackBehavior;this.setState(function(n){var I=n,w=void 0,g=void 0;if("string"==typeof e)w=e,g=e;else{for(var M=0;M<e.length-1;M++)I=I[e[M]];w=e[e.length-1],g=e.join("|")}var m={easing:r||c,duration:null==a?f:a,delay:null==u?l:u,beginValue:null==o?I[w]:o,endValue:v,onEnd:d,stackBehavior:p||s},x=n.tweenQueue;return m.stackBehavior===h.DESTRUCTIVE&&(x=n.tweenQueue.filter(function(e){return e.pathHash!==g})),x.push({pathHash:g,config:m,initTime:Date.now()+m.delay}),I[w]=m.endValue,1===x.length&&(t._rafID=(0,i["default"])(t._rafCb)),{tweenQueue:x}})},getTweeningValue:function(e){var n=this.state,t=void 0,r=void 0;if("string"==typeof e)t=n[e],r=e;else{t=n;for(var a=0;a<e.length;a++)t=t[e[a]];r=e.join("|")}for(var u=Date.now(),a=0;a<n.tweenQueue.length;a++){var o=n.tweenQueue[a],i=o.pathHash,s=o.initTime,c=o.config;if(i===r){var f=u-s>c.duration?c.duration:Math.max(0,u-s),l=0===c.duration?c.endValue:c.easing(f,c.beginValue,c.endValue,c.duration),h=l-c.endValue;t+=h}}return t},_rafCb:function(){var e=this.state;if(0!==e.tweenQueue.length){for(var n=Date.now(),t=[],r=0;r<e.tweenQueue.length;r++){var a=e.tweenQueue[r],u=a.initTime,o=a.config;n-u<o.duration?t.push(a):o.onEnd&&o.onEnd()}-1!==this._rafID&&(this.setState({tweenQueue:t}),this._rafID=(0,i["default"])(this._rafCb))}}};n["default"]={Mixin:v,easingTypes:u["default"],stackBehavior:h},e.exports=n["default"]},91:function(e,n,t){for(var r=t(92),a="undefined"==typeof window?{}:window,u=["moz","webkit"],o="AnimationFrame",i=a["request"+o],s=a["cancel"+o]||a["cancelRequest"+o],c=0;c<u.length&&!i;c++)i=a[u[c]+"Request"+o],s=a[u[c]+"Cancel"+o]||a[u[c]+"CancelRequest"+o];if(!i||!s){var f=0,l=0,h=[],v=1e3/60;i=function(e){if(0===h.length){var n=r(),t=Math.max(0,v-(n-f));f=t+n,setTimeout(function(){var e=h.slice(0);h.length=0;for(var n=0;n<e.length;n++)if(!e[n].cancelled)try{e[n].callback(f)}catch(t){setTimeout(function(){throw t},0)}},Math.round(t))}return h.push({handle:++l,callback:e,cancelled:!1}),l},s=function(e){for(var n=0;n<h.length;n++)h[n].handle===e&&(h[n].cancelled=!0)}}e.exports=function(e){return i.call(a,e)},e.exports.cancel=function(){s.apply(a,arguments)}},92:function(e,n,t){(function(n){(function(){var t,r,a;"undefined"!=typeof performance&&null!==performance&&performance.now?e.exports=function(){return performance.now()}:"undefined"!=typeof n&&null!==n&&n.hrtime?(e.exports=function(){return(t()-a)/1e6},r=n.hrtime,t=function(){var e;return e=r(),1e9*e[0]+e[1]},a=t()):Date.now?(e.exports=function(){return Date.now()-a},a=Date.now()):(e.exports=function(){return(new Date).getTime()-a},a=(new Date).getTime())}).call(this)}).call(n,t(1))},165:function(e,n){"use strict";var t={linear:function(e,n,t,r){var a=t-n;return a*e/r+n},easeInQuad:function(e,n,t,r){var a=t-n;return a*(e/=r)*e+n},easeOutQuad:function(e,n,t,r){var a=t-n;return-a*(e/=r)*(e-2)+n},easeInOutQuad:function(e,n,t,r){var a=t-n;return(e/=r/2)<1?a/2*e*e+n:-a/2*(--e*(e-2)-1)+n},easeInCubic:function(e,n,t,r){var a=t-n;return a*(e/=r)*e*e+n},easeOutCubic:function(e,n,t,r){var a=t-n;return a*((e=e/r-1)*e*e+1)+n},easeInOutCubic:function(e,n,t,r){var a=t-n;return(e/=r/2)<1?a/2*e*e*e+n:a/2*((e-=2)*e*e+2)+n},easeInQuart:function(e,n,t,r){var a=t-n;return a*(e/=r)*e*e*e+n},easeOutQuart:function(e,n,t,r){var a=t-n;return-a*((e=e/r-1)*e*e*e-1)+n},easeInOutQuart:function(e,n,t,r){var a=t-n;return(e/=r/2)<1?a/2*e*e*e*e+n:-a/2*((e-=2)*e*e*e-2)+n},easeInQuint:function(e,n,t,r){var a=t-n;return a*(e/=r)*e*e*e*e+n},easeOutQuint:function(e,n,t,r){var a=t-n;return a*((e=e/r-1)*e*e*e*e+1)+n},easeInOutQuint:function(e,n,t,r){var a=t-n;return(e/=r/2)<1?a/2*e*e*e*e*e+n:a/2*((e-=2)*e*e*e*e+2)+n},easeInSine:function(e,n,t,r){var a=t-n;return-a*Math.cos(e/r*(Math.PI/2))+a+n},easeOutSine:function(e,n,t,r){var a=t-n;return a*Math.sin(e/r*(Math.PI/2))+n},easeInOutSine:function(e,n,t,r){var a=t-n;return-a/2*(Math.cos(Math.PI*e/r)-1)+n},easeInExpo:function(e,n,t,r){var a=t-n;return 0==e?n:a*Math.pow(2,10*(e/r-1))+n},easeOutExpo:function(e,n,t,r){var a=t-n;return e==r?n+a:a*(-Math.pow(2,-10*e/r)+1)+n},easeInOutExpo:function(e,n,t,r){var a=t-n;return 0===e?n:e===r?n+a:(e/=r/2)<1?a/2*Math.pow(2,10*(e-1))+n:a/2*(-Math.pow(2,-10*--e)+2)+n},easeInCirc:function(e,n,t,r){var a=t-n;return-a*(Math.sqrt(1-(e/=r)*e)-1)+n},easeOutCirc:function(e,n,t,r){var a=t-n;return a*Math.sqrt(1-(e=e/r-1)*e)+n},easeInOutCirc:function(e,n,t,r){var a=t-n;return(e/=r/2)<1?-a/2*(Math.sqrt(1-e*e)-1)+n:a/2*(Math.sqrt(1-(e-=2)*e)+1)+n},easeInElastic:function(e,n,t,r){var a,u,o,i=t-n;return o=1.70158,u=0,a=i,0===e?n:1===(e/=r)?n+i:(u||(u=.3*r),a<Math.abs(i)?(a=i,o=u/4):o=u/(2*Math.PI)*Math.asin(i/a),-(a*Math.pow(2,10*(e-=1))*Math.sin((e*r-o)*(2*Math.PI)/u))+n)},easeOutElastic:function(e,n,t,r){var a,u,o,i=t-n;return o=1.70158,u=0,a=i,0===e?n:1===(e/=r)?n+i:(u||(u=.3*r),a<Math.abs(i)?(a=i,o=u/4):o=u/(2*Math.PI)*Math.asin(i/a),a*Math.pow(2,-10*e)*Math.sin((e*r-o)*(2*Math.PI)/u)+i+n)},easeInOutElastic:function(e,n,t,r){var a,u,o,i=t-n;return o=1.70158,u=0,a=i,0===e?n:2===(e/=r/2)?n+i:(u||(u=r*(.3*1.5)),a<Math.abs(i)?(a=i,o=u/4):o=u/(2*Math.PI)*Math.asin(i/a),1>e?-.5*(a*Math.pow(2,10*(e-=1))*Math.sin((e*r-o)*(2*Math.PI)/u))+n:a*Math.pow(2,-10*(e-=1))*Math.sin((e*r-o)*(2*Math.PI)/u)*.5+i+n)},easeInBack:function(e,n,t,r,a){var u=t-n;return void 0===a&&(a=1.70158),u*(e/=r)*e*((a+1)*e-a)+n},easeOutBack:function(e,n,t,r,a){var u=t-n;return void 0===a&&(a=1.70158),u*((e=e/r-1)*e*((a+1)*e+a)+1)+n},easeInOutBack:function(e,n,t,r,a){var u=t-n;return void 0===a&&(a=1.70158),(e/=r/2)<1?u/2*(e*e*(((a*=1.525)+1)*e-a))+n:u/2*((e-=2)*e*(((a*=1.525)+1)*e+a)+2)+n},easeInBounce:function(e,n,r,a){var u,o=r-n;return u=t.easeOutBounce(a-e,0,o,a),o-u+n},easeOutBounce:function(e,n,t,r){var a=t-n;return(e/=r)<1/2.75?a*(7.5625*e*e)+n:2/2.75>e?a*(7.5625*(e-=1.5/2.75)*e+.75)+n:2.5/2.75>e?a*(7.5625*(e-=2.25/2.75)*e+.9375)+n:a*(7.5625*(e-=2.625/2.75)*e+.984375)+n},easeInOutBounce:function(e,n,r,a){var u,o=r-n;return a/2>e?(u=t.easeInBounce(2*e,0,o,a),.5*u+n):(u=t.easeOutBounce(2*e-a,0,o,a),.5*u+.5*o+n)}};e.exports=t}})});
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var DefaultDecorators = [{
+	  component: _react2['default'].createClass({
+	    displayName: 'component',
+
+	    render: function render() {
+	      return _react2['default'].createElement(
+	        'button',
+	        {
+	          style: this.getButtonStyles(this.props.currentSlide === 0),
+	          onClick: this.props.previousSlide },
+	        'PREV'
+	      );
+	    },
+	    getButtonStyles: function getButtonStyles(disabled) {
+	      return {
+	        border: 0,
+	        background: 'rgba(0,0,0,0.4)',
+	        color: 'white',
+	        padding: 10,
+	        outline: 0,
+	        opacity: disabled ? 0.3 : 1,
+	        cursor: 'pointer'
+	      };
+	    }
+	  }),
+	  position: 'CenterLeft'
+	}, {
+	  component: _react2['default'].createClass({
+	    displayName: 'component',
+
+	    render: function render() {
+	      return _react2['default'].createElement(
+	        'button',
+	        {
+	          style: this.getButtonStyles(this.props.currentSlide + this.props.slidesToScroll >= this.props.slideCount),
+	          onClick: this.props.nextSlide },
+	        'NEXT'
+	      );
+	    },
+	    getButtonStyles: function getButtonStyles(disabled) {
+	      return {
+	        border: 0,
+	        background: 'rgba(0,0,0,0.4)',
+	        color: 'white',
+	        padding: 10,
+	        outline: 0,
+	        opacity: disabled ? 0.3 : 1,
+	        cursor: 'pointer'
+	      };
+	    }
+	  }),
+	  position: 'CenterRight'
+	}, {
+	  component: _react2['default'].createClass({
+	    displayName: 'component',
+
+	    render: function render() {
+	      var self = this;
+	      var indexes = this.getIndexes(self.props.slideCount, self.props.slidesToScroll);
+	      return _react2['default'].createElement(
+	        'ul',
+	        { style: self.getListStyles() },
+	        indexes.map(function (index) {
+	          return _react2['default'].createElement(
+	            'li',
+	            { style: self.getListItemStyles(), key: index },
+	            _react2['default'].createElement(
+	              'button',
+	              {
+	                style: self.getButtonStyles(self.props.currentSlide === index),
+	                onClick: self.props.goToSlide.bind(null, index) },
+	              '•'
+	            )
+	          );
+	        })
+	      );
+	    },
+	    getIndexes: function getIndexes(count, inc) {
+	      var arr = [];
+	      for (var i = 0; i < count; i += inc) {
+	        arr.push(i);
+	      }
+	      return arr;
+	    },
+	    getListStyles: function getListStyles() {
+	      return {
+	        position: 'relative',
+	        margin: 0,
+	        top: -10,
+	        padding: 0
+	      };
+	    },
+	    getListItemStyles: function getListItemStyles() {
+	      return {
+	        listStyleType: 'none',
+	        display: 'inline-block'
+	      };
+	    },
+	    getButtonStyles: function getButtonStyles(active) {
+	      return {
+	        border: 0,
+	        background: 'transparent',
+	        color: 'black',
+	        cursor: 'pointer',
+	        padding: 10,
+	        outline: 0,
+	        fontSize: 24,
+	        opacity: active ? 1 : 0.5
+	      };
+	    }
+	  }),
+	  position: 'BottomCenter'
+	}];
+
+	exports['default'] = DefaultDecorators;
+	module.exports = exports['default'];
+
+/***/ },
+/* 168 */
+/***/ function(module, exports) {
+
+	/* eslint-disable no-unused-vars */
+	'use strict';
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Based on code that is Copyright 2013-2015, Facebook, Inc.
+	  All rights reserved.
+	*/
+
+	(function () {
+		'use strict';
+
+		var canUseDOM = !!(
+			typeof window !== 'undefined' &&
+			window.document &&
+			window.document.createElement
+		);
+
+		var ExecutionEnvironment = {
+
+			canUseDOM: canUseDOM,
+
+			canUseWorkers: typeof Worker !== 'undefined',
+
+			canUseEventListeners:
+				canUseDOM && !!(window.addEventListener || window.attachEvent),
+
+			canUseViewport: canUseDOM && !!window.screen
+
+		};
+
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return ExecutionEnvironment;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else if (typeof module !== 'undefined' && module.exports) {
+			module.exports = ExecutionEnvironment;
+		} else {
+			window.ExecutionEnvironment = ExecutionEnvironment;
+		}
+
 	}());
 
 

@@ -4,6 +4,7 @@ var Flux = require('flux');
 var dispatcher = new Flux.Dispatcher();
 var $ = require('jquery');
 var cx = require('classnames');
+var Carousel = require('nuka-carousel');
 
 var cumulativeOffset = function (element) {
 	var top = 0,
@@ -79,7 +80,11 @@ App.Header = React.createClass({
 			React.createElement(
 				'div',
 				{ className: 'flex one justify-start' },
-				React.createElement('img', { className: 'logo flex align-center', src: 'images/bsl_logo.png' })
+				React.createElement(
+					'a',
+					{ href: '/' },
+					React.createElement('img', { className: 'logo flex align-center', src: 'images/bsl_logo.png' })
+				)
 			),
 			React.createElement(
 				'div',
@@ -271,14 +276,18 @@ App.Content.About = React.createClass({
 						'About us'
 					),
 					React.createElement(
-						'p',
-						null,
-						'We’re an agile production company; creating engaging content for brands and their audiences across all digital and social channels. We work directly with client organisations and also in support of their agency partners.'
-					),
-					React.createElement(
-						'p',
-						null,
-						'We have teams in Singapore, Shanghai and Mumbai, creating content for clients such as Nike, IKEA, Google, British Airways, Skoda and Coca-Cola. We’re flexible in our approach, maximizing budgets and delivering effective solutions at pace.'
+						Carousel,
+						{ className: 'carousel' },
+						React.createElement(
+							'p',
+							null,
+							'We’re an agile production company; creating engaging content for brands and their audiences across all digital and social channels. We work directly with client organisations and also in support of their agency partners.'
+						),
+						React.createElement(
+							'p',
+							null,
+							'We have teams in Singapore, Shanghai and Mumbai, creating content for clients such as Nike, IKEA, Google, British Airways, Skoda and Coca-Cola. We’re flexible in our approach, maximizing budgets and delivering effective solutions at pace.'
+						)
 					)
 				)
 			)
@@ -339,24 +348,32 @@ App.Content.Contact = React.createClass({
 						'Contact'
 					),
 					React.createElement(
-						'h3',
-						null,
-						'Singapore'
-					),
-					React.createElement(
-						'p',
-						null,
-						'Blacksheep Live '
-					),
-					React.createElement(
-						'p',
-						null,
-						'5 Magazine Road, #03-03 Central Mall,'
-					),
-					React.createElement(
-						'p',
-						null,
-						'Singapore 059571'
+						Carousel,
+						{ className: 'carousel' },
+						React.createElement(
+							'div',
+							null,
+							React.createElement(
+								'h3',
+								null,
+								'Singapore'
+							),
+							React.createElement(
+								'p',
+								null,
+								'Blacksheep Live '
+							),
+							React.createElement(
+								'p',
+								null,
+								'5 Magazine Road, #03-03 Central Mall,'
+							),
+							React.createElement(
+								'p',
+								null,
+								'Singapore 059571'
+							)
+						)
 					)
 				)
 			)
@@ -370,21 +387,102 @@ App.Content.Showreel = React.createClass({
 	render: function () {
 		return React.createElement(
 			'div',
-			{ ref: 'showreel', className: 'page showreel flex row align-center justify-center' },
+			{ className: cx('page showreel flex row align-center justify-center', this.state.expanded && 'expanded') },
 			React.createElement(
 				'div',
 				{ className: 'inner' },
 				React.createElement(
 					'div',
 					{ className: 'content flex column align-center justify-center' },
+					React.createElement('div', { id: 'video-showreel' }),
 					React.createElement(
-						'h1',
-						null,
-						'Showreel'
+						'div',
+						{ 'class': 'info' },
+						React.createElement(
+							'h1',
+							null,
+							'Showreel'
+						),
+						React.createElement(
+							'button',
+							{ onClick: this.expand },
+							'PLAY'
+						)
 					)
 				)
 			)
 		);
+	},
+	getInitialState: function () {
+		return { expanded: false };
+	},
+	componentDidMount: function () {
+		this.player = new YT.Player('video-showreel', {
+			width: '1280',
+			height: '720',
+			videoId: 'EYkz_2HchLg',
+			playerVars: {
+				controls: 0,
+				showinfo: 0,
+				modestbranding: 1,
+				wmode: 'transparent'
+			},
+			events: {
+				'onReady': this.onPlayerReady,
+				'onStateChange': this.onPlayerStateChange
+			}
+		});
+
+		window.addEventListener('resize', this.resize);
+	},
+	componentDidUpdate: function () {
+		this.resize();
+	},
+	componentWillUnmount: function () {
+		if (this.player) {
+			this.player.destroy();
+			this.player = null;
+		}
+
+		window.removeEventListener('resize', this.resize);
+	},
+	onPlayerReady: function () {
+		if (this.player) {
+			this.player.playVideo();
+			this.resize();
+		}
+	},
+	onPlayerStateChange: function (event) {
+		switch (event.data) {
+			case YT.PlayerState.ENDED:
+				if (this.player) {
+					this.player.stopVideo();
+				}
+				break;
+		}
+	},
+	expand: function () {
+		this.setState({ expanded: true });
+	},
+	resize: function () {
+		var player = document.getElementById('video-showreel');
+		var header = document.getElementById('header');
+		var container;
+		if (this.state.expanded) {
+			container = $('.page.showreel')[0];
+		} else {
+			container = $(player).parent()[0];
+		}
+
+		var newPlayerHeight = container.offsetHeight;
+		var newPlayerWidth = 16 / 9 * newPlayerHeight;
+		var newPlayerX = -(newPlayerWidth - container.offsetWidth) * 0.5;
+		var newPlayerY = this.state.expanded ? header.offsetHeight : 0;
+		if (isFinite(newPlayerX) || newPlayerX != 0) {
+			console.log(newPlayerY);
+			$(player).width(newPlayerWidth).height(newPlayerHeight);
+			$(player).css({ left: newPlayerX, top: newPlayerY });
+		}
 	}
 });
 

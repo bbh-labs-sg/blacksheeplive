@@ -13,6 +13,8 @@
 <body>
 	<div id='fallback'>
 		{{ range $id, $project := .Projects }}
+		<h1>{{ $project.Name }}</h1>
+		<p>{{ $project.Description }}</p>
 		<iframe width="1280" height="720" src="https://www.youtube.com/embed/{{ $project.YoutubeVideoID }}" frameborder="0" allowfullscreen></iframe>
 		{{ end }}
 	</div>
