@@ -1,6 +1,6 @@
 html, body, #root {
 	height: 100%;
-	min-height: 360px;
+	min-height: 300px;
 	margin: 0;
 	background: black;
 	overflow: hidden;
