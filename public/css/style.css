@@ -403,6 +403,11 @@ a {
 }
 
 @media (max-width: 720px) and (orientation: portrait) {
+	#content .home {
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+
 	.bubble:nth-child(2) { transform: translate(0, 0%) }
 	.bubble:nth-child(3) { transform: translate(0, 100%) }
 	.bubble:nth-child(4) { transform: translate(0, 200%) }
@@ -415,6 +420,11 @@ a {
 }
 
 @media (max-width: 720px) and (orientation: landscape) {
+	#content .home {
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
+
 	.bubble:nth-child(2) { transform: translate(0%, 0) }
 	.bubble:nth-child(3) { transform: translate(100%, 0) }
 	.bubble:nth-child(4) { transform: translate(200%, 0) }
@@ -427,10 +437,6 @@ a {
 }
 
 @media (max-width: 360px) {
-	#content .home {
-		overflow: auto;
-	}
-
 	#content .home .bubble .poster .info p {
 		max-width: 270px;
 	}
