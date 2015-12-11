@@ -272,7 +272,10 @@ a {
 }
 
 
-#content .about, #content .services, #content .contact, #content .showreel {
+#content .about,
+#content .services,
+#content .contact,
+#content .showreel {
 	background-color: #fb1f25;
 }
 
@@ -382,11 +385,6 @@ a {
 	transition: opacity .4s;
 }
 
-.page.showreel.expanded #video-showreel {
-	position: fixed;
-	z-index: 10000;
-}
-
 .page.showreel .content .info {
 	opacity: 0;
 	transition: opacity .4s;
@@ -394,6 +392,15 @@ a {
 
 .page.showreel .content:hover .info {
 	opacity: 1;
+}
+
+.page.showreel.expanded #video-showreel {
+	position: fixed;
+	z-index: 10000;
+}
+
+.page.showreel.expanded .content {
+	background: #fb1f25 !important;
 }
 
 .carousel {
