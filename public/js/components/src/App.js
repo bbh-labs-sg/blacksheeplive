@@ -5,6 +5,20 @@ var dispatcher = new Flux.Dispatcher();
 var $ = require('jquery');
 var cx = require('classnames');
 
+var cumulativeOffset = function(element) {
+	var top = 0, left = 0;
+	do {
+		top += element.offsetTop  || 0;
+		left += element.offsetLeft || 0;
+		element = element.offsetParent;
+	} while(element);
+
+	return {
+		top: top,
+		left: left
+	};
+};
+
 var App = React.createClass({
 	render: function() {
 		return (
@@ -326,6 +340,10 @@ var Poster = React.createClass({
 				this.player.stopVideo();
 			}
 		}
+
+		if (this.props.selected) {
+			this.resize();
+		}
 	},
 	componentWillUnmount: function() {
 		if (this.player) {
@@ -367,26 +385,14 @@ var Poster = React.createClass({
 			container = $(player).parent()[0];
 		}
 
-		var newPlayerWidth, newPlayerHeight, newPlayerX, newPlayerY;
-		var maxWidth, minWidth, maxHeight, minHeight;
-
-		var multiplier = container.offsetHeight / (player.offsetWidth * 9 / 16);
-		newPlayerWidth = container.offsetWidth * multiplier;
-		newPlayerHeight = container.offsetHeight * multiplier;
-		maxWidth = Math.max(newPlayerWidth, player.offsetWidth);
-		minWidth = Math.min(newPlayerWidth, player.offsetWidth);
-		maxHeight = Math.max(newPlayerHeight, player.offsetHeight);
-		minHeight = Math.min(newPlayerHeight, player.offsetHeight);
-		newPlayerX = -(maxWidth - minWidth) * 0.5;
-		//newPlayerY = -(newPlayerHeight - player.offsetHeight) * 0.5;
-		newPlayerY = -(maxHeight - minHeight) * 0.5;
-		if (isFinite(newPlayerX) && isFinite(newPlayerY) && newPlayerX != 0 && newPlayerY != 0) {
-			$(player).width(maxWidth)
-				.height(newPlayerHeight)
-				.css({
-					left: newPlayerX,
-					top: newPlayerY,
-				});
+		var header = document.getElementById('header');
+		var newPlayerHeight = container.offsetHeight;
+		var newPlayerWidth = 16 / 9 * newPlayerHeight;
+		var newPlayerX = -(newPlayerWidth - container.offsetWidth) * 0.5;
+		var newPlayerY = this.props.selected ? header.offsetHeight : 0;
+		if (isFinite(newPlayerX) || newPlayerX != 0) {
+			$(player).width(newPlayerWidth).height(newPlayerHeight)
+			$(player).css({ left: newPlayerX, top: newPlayerY });
 		}
 	},
 	expand: function() {
