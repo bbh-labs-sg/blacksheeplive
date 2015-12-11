@@ -1,3 +1,5 @@
+{{ define "index" }}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +11,19 @@
 	<link href='https://fonts.googleapis.com/css?family=Dosis:400,200,500,700,600,300,800' rel='stylesheet' type='text/css'>
 </head>
 <body>
+	<div id='fallback' class='orbit' role='region' aria-label='Favourite Space Pictures' data-orbit>
+		<ul class='orbit-container'>
+			<button class='orbit-previous' aria-label='previous'><span class='show-for-sr'>Previous Slide</span>&#9664;</button>
+			<button class='orbit-next' aria-label='next'><span class='show-for-sr'>Next Slide</span>&#9654;</button>
+			{{ $i := 0 }}
+			{{ range $id, $project := .Projects }}
+			<li class='{{ if eq $i 0 }} is-active {{ end }} orbit-slide'>
+				<h1>{{ $project.Name }}</h1>
+			</li>
+			{{ $i := 1 }}
+			{{ end }}
+		</ul>
+	</div>
 	<div id='root'></div>
 
 	<script>var render;</script>
@@ -26,3 +41,5 @@
 	</script>
 </body>
 </html>
+
+{{ end }}

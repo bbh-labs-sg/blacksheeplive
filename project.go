@@ -20,8 +20,6 @@ type Project struct {
 
 var projects = make(map[string]Project)
 
-type projectHandler struct{}
-
 func projectsHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
@@ -31,7 +29,7 @@ func projectsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (_ projectHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func projectHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		posterImage, posterImageHeader, err := r.FormFile("posterImage")

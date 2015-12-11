@@ -66,6 +66,9 @@
 		getInitialState: function () {
 			return { projects: [], selectedProject: -1, page: null };
 		},
+		componentWillMount: function () {
+			document.body.removeChild(document.getElementById('fallback'));
+		},
 		componentDidMount: function () {
 			this.listenerID = dispatcher.register((function (payload) {
 				switch (payload.type) {
