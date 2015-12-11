@@ -8,14 +8,21 @@ import (
 	"math/big"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 )
+
+var youtubeVideoIDRegex = regexp.MustCompile(`(?:(youtube\.com|youtu\.be)\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})`)
 
 type Project struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	PosterURL   string `json:"posterURL"`
 	URL         string `json:"url"`
+}
+
+func (p Project) YoutubeVideoID() string {
+	return youtubeVideoIDRegex.FindString(p.URL)
 }
 
 var projects = make(map[string]Project)
