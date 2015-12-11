@@ -3,7 +3,7 @@ html, body, #root {
 	min-height: 300px;
 	margin: 0;
 	background: black;
-	overflow: hidden;
+	overflow-x: hidden;
 	font-family: 'Dosis', sans-serif;
 }
 
@@ -13,6 +13,7 @@ a {
 
 #app {
 	height: 100%;
+	overflow-y: hidden;
 }
 
 #header, #footer {
@@ -197,7 +198,8 @@ a {
 	transition: opacity .4s;
 }
 
-#content .home .bubble .poster .info img {
+#content .home .bubble .poster .info img,
+#content .page.showreel .info img {
 	width: 80px;
 	height: 80px;
 	margin: auto;
@@ -392,6 +394,7 @@ a {
 
 .page.showreel .content:hover .info {
 	opacity: 1;
+	color: white;
 }
 
 .page.showreel.expanded #video-showreel {

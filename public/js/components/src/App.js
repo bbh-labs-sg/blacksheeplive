@@ -261,7 +261,7 @@ App.Content.Showreel = React.createClass({
 						<div id='video-showreel'></div>
 						<div className='info'>
 							<h1>Showreel</h1>
-							<button onClick={this.expand}>PLAY</button>
+							<img onClick={this.expand} className='flex align-center' src='images/icons/play_icon_w.png' />
 						</div>
 					</div>
 				</div>
@@ -334,7 +334,6 @@ App.Content.Showreel = React.createClass({
 		var newPlayerX = -(newPlayerWidth - container.offsetWidth) * 0.5;
 		var newPlayerY = this.state.expanded ? header.offsetHeight : 0;
 		if (isFinite(newPlayerX) || newPlayerX != 0) {
-			console.log(newPlayerY);
 			$(player).width(newPlayerWidth).height(newPlayerHeight)
 			$(player).css({ left: newPlayerX, top: newPlayerY });
 		}
