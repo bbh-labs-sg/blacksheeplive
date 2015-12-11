@@ -299,7 +299,17 @@
 						React.createElement(
 							'h1',
 							null,
-							'About'
+							'About us'
+						),
+						React.createElement(
+							'p',
+							null,
+							'We’re an agile production company; creating engaging content for brands and their audiences across all digital and social channels. We work directly with client organisations and also in support of their agency partners.'
+						),
+						React.createElement(
+							'p',
+							null,
+							'We have teams in Singapore, Shanghai and Mumbai, creating content for clients such as Nike, IKEA, Google, British Airways, Skoda and Coca-Cola. We’re flexible in our approach, maximizing budgets and delivering effective solutions at pace.'
 						)
 					)
 				)
@@ -313,7 +323,7 @@
 		render: function () {
 			return React.createElement(
 				'div',
-				{ ref: 'about', className: 'page services flex row align-center justify-center' },
+				{ ref: 'services', className: 'page services flex row align-center justify-center' },
 				React.createElement(
 					'div',
 					{ className: 'inner' },
@@ -324,6 +334,16 @@
 							'h1',
 							null,
 							'Services'
+						),
+						React.createElement(
+							'h3',
+							null,
+							'Production'
+						),
+						React.createElement(
+							'p',
+							null,
+							'We have an experienced and dedicated core team of film-makers, photographers, editors, developers and content writers in addition to links with like-minded specialists around the region.'
 						)
 					)
 				)
@@ -348,6 +368,26 @@
 							'h1',
 							null,
 							'Contact'
+						),
+						React.createElement(
+							'h3',
+							null,
+							'Singapore'
+						),
+						React.createElement(
+							'p',
+							null,
+							'Blacksheep Live '
+						),
+						React.createElement(
+							'p',
+							null,
+							'5 Magazine Road, #03-03 Central Mall,'
+						),
+						React.createElement(
+							'p',
+							null,
+							'Singapore 059571'
 						)
 					)
 				)

@@ -187,7 +187,11 @@ App.Content.About = React.createClass({
 			<div ref='about' className='page about flex column align-center justify-center'>
 				<div className='inner'>
 					<div className='content flex column align-center justify-center'>
-						<h1>About</h1>
+						<h1>About us</h1>
+						<p>We’re an agile production company; creating engaging content for brands and their audiences across all
+							digital and social channels. We work directly with client organisations and also in support of their agency partners.</p>
+						<p>We have teams in Singapore, Shanghai and Mumbai, creating content for clients such as Nike, IKEA, Google, British Airways, 
+							Skoda and Coca-Cola. We’re flexible in our approach, maximizing budgets and delivering effective solutions at pace.</p>
 					</div>
 				</div>
 			</div>
@@ -198,10 +202,12 @@ App.Content.About = React.createClass({
 App.Content.Services = React.createClass({
 	render: function() {
 		return (
-			<div ref='about' className='page services flex row align-center justify-center'>
+			<div ref='services' className='page services flex row align-center justify-center'>
 				<div className='inner'>
 					<div className='content flex column align-center justify-center'>
 						<h1>Services</h1>
+						<h3>Production</h3>
+						<p>We have an experienced and dedicated core team of film-makers, photographers, editors, developers and content writers in addition to links with like-minded specialists around the region.</p>
 					</div>
 				</div>
 			</div>
@@ -216,6 +222,10 @@ App.Content.Contact = React.createClass({
 				<div className='inner'>
 					<div className='content flex column align-center justify-center'>
 						<h1>Contact</h1>
+						<h3>Singapore</h3>
+						<p>Blacksheep Live </p>
+						<p>5 Magazine Road, #03-03 Central Mall,</p>
+						<p>Singapore 059571</p>
 					</div>
 				</div>
 			</div>
