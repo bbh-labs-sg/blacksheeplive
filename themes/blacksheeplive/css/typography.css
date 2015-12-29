@@ -1,0 +1,72 @@
+/**************
+ * Typography *
+ **************/
+html, body, #root {
+	font-family: 'Dosis', sans-serif;
+}
+
+a {
+	text-decoration: none;
+}
+
+#header .menu {
+	color: #fb1f25;
+	font-weight: 100;
+}
+
+#content .menu .inner .item {
+	color: white;
+	font-size: 6vmin;
+	font-weight: 100;
+	text-align: center;
+	text-transform: uppercase;
+	letter-spacing: 5px;
+}
+
+#home .welcome {
+	color: #fff;
+	font-size: 1rem;
+	font-weight: 100;
+}
+
+#home .bubble .poster .info h1 {
+	color: white;
+	font-family: 'Dosis', sans-serif;
+	font-weight: 100;
+	font-size: 2.5rem;
+	font-size: 5vm;
+	font-size: 5vmin;
+	text-transform: uppercase;
+	letter-spacing: 3pt;
+}
+
+#home .bubble .poster .info p {
+	color: white;
+	font-family: 'Dosis', sans-serif;
+	font-weight: 100;
+	font-size: 1rem;
+	font-size: 2.5vm;
+	font-size: 2.5vmin;
+	letter-spacing: 3pt;
+}
+
+.page .content p {
+	font-size: 0.75rem;
+	text-transform: none;
+	text-align: center;
+}
+
+.page .content h1 {
+	text-transform: uppercase;
+	font-weight: 400;
+}
+
+.page .content h3 {
+	font-size: 1.5rem;
+	text-align: center;
+}
+
+#copyright {
+	font-size: 0.66rem;
+}
+
