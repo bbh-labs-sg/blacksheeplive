@@ -73,7 +73,10 @@
 	}
 
 	function pageCount() {
-		return isMobile() ? projects.length : parseInt((projects.length / 9).toFixed(0)) + 1;
+		if (isMobile()) {
+			return projects.length;
+		}
+		return parseInt((projects.length / 9).toFixed(0)) + 1;
 	}
 
 	function htmlEscape(str) {
@@ -131,16 +134,18 @@
 		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				this.listenerID = dispatcher.register((function (payload) {
+				var _this2 = this;
+
+				this.listenerID = dispatcher.register(function (payload) {
 					switch (payload.type) {
 						case 'selectProject':
-							this.setState({ selectedProject: payload.projectID });
+							_this2.setState({ selectedProject: payload.projectID });
 							break;
 						case 'deselectProject':
-							this.setState({ selectedProject: -1 });
+							_this2.setState({ selectedProject: -1 });
 							break;
 					}
-				}).bind(this));
+				});
 			}
 		}]);
 
@@ -153,7 +158,7 @@
 		function Header() {
 			var _Object$getPrototypeO2;
 
-			var _temp2, _this2, _ret2;
+			var _temp2, _this3, _ret2;
 
 			_classCallCheck(this, Header);
 
@@ -161,9 +166,9 @@
 				args[_key2] = arguments[_key2];
 			}
 
-			return _ret2 = (_temp2 = (_this2 = _possibleConstructorReturn(this, (_Object$getPrototypeO2 = Object.getPrototypeOf(Header)).call.apply(_Object$getPrototypeO2, [this].concat(args))), _this2), _this2.toggleMenu = function () {
-				_this2.props.togglePage('menu');
-			}, _temp2), _possibleConstructorReturn(_this2, _ret2);
+			return _ret2 = (_temp2 = (_this3 = _possibleConstructorReturn(this, (_Object$getPrototypeO2 = Object.getPrototypeOf(Header)).call.apply(_Object$getPrototypeO2, [this].concat(args))), _this3), _this3.toggleMenu = function () {
+				_this3.props.togglePage('menu');
+			}, _temp2), _possibleConstructorReturn(_this3, _ret2);
 		}
 
 		_createClass(Header, [{
@@ -203,7 +208,7 @@
 		function Content() {
 			var _Object$getPrototypeO3;
 
-			var _temp3, _this3, _ret3;
+			var _temp3, _this4, _ret3;
 
 			_classCallCheck(this, Content);
 
@@ -211,13 +216,13 @@
 				args[_key3] = arguments[_key3];
 			}
 
-			return _ret3 = (_temp3 = (_this3 = _possibleConstructorReturn(this, (_Object$getPrototypeO3 = Object.getPrototypeOf(Content)).call.apply(_Object$getPrototypeO3, [this].concat(args))), _this3), _this3.state = {
+			return _ret3 = (_temp3 = (_this4 = _possibleConstructorReturn(this, (_Object$getPrototypeO3 = Object.getPrototypeOf(Content)).call.apply(_Object$getPrototypeO3, [this].concat(args))), _this4), _this4.state = {
 				project: null
-			}, _this3.toggleMenu = function () {
-				_this3.props.togglePage('menu');
-			}, _this3.closePage = function (event) {
-				_this3.props.togglePage(null);
-			}, _temp3), _possibleConstructorReturn(_this3, _ret3);
+			}, _this4.toggleMenu = function () {
+				_this4.props.togglePage('menu');
+			}, _this4.closePage = function (event) {
+				_this4.props.togglePage(null);
+			}, _temp3), _possibleConstructorReturn(_this4, _ret3);
 		}
 
 		_createClass(Content, [{
@@ -277,11 +282,17 @@
 						'div',
 						{ className: 'flex column inner' },
 						menus ? menus.map(function (menu, i) {
+							var menuAttrs = {
+								key: { i: i },
+								href: '#',
+								className: 'flex one item justify-center',
+								onClick: function onClick() {
+									togglePage(i);
+								}
+							};
 							return React.createElement(
 								'a',
-								{ key: i, href: '#', className: 'flex one item justify-center', onClick: function onClick() {
-										togglePage(i);
-									} },
+								menuAttrs,
 								menu.name
 							);
 						}) : null
@@ -299,7 +310,7 @@
 		function Home() {
 			var _Object$getPrototypeO4;
 
-			var _temp4, _this5, _ret4;
+			var _temp4, _this6, _ret4;
 
 			_classCallCheck(this, Home);
 
@@ -307,11 +318,11 @@
 				args[_key4] = arguments[_key4];
 			}
 
-			return _ret4 = (_temp4 = (_this5 = _possibleConstructorReturn(this, (_Object$getPrototypeO4 = Object.getPrototypeOf(Home)).call.apply(_Object$getPrototypeO4, [this].concat(args))), _this5), _this5.state = {
+			return _ret4 = (_temp4 = (_this6 = _possibleConstructorReturn(this, (_Object$getPrototypeO4 = Object.getPrototypeOf(Home)).call.apply(_Object$getPrototypeO4, [this].concat(args))), _this6), _this6.state = {
 				minWidth: 0,
 				currentPage: 0
-			}, _this5.projectElements = function (offset) {
-				var projects = _this5.props.projects;
+			}, _this6.projectElements = function (offset) {
+				var projects = _this6.props.projects;
 				if (!projects) {
 					return null;
 				}
@@ -319,7 +330,7 @@
 				var start = typeof offset !== 'undefined' ? offset : 0;
 				var end = typeof offset !== 'undefined' ? Math.min(projects.length, offset + 9) : projects.length;
 
-				var selectedProject = _this5.props.selectedProject;
+				var selectedProject = _this6.props.selectedProject;
 				var elems = [];
 				for (var i = start; i < end; i++) {
 					var attrs = {
@@ -327,95 +338,98 @@
 						project: projects[i],
 						projectID: i,
 						selected: i == selectedProject,
-						onClick: _this5.selectProject.bind(_this5, i),
-						minWidth: _this5.state.minWidth
+						onClick: _this6.selectProject.bind(_this6, i),
+						minWidth: _this6.state.minWidth
 					};
 					elems.push(React.createElement(App.Content.Home.Project, attrs));
 				}
 				return elems;
-			}, _this5.onWindowResize = function (event) {
-				var home = _this5.refs.home;
+			}, _this6.onWindowResize = function (event) {
+				var home = _this6.refs.home;
 
-				_this5.setState({
+				_this6.setState({
 					minWidth: Math.min(home.offsetWidth, home.offsetHeight)
 				});
 
-				if (!_this5.hammertime) {
-					_this5.hammertime = new Hammer(_this5.refs.home);
-					_this5.handleGesture();
+				if (!_this6.hammertime) {
+					_this6.hammertime = new Hammer(_this6.refs.home);
+					_this6.handleGesture();
 				}
 
 				if (window.innerWidth >= 720) {
-					_this5.handleGestureDesktop();
+					_this6.handleGestureDesktop();
 				}
-			}, _this5.selectProject = function (i) {
+			}, _this6.selectProject = function (i) {
 				dispatcher.dispatch({
 					type: 'selectProject',
 					projectID: i
 				});
-			}, _this5.down = function () {
-				var currentPage = _this5.state.currentPage;
+			}, _this6.down = function () {
+				var currentPage = _this6.state.currentPage;
 				if (projects.length == 0 || currentPage >= pageCount() - 1) {
 					return;
 				}
 				currentPage++;
-				_this5.setState({ currentPage: currentPage });
+				_this6.setState({ currentPage: currentPage });
 
 				if (isMobile()) {
-					_this5.refs.bubbleContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
+					_this6.refs.bubbleContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
 				}
-			}, _this5.up = function () {
-				var currentPage = _this5.state.currentPage;
+			}, _this6.up = function () {
+				var currentPage = _this6.state.currentPage;
 				if (currentPage <= 0) {
 					return;
 				}
 				currentPage--;
-				_this5.setState({ currentPage: currentPage });
+				_this6.setState({ currentPage: currentPage });
 
 				if (isMobile()) {
-					_this5.refs.bubbleContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
+					_this6.refs.bubbleContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
 				}
-			}, _this5.handleGesture = function () {
+			}, _this6.handleGesture = function () {
 				// Handle Mouse Wheel / Touchpad
-				_this5.wheelY = 0;
+				_this6.wheelY = 0;
 				$(window).on('wheel', function (event) {
-					_this5.wheelY += event.originalEvent.deltaY;
-					if (Math.abs(_this5.wheelY) > 150) {
-						if (_this5.wheelY < 0) {
-							_this5.down();
-						} else if (_this5.wheelY > 0) {
-							_this5.up();
+					_this6.wheelY += event.originalEvent.deltaY;
+					if (Math.abs(_this6.wheelY) > 150) {
+						if (_this6.wheelY < 0) {
+							_this6.down();
+						} else if (_this6.wheelY > 0) {
+							_this6.up();
 						}
-						_this5.wheelY = 0;
+						_this6.wheelY = 0;
 					}
 				});
 
 				// Handle Drag
-				_this5.hammertime.get('pan').set({
+				_this6.hammertime.get('pan').set({
 					direction: Hammer.DIRECTION_VERTICAL
 				});
-				_this5.hammertime.on('pan', function (event) {
+				_this6.hammertime.on('pan', function (event) {
 					if (!event.isFinal) {
 						return;
 					}
 					if (event.deltaY > 100) {
-						_this5.up();
+						_this6.up();
 					} else if (event.deltaY < -100) {
-						_this5.down();
+						_this6.down();
 					}
 				});
-			}, _this5.handleGestureDesktop = function () {
+			}, _this6.handleGestureDesktop = function () {
 				//$(window).off('wheel');
 				//this.hammertime.off('pan');
-				_this5.setState({ currentPage: 0 });
-				_this5.refs.home.style.transform = 'translate(0, 0%)';
-			}, _temp4), _possibleConstructorReturn(_this5, _ret4);
+				_this6.setState({ currentPage: 0 });
+				_this6.refs.home.style.transform = 'translate(0, 0%)';
+			}, _temp4), _possibleConstructorReturn(_this6, _ret4);
 		}
 
 		_createClass(Home, [{
 			key: 'render',
 			value: function render() {
+				var _this7 = this;
+
 				var currentPage = this.state.currentPage;
+				var selectedProject = this.props.selectedProject;
 				var bubbleContainers = [];
 				for (var i = 0; i < pageCount(); i++) {
 					bubbleContainers.push(i);
@@ -425,7 +439,7 @@
 					{ ref: 'home', id: 'home', className: 'flex column one' },
 					React.createElement(
 						'div',
-						{ className: cx('welcome flex one justify-start', this.props.selectedProject >= 0 && 'hide') },
+						{ className: cx('welcome flex one justify-start', selectedProject >= 0 && 'hide') },
 						React.createElement(
 							'p',
 							null,
@@ -433,14 +447,14 @@
 						),
 						React.createElement('img', { className: 'logo flex align-center', src: 'wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' })
 					),
-					window.innerWidth >= 720 ? bubbleContainers.map((function (i) {
+					window.innerWidth >= 720 ? bubbleContainers.map(function (i) {
 						var styles = { transform: 'translate(0, ' + (i - currentPage) * 100 + '%)' };
 						return React.createElement(
 							'div',
 							{ key: i, ref: 'bubbleContainer', className: 'bubble-container', style: styles },
-							this.projectElements(i * 9)
+							_this7.projectElements(i * 9)
 						);
-					}).bind(this)) : React.createElement(
+					}) : React.createElement(
 						'div',
 						{ ref: 'bubbleContainer', className: 'bubble-container' },
 						this.projectElements()
@@ -474,7 +488,7 @@
 		function Page() {
 			var _Object$getPrototypeO5;
 
-			var _temp5, _this6, _ret5;
+			var _temp5, _this8, _ret5;
 
 			_classCallCheck(this, Page);
 
@@ -482,30 +496,30 @@
 				args[_key5] = arguments[_key5];
 			}
 
-			return _ret5 = (_temp5 = (_this6 = _possibleConstructorReturn(this, (_Object$getPrototypeO5 = Object.getPrototypeOf(Page)).call.apply(_Object$getPrototypeO5, [this].concat(args))), _this6), _this6.state = {
+			return _ret5 = (_temp5 = (_this8 = _possibleConstructorReturn(this, (_Object$getPrototypeO5 = Object.getPrototypeOf(Page)).call.apply(_Object$getPrototypeO5, [this].concat(args))), _this8), _this8.state = {
 				expanded: false
-			}, _this6.onPlayerReady = function () {
-				if (_this6.player) {
-					_this6.player.playVideo();
-					_this6.resize();
+			}, _this8.onPlayerReady = function () {
+				if (_this8.player) {
+					_this8.player.playVideo();
+					_this8.resize();
 				}
-			}, _this6.onPlayerStateChange = function (event) {
+			}, _this8.onPlayerStateChange = function (event) {
 				switch (event.data) {
 					case YT.PlayerState.ENDED:
-						if (_this6.player) {
-							_this6.player.stopVideo();
+						if (_this8.player) {
+							_this8.player.stopVideo();
 						}
 						break;
 				}
-			}, _this6.expand = function (event) {
-				_this6.setState({ expanded: true });
-			}, _this6.resize = function () {
+			}, _this8.expand = function (event) {
+				_this8.setState({ expanded: true });
+			}, _this8.resize = function () {
 				var player = document.getElementById('video-showreel');
 				var content = document.getElementById('content');
 				var adminbar = document.getElementById('wpadminbar');
 
 				var container = undefined;
-				if (_this6.state.expanded) {
+				if (_this8.state.expanded) {
 					container = content;
 				} else {
 					container = $(player).parent()[0];
@@ -514,13 +528,13 @@
 				var newPlayerHeight = container.offsetHeight;
 				var newPlayerWidth = 16 / 9 * newPlayerHeight;
 				var newPlayerX = -(newPlayerWidth - container.offsetWidth) * 0.5;
-				var newPlayerY = _this6.props.expanded ? content.offsetTop + adminbar.offsetHeight - window.pageYOffset : 0;
+				var newPlayerY = _this8.props.expanded ? content.offsetTop + adminbar.offsetHeight - window.pageYOffset : 0;
 				if (isFinite(newPlayerX) || newPlayerX != 0) {
 					$(player).width(newPlayerWidth).height(newPlayerHeight);
 					$(player).css({ left: newPlayerX, top: newPlayerY });
 				}
-			}, _this6.menuPageContent = function () {
-				var description = _this6.props.menu.description;
+			}, _this8.menuPageContent = function () {
+				var description = _this8.props.menu.description;
 				var carouselAttrs = { decorators: [] };
 				if (description) {
 					if (description.split('\n').length > 1) {
@@ -528,9 +542,9 @@
 					}
 				}
 
-				var menu = _this6.props.menu;
+				var menu = _this8.props.menu;
 				var elems = [];
-				if (_this6.isShowreel()) {
+				if (_this8.isShowreel()) {
 					if (iOS) {
 						var iframeAttrs = {
 							id: 'video-showreel',
@@ -540,7 +554,7 @@
 							src: 'https://www.youtube.com/embed/EYkz_2HchLg?controls=0&modestbranding=1',
 							frameBorder: '0',
 							allowFullScreen: 'true',
-							onClick: _this6.expand
+							onClick: _this8.expand
 						};
 						elems.push(React.createElement('iframe', _extends({ key: 'video-showreel' }, iframeAttrs)));
 					} else {
@@ -553,7 +567,7 @@
 								null,
 								'Showreel'
 							),
-							React.createElement('img', { onClick: _this6.expand, className: 'play flex align-center', src: 'wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' })
+							React.createElement('img', { onClick: _this8.expand, className: 'play flex align-center', src: 'wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' })
 						));
 					}
 				} else {
@@ -571,13 +585,13 @@
 					));
 				}
 				return elems;
-			}, _this6.isShowreel = function () {
-				var menu = _this6.props.menu;
+			}, _this8.isShowreel = function () {
+				var menu = _this8.props.menu;
 				if (!menu) {
 					return false;
 				}
 				return menu.name.toLowerCase() == 'showreel';
-			}, _temp5), _possibleConstructorReturn(_this6, _ret5);
+			}, _temp5), _possibleConstructorReturn(_this8, _ret5);
 		}
 
 		_createClass(Page, [{
@@ -660,7 +674,7 @@
 		function Poster() {
 			var _Object$getPrototypeO6;
 
-			var _temp6, _this7, _ret6;
+			var _temp6, _this9, _ret6;
 
 			_classCallCheck(this, Poster);
 
@@ -668,32 +682,32 @@
 				args[_key6] = arguments[_key6];
 			}
 
-			return _ret6 = (_temp6 = (_this7 = _possibleConstructorReturn(this, (_Object$getPrototypeO6 = Object.getPrototypeOf(Poster)).call.apply(_Object$getPrototypeO6, [this].concat(args))), _this7), _this7.state = {
+			return _ret6 = (_temp6 = (_this9 = _possibleConstructorReturn(this, (_Object$getPrototypeO6 = Object.getPrototypeOf(Poster)).call.apply(_Object$getPrototypeO6, [this].concat(args))), _this9), _this9.state = {
 				hovering: false,
 				expanded: false
-			}, _this7.onPlayerReady = function () {
-				_this7.resize();
-				if (!iOS && _this7.player) {
-					if (_this7.state.hovering) {
-						_this7.player.playVideo();
+			}, _this9.onPlayerReady = function () {
+				_this9.resize();
+				if (!iOS && _this9.player) {
+					if (_this9.state.hovering) {
+						_this9.player.playVideo();
 					} else {
-						_this7.player.seekTo(0);
-						_this7.player.stopVideo();
+						_this9.player.seekTo(0);
+						_this9.player.stopVideo();
 					}
 				}
-			}, _this7.onPlayerStateChange = function (event) {
+			}, _this9.onPlayerStateChange = function (event) {
 				switch (event.data) {
 					case YT.PlayerState.ENDED:
-						if (_this7.player) {
-							_this7.player.stopVideo();
+						if (_this9.player) {
+							_this9.player.stopVideo();
 						}
 						break;
 				}
-			}, _this7.setHovering = function (state) {
-				_this7.setState({ hovering: state });
-				_this7.resize();
-			}, _this7.resize = function () {
-				var id = 'video-' + _this7.props.projectID;
+			}, _this9.setHovering = function (state) {
+				_this9.setState({ hovering: state });
+				_this9.resize();
+			}, _this9.resize = function () {
+				var id = 'video-' + _this9.props.projectID;
 				var player = document.getElementById(id);
 				var content = document.getElementById('content');
 				var adminbar = document.getElementById('wpadminbar');
@@ -703,7 +717,7 @@
 				}
 
 				var container = undefined;
-				if (_this7.props.selected) {
+				if (_this9.props.selected) {
 					container = content;
 				} else {
 					container = $(player).parent()[0];
@@ -715,17 +729,17 @@
 				var minWidth = newPlayerWidth < container.offsetWidth ? newPlayerWidth : container.offsetWidth;
 				var newPlayerX = (content.offsetWidth - player.offsetWidth) * 0.5 - (poster ? poster.offsetLeft : 0);
 				var newPlayerY = 0;
-				//var newPlayerY = this.props.selected ? (content.offsetTop + adminbar.offsetHeight - window.pageYOffset) : 0;
+				//let newPlayerY = this.props.selected ? (content.offsetTop + adminbar.offsetHeight - window.pageYOffset) : 0;
 				if (isFinite(newPlayerX) || newPlayerX != 0) {
 					$(player).width(newPlayerWidth).height(newPlayerHeight).css({
 						left: newPlayerX,
 						top: newPlayerY
 					});
 				}
-			}, _this7.expand = function () {
-				var expanded = !_this7.state.expanded;
-				_this7.setState({ expanded: expanded });
-			}, _temp6), _possibleConstructorReturn(_this7, _ret6);
+			}, _this9.expand = function () {
+				var expanded = !_this9.state.expanded;
+				_this9.setState({ expanded: expanded });
+			}, _temp6), _possibleConstructorReturn(_this9, _ret6);
 		}
 
 		_createClass(Poster, [{
@@ -783,24 +797,26 @@
 		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
+				var _this10 = this;
+
 				var posterHeight = this.refs.poster.offsetHeight;
 				this.refs.poster.style.width = posterHeight + 'px';
 
 				window.addEventListener('resize', this.resize);
 
-				this.listenerID = dispatcher.register((function (payload) {
+				this.listenerID = dispatcher.register(function (payload) {
 					switch (payload.type) {
 						case 'deselectProject':
-							if (!iOS && this.player) {
-								this.player.stopVideo();
+							if (!iOS && _this10.player) {
+								_this10.player.stopVideo();
 							}
-							this.setState({
+							_this10.setState({
 								hovering: false,
 								expanded: false
 							});
 							break;
 					}
-				}).bind(this));
+				});
 			}
 		}, {
 			key: 'componentDidUpdate',
@@ -2030,7 +2046,7 @@
 	 * will remain to ensure logic does not differ in production.
 	 */
 
-	var invariant = function (condition, format, a, b, c, d, e, f) {
+	function invariant(condition, format, a, b, c, d, e, f) {
 	  if (process.env.NODE_ENV !== 'production') {
 	    if (format === undefined) {
 	      throw new Error('invariant requires an error message argument');
@@ -2044,15 +2060,16 @@
 	    } else {
 	      var args = [a, b, c, d, e, f];
 	      var argIndex = 0;
-	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	      error = new Error(format.replace(/%s/g, function () {
 	        return args[argIndex++];
 	      }));
+	      error.name = 'Invariant Violation';
 	    }
 
 	    error.framesToPop = 1; // we don't care about invariant's own frame
 	    throw error;
 	  }
-	};
+	}
 
 	module.exports = invariant;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
@@ -11479,8 +11496,8 @@
 	     */
 	    // autoCapitalize and autoCorrect are supported in Mobile Safari for
 	    // keyboard hints.
-	    autoCapitalize: null,
-	    autoCorrect: null,
+	    autoCapitalize: MUST_USE_ATTRIBUTE,
+	    autoCorrect: MUST_USE_ATTRIBUTE,
 	    // autoSave allows WebKit/Blink to persist values of input fields on page reloads
 	    autoSave: null,
 	    // color is for Safari mask-icon link
@@ -11511,9 +11528,7 @@
 	    httpEquiv: 'http-equiv'
 	  },
 	  DOMPropertyNames: {
-	    autoCapitalize: 'autocapitalize',
 	    autoComplete: 'autocomplete',
-	    autoCorrect: 'autocorrect',
 	    autoFocus: 'autofocus',
 	    autoPlay: 'autoplay',
 	    autoSave: 'autosave',
@@ -14592,7 +14607,7 @@
 	    var value = LinkedValueUtils.getValue(props);
 
 	    if (value != null) {
-	      updateOptions(this, props, value);
+	      updateOptions(this, Boolean(props.multiple), value);
 	    }
 	  }
 	}
@@ -17631,15 +17646,11 @@
 	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
 	 * not safe to call document.activeElement if there is nothing focused.
 	 *
-	 * The activeElement will be null only if the document or document body is not yet defined.
+	 * The activeElement will be null only if the document body is not yet defined.
 	 */
-	'use strict';
+	"use strict";
 
 	function getActiveElement() /*?DOMElement*/{
-	  if (typeof document === 'undefined') {
-	    return null;
-	  }
-
 	  try {
 	    return document.activeElement || document.body;
 	  } catch (e) {
@@ -19379,7 +19390,9 @@
 	  'setValueForProperty': 'update attribute',
 	  'setValueForAttribute': 'update attribute',
 	  'deleteValueForProperty': 'remove attribute',
-	  'dangerouslyReplaceNodeWithMarkupByID': 'replace'
+	  'setValueForStyles': 'update styles',
+	  'replaceNodeWithMarkup': 'replace',
+	  'updateTextContent': 'set textContent'
 	};
 
 	function getTotalTime(measurements) {
@@ -19571,18 +19584,23 @@
 	'use strict';
 
 	var performance = __webpack_require__(145);
-	var curPerformance = performance;
+
+	var performanceNow;
 
 	/**
 	 * Detect if we can use `window.performance.now()` and gracefully fallback to
 	 * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
 	 * because of Facebook's testing infrastructure.
 	 */
-	if (!curPerformance || !curPerformance.now) {
-	  curPerformance = Date;
+	if (performance.now) {
+	  performanceNow = function () {
+	    return performance.now();
+	  };
+	} else {
+	  performanceNow = function () {
+	    return Date.now();
+	  };
 	}
-
-	var performanceNow = curPerformance.now.bind(curPerformance);
 
 	module.exports = performanceNow;
 
@@ -19631,7 +19649,7 @@
 
 	'use strict';
 
-	module.exports = '0.14.3';
+	module.exports = '0.14.5';
 
 /***/ },
 /* 147 */

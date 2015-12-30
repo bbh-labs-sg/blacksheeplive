@@ -17,7 +17,10 @@ function isDesktop() {
 }
 
 function pageCount() {
-	return isMobile() ? projects.length : parseInt((projects.length / 9).toFixed(0)) + 1;
+	if (isMobile()) {
+		return projects.length;
+	}
+	return parseInt((projects.length / 9).toFixed(0)) + 1;
 }
 
 function htmlEscape(str) {
@@ -63,7 +66,7 @@ class App extends React.Component {
 		)
 	}
 	componentDidMount() {
-		this.listenerID = dispatcher.register(function(payload) {
+		this.listenerID = dispatcher.register((payload) => {
 			switch (payload.type) {
 			case 'selectProject':
 				this.setState({ selectedProject: payload.projectID });
@@ -72,7 +75,7 @@ class App extends React.Component {
 				this.setState({ selectedProject: -1 });
 				break;
 			}
-		}.bind(this));
+		});
 	}
 	togglePage = (newPage) => {
 		let page = this.state.page;
@@ -142,8 +145,16 @@ App.Content.Menu = class Menu extends React.Component {
 		return (
 			<div className='flex one column menu align-center justify-center'>
 				<div className='flex column inner'>{
-					menus ? menus.map(function(menu, i) {
-						return <a key={i} href='#' className='flex one item justify-center' onClick={function() { togglePage(i); }}>{menu.name}</a>;
+					menus ? menus.map((menu, i) => {
+						let menuAttrs = {
+							key: {i},
+							href: '#',
+							className: 'flex one item justify-center',
+							onClick: () => {
+								togglePage(i);
+							},
+						};
+						return <a {...menuAttrs}>{menu.name}</a>;
 					}) : null
 				}</div>
 			</div>
@@ -154,26 +165,27 @@ App.Content.Menu = class Menu extends React.Component {
 App.Content.Home = class Home extends React.Component {
 	render() {
 		let currentPage = this.state.currentPage;
+		let selectedProject = this.props.selectedProject;
 		let bubbleContainers = [];
 		for (let i = 0; i < pageCount(); i++) {
 			bubbleContainers.push(i);
 		}
 		return (
 			<div ref='home' id='home' className='flex column one'>
-				<div className={cx('welcome flex one justify-start', this.props.selectedProject >= 0 && 'hide')}>
+				<div className={cx('welcome flex one justify-start', selectedProject >= 0 && 'hide')}>
 					<p>Welcome to</p>
 					<img className='logo flex align-center' src='wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' />
 				</div>
 				{
 					window.innerWidth >= 720 ?
-					bubbleContainers.map(function(i) {
+					bubbleContainers.map((i) => {
 						let styles = { transform: 'translate(0, ' + (i - currentPage) * 100 + '%)' };
 						return (
 							<div key={i} ref='bubbleContainer' className='bubble-container' style={styles}>
 								{ this.projectElements(i * 9) }
 							</div>
 						)
-					}.bind(this)) :
+					}) :
 					<div ref='bubbleContainer' className='bubble-container'>
 						{ this.projectElements() }
 					</div>
@@ -448,7 +460,7 @@ App.Content.Menu.Page = class Page extends React.Component {
 		} else {
 			elems.push( <h1 key='menu-name'>{ menu.name }</h1> )
 			elems.push( <Carousel key='carousel' ref='carousel' className='carousel' { ...carouselAttrs }>{
-				description ? description.split('\n').map(function(item, i) {
+				description ? description.split('\n').map((item, i) => {
 					return <div key={i} dangerouslySetInnerHTML={{ __html: htmlUnescape(item) }} />
 				}) : null
 			}</Carousel> );
@@ -523,7 +535,7 @@ class Poster extends React.Component {
 
 		window.addEventListener('resize', this.resize);
 
-		this.listenerID = dispatcher.register(function(payload) {
+		this.listenerID = dispatcher.register((payload) => {
 			switch (payload.type) {
 			case 'deselectProject':
 				if (!iOS && this.player) {
@@ -535,7 +547,7 @@ class Poster extends React.Component {
 				});
 				break;
 			}
-		}.bind(this));
+		});
 	}
 	componentDidUpdate() {
 		let posterHeight = this.refs.poster.offsetHeight;
