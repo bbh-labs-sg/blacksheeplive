@@ -160,9 +160,9 @@ html, body, #root {
 }
 
 @media (min-width: 720px) {
-	.bubble:nth-child(1):not(.selected) .poster { transform: translate(-12vw, 13vh) scale(0.4) }
+	.bubble:nth-child(1):not(.selected) .poster { transform: translate(-32vw, 10vh) scale(0.2) }
 	.bubble:nth-child(2):not(.selected) .poster { transform: translate(-27vw, -20vh) scale(0.3) }
-	.bubble:nth-child(3):not(.selected) .poster { transform: translate(-32vw, 10vh) scale(0.2) }
+	.bubble:nth-child(3):not(.selected) .poster { transform: translate(-12vw, 13vh) scale(0.4) }
 	.bubble:nth-child(4):not(.selected) .poster { transform: translate(3vw, -20vh) scale(0.3) }
 	.bubble:nth-child(5):not(.selected) .poster { transform: translate(8vw, 10vh) scale(0.2) }
 	.bubble:nth-child(6):not(.selected) .poster { transform: translate(20vw, 0vh) scale(0.2) }
