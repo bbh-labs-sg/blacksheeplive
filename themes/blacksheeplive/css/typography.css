@@ -9,12 +9,12 @@ a {
 	text-decoration: none;
 }
 
-#header .menu {
+.header-menu {
 	color: #fb1f25;
 	font-weight: 100;
 }
 
-#content .menu .inner .item {
+.main-content__menu-inner-item {
 	color: white;
 	font-size: 6vmin;
 	font-weight: 100;
@@ -23,13 +23,13 @@ a {
 	letter-spacing: 5px;
 }
 
-#home .welcome {
+.welcome {
 	color: #fff;
 	font-size: 1rem;
 	font-weight: 100;
 }
 
-#home .bubble .poster .info h1 {
+.project__poster-info-name {
 	color: white;
 	font-family: 'Dosis', sans-serif;
 	font-weight: 100;
@@ -40,7 +40,7 @@ a {
 	letter-spacing: 3pt;
 }
 
-#home .bubble .poster .info p {
+.project__poster-info-description {
 	color: white;
 	font-family: 'Dosis', sans-serif;
 	font-weight: 100;
@@ -50,23 +50,27 @@ a {
 	letter-spacing: 3pt;
 }
 
-.page .content p {
+.menu-content__inner-content-title {
+	text-transform: uppercase;
+	font-weight: 400;
+}
+
+.menu-content__inner-content-subtitle {
+	font-size: 1.5rem;
+	text-align: center;
+}
+
+.menu-content__inner-content-description {
 	font-size: 0.75rem;
 	text-transform: none;
 	text-align: center;
 }
 
-.page .content h1 {
-	text-transform: uppercase;
-	font-weight: 400;
+.showreel .menu-content__inner-content {
+	color: white;
 }
 
-.page .content h3 {
-	font-size: 1.5rem;
-	text-align: center;
-}
-
-#copyright {
+.footer__copyright {
 	font-size: 0.66rem;
 }
 

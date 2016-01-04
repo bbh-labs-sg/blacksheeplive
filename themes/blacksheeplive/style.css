@@ -2,121 +2,116 @@ html, body, #root {
 	background: black;
 }
 
-#header, #footer {
+.header, .footer {
 	background: white;
 }
 
-#content .menu {
+.main-content__menu {
 	background: red;
 }
 
-#content .menu .inner .item {
+.main-content__menu-inner-item {
 	cursor: pointer;
 }
 
-#content .menu .inner .item:hover {
+.main-content__menu-inner-item:hover {
 	color: black;
 	background: white;
 }
 
-#content .close {
+.main-content__close {
 	background: none;
 }
 
-#content .close.hide {
+.main-content__close--hide {
 	display: none;
 }
 
-#content .close .symbol {
+.main-content__close-symbol {
 	color: white;
 	cursor: pointer;
 }
 
-#content .close .symbol img {
+.main-content__close-symbol-img {
 	cursor: pointer;
 }
 
-#home {
+.front {
 	background: black;
 	overflow: hidden;
 }
 
-#home .bubble-container {
+.project-container {
 	transition: transform .4s;
 }
 
-#home .bubble {
+.project {
 	background: rgba(0, 0, 0, 0);
 	transition: background .4s;
 }
 
-#home .bubble.selected {
+.project--selected {
 	background: rgba(0, 0, 0, 1);
 }
 
-#home .bubble .poster {
+.project__poster {
 	border-radius: 50%;
 	overflow: hidden;
 	cursor: pointer;
 	transition: border-radius .4s, transform .4s, overflow .4s;
 }
 
-#home .bubble.selected .poster {
+.project__poster--selected {
 	opacity: 1;
 	cursor: auto;
 }
 
-#home .bubble .poster.expanded {
+.project__poster--expanded {
 	border-radius: 0%;
 	overflow: visible;
 }
 
-#home .bubble .poster .info {
+.project__poster-info {
 	opacity: 1;
 	text-align: center;
 	transition: opacity .4s;
 }
 
-#home .bubble .poster .info.ios {
+.project__poster-info--ios {
 	pointer-events: none;
 }
 
-#home .bubble .poster .info .play,
-.menu .page .info .play {
+.play {
 	cursor: pointer;
 }
 
-#home .bubble .poster.expanded .info {
-	opacity: 0;
-}
-
-#home .bubble .close .symbol {
+.project__close-symbol {
 	background: black;
 	background: rgba(0, 0, 0, 0.5);
 	cursor: pointer;
 }
 
-#home .bubble .close .symbol img {
+.project__close-symbol-img {
 	cursor: pointer;
 }
 
-#home .bubble .poster iframe {
+.project__poster-iframe {
 	opacity: 0;
 }
 
-#home .bubble .poster.playing iframe {
+.project__poster--playing .project__poster-iframe {
 	opacity: 1;
 }
 
-#home .bubble.selected .poster.playing iframe {
+.project__poster--playing .project__poster--selected .project__poster-iframe {
 	opacity: 0.5;
 }
 
-#home .bubble.selected .poster iframe.ios {
+.project--selected .project__poster-iframe--ios {
 	pointer-events: auto;
 }
 
-.welcome.hide {
+.welcome--hide {
 	display: none;
 }
 
@@ -124,61 +119,57 @@ html, body, #root {
 	border-radius: 50%;
 }
 
-.page {
+.menu-content {
 	background-color: #fb1f25;
 	color: black;
 }
 
-.page > .inner > .content {
+.menu-content__inner-content {
 	border-radius: 50%;
 	background-color: #fff;
 	background-color: rgba(255, 255, 255, 1);
 	transition: background-color .4s;
 }
 
-.page.showreel.expanded > .inner > .content {
-	border-radius: 0% !important;
-}
-
-#video-showreel {
+.showreel__video {
 	opacity: 1;
 	transition: opacity .4s;
 }
 
-.page.showreel .content .info {
+.showreel__content-info {
 	opacity: 0;
 	transition: opacity .4s;
 }
 
-.page.showreel .content:hover .info {
+.showreel__content--hover .showreel__content-info {
 	opacity: 1;
 	color: white;
 }
 
-.page.showreel.expanded .content {
+.showreel--expanded .showreel__content {
 	background: #fb1f25 !important;
 }
 
 @media (min-width: 720px) {
-	.bubble:nth-child(1):not(.selected) .poster { transform: translate(-32vw, 10vh) scale(0.2) }
-	.bubble:nth-child(2):not(.selected) .poster { transform: translate(-27vw, -20vh) scale(0.3) }
-	.bubble:nth-child(3):not(.selected) .poster { transform: translate(-12vw, 13vh) scale(0.4) }
-	.bubble:nth-child(4):not(.selected) .poster { transform: translate(3vw, -20vh) scale(0.3) }
-	.bubble:nth-child(5):not(.selected) .poster { transform: translate(8vw, 10vh) scale(0.2) }
-	.bubble:nth-child(6):not(.selected) .poster { transform: translate(20vw, 0vh) scale(0.2) }
-	.bubble:nth-child(7):not(.selected) .poster { transform: translate(20vw, 25vh) scale(0.2) }
-	.bubble:nth-child(8):not(.selected) .poster { transform: translate(31vw, -20vh) scale(0.2) }
-	.bubble:nth-child(9):not(.selected) .poster { transform: translate(31vw, 12vh) scale(0.15) }
+	.project:nth-child(1):not(.project--selected) .project__poster { transform: translate(-32vw, 10vh) scale(0.2) }
+	.project:nth-child(2):not(.project--selected) .project__poster { transform: translate(-27vw, -20vh) scale(0.3) }
+	.project:nth-child(3):not(.project--selected) .project__poster { transform: translate(-12vw, 13vh) scale(0.4) }
+	.project:nth-child(4):not(.project--selected) .project__poster { transform: translate(3vw, -20vh) scale(0.3) }
+	.project:nth-child(5):not(.project--selected) .project__poster { transform: translate(8vw, 10vh) scale(0.2) }
+	.project:nth-child(6):not(.project--selected) .project__poster { transform: translate(20vw, 0vh) scale(0.2) }
+	.project:nth-child(7):not(.project--selected) .project__poster { transform: translate(20vw, 25vh) scale(0.2) }
+	.project:nth-child(8):not(.project--selected) .project__poster { transform: translate(31vw, -20vh) scale(0.2) }
+	.project:nth-child(9):not(.project--selected) .project__poster { transform: translate(31vw, 12vh) scale(0.15) }
 }
 
 @media (max-width: 720px) {
-	#content .about .content,
-	#content .services .content,
-	#content .contact .content,
-	#content .showreel .content {
+	.about .content,
+	.services .content,
+	.contact .content,
+	.showreel .content {
 		background-color: none;
 		background-color: rgba(255, 255, 255, 0);
 	}
 
-	.bubble:not(.selected) .poster { transform: scale(0.6) }
+	.project:not(.project--selected) .project__poster { transform: scale(0.6) }
 }

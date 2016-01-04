@@ -22,10 +22,6 @@ function isMobile() {
 	return window.innerWidth < 720;
 }
 
-function isDesktop() {
-	return window.innerWidth >= 720;
-}
-
 function pageCount() {
 	if (isMobile()) {
 		return projects.length;
@@ -130,14 +126,14 @@ App.Header = (function (_React$Component2) {
 		value: function render() {
 			return React.createElement(
 				'div',
-				{ id: 'header', className: 'flex' },
+				{ className: 'header flex' },
 				React.createElement(
 					'div',
 					{ className: 'flex one justify-start' },
 					React.createElement(
 						'a',
 						{ href: '/' },
-						React.createElement('img', { className: 'logo flex align-center', src: 'wp-content/themes/blacksheeplive/images/bsl_logo.png' })
+						React.createElement('img', { className: 'header-logo flex align-center', src: 'wp-content/themes/blacksheeplive/images/bsl_logo.png' })
 					)
 				),
 				React.createElement(
@@ -145,7 +141,7 @@ App.Header = (function (_React$Component2) {
 					{ className: 'flex one justify-end' },
 					React.createElement(
 						'a',
-						{ className: 'menu flex align-center', href: '#', onClick: this.toggleMenu },
+						{ className: 'header-menu flex align-center', href: '#', onClick: this.toggleMenu },
 						'MENU'
 					)
 				)
@@ -192,21 +188,21 @@ App.Content = (function (_React$Component3) {
 				case null:
 					break;
 				default:
-					page = React.createElement(App.Content.Menu.Page, { menu: menus[this.props.page] });break;
+					page = React.createElement(App.Content.Menu.Content, { menu: menus[this.props.page] });break;
 			}
 
 			return React.createElement(
 				'div',
-				{ id: 'content', className: 'flex one column' },
-				React.createElement(App.Content.Home, { projects: this.props.projects, selectedProject: this.props.selectedProject }),
+				{ className: 'main-content flex one column' },
+				React.createElement(App.Content.Front, { projects: this.props.projects, selectedProject: this.props.selectedProject }),
 				page,
 				React.createElement(
 					'div',
-					{ className: cx('flex close justify-end', this.props.page ? '' : 'hide') },
+					{ className: cx('main-content__close flex justify-end', this.props.page ? '' : 'main-content__close--hide') },
 					React.createElement(
 						'span',
-						{ className: 'symbol', onClick: this.closePage },
-						React.createElement('img', { src: 'wp-content/themes/blacksheeplive/images/icons/close_w.png' })
+						{ className: 'main-content__close-symbol', onClick: this.closePage },
+						React.createElement('img', { className: 'main-content__close-symbol-img', src: 'wp-content/themes/blacksheeplive/images/icons/close_w.png' })
 					)
 				)
 			);
@@ -231,15 +227,14 @@ App.Content.Menu = (function (_React$Component4) {
 			var togglePage = this.props.togglePage;
 			return React.createElement(
 				'div',
-				{ className: 'flex one column menu align-center justify-center' },
+				{ className: 'main-content__menu main-content__child flex one column align-center justify-center' },
 				React.createElement(
 					'div',
-					{ className: 'flex column inner' },
+					{ className: 'main-content__menu-inner flex column' },
 					menus ? menus.map(function (menu, i) {
 						var menuAttrs = {
-							key: { i: i },
-							href: '#',
-							className: 'flex one item justify-center',
+							key: 'menu-' + i,
+							className: 'main-content__menu-inner-item flex one justify-center',
 							onClick: function onClick() {
 								togglePage(i);
 							}
@@ -258,21 +253,21 @@ App.Content.Menu = (function (_React$Component4) {
 	return Menu;
 })(React.Component);
 
-App.Content.Home = (function (_React$Component5) {
-	_inherits(Home, _React$Component5);
+App.Content.Front = (function (_React$Component5) {
+	_inherits(Front, _React$Component5);
 
-	function Home() {
+	function Front() {
 		var _Object$getPrototypeO4;
 
 		var _temp4, _this6, _ret4;
 
-		_classCallCheck(this, Home);
+		_classCallCheck(this, Front);
 
 		for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
 			args[_key4] = arguments[_key4];
 		}
 
-		return _ret4 = (_temp4 = (_this6 = _possibleConstructorReturn(this, (_Object$getPrototypeO4 = Object.getPrototypeOf(Home)).call.apply(_Object$getPrototypeO4, [this].concat(args))), _this6), _this6.state = {
+		return _ret4 = (_temp4 = (_this6 = _possibleConstructorReturn(this, (_Object$getPrototypeO4 = Object.getPrototypeOf(Front)).call.apply(_Object$getPrototypeO4, [this].concat(args))), _this6), _this6.state = {
 			minWidth: 0,
 			currentPage: 0
 		}, _this6.projectElements = function (offset) {
@@ -295,18 +290,18 @@ App.Content.Home = (function (_React$Component5) {
 					onClick: _this6.selectProject.bind(_this6, i),
 					minWidth: _this6.state.minWidth
 				};
-				elems.push(React.createElement(App.Content.Home.Project, attrs));
+				elems.push(React.createElement(App.Content.Front.Project, attrs));
 			}
 			return elems;
 		}, _this6.onWindowResize = function (event) {
-			var home = _this6.refs.home;
+			var front = _this6.refs.front;
 
 			_this6.setState({
-				minWidth: Math.min(home.offsetWidth, home.offsetHeight)
+				minWidth: Math.min(front.offsetWidth, front.offsetHeight)
 			});
 
 			if (!_this6.hammertime) {
-				_this6.hammertime = new Hammer(_this6.refs.home);
+				_this6.hammertime = new Hammer(_this6.refs.front);
 				_this6.handleGesture();
 			}
 
@@ -327,7 +322,7 @@ App.Content.Home = (function (_React$Component5) {
 			_this6.setState({ currentPage: currentPage });
 
 			if (isMobile()) {
-				_this6.refs.bubbleContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
+				_this6.refs.projectContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
 			}
 		}, _this6.up = function () {
 			var currentPage = _this6.state.currentPage;
@@ -338,7 +333,7 @@ App.Content.Home = (function (_React$Component5) {
 			_this6.setState({ currentPage: currentPage });
 
 			if (isMobile()) {
-				_this6.refs.bubbleContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
+				_this6.refs.projectContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
 			}
 		}, _this6.handleGesture = function () {
 			// Handle Mouse Wheel / Touchpad
@@ -370,47 +365,45 @@ App.Content.Home = (function (_React$Component5) {
 				}
 			});
 		}, _this6.handleGestureDesktop = function () {
-			//$(window).off('wheel');
-			//this.hammertime.off('pan');
 			_this6.setState({ currentPage: 0 });
-			_this6.refs.home.style.transform = 'translate(0, 0%)';
+			_this6.refs.front.style.transform = 'translate(0, 0%)';
 		}, _temp4), _possibleConstructorReturn(_this6, _ret4);
 	}
 
-	_createClass(Home, [{
+	_createClass(Front, [{
 		key: 'render',
 		value: function render() {
 			var _this7 = this;
 
 			var currentPage = this.state.currentPage;
 			var selectedProject = this.props.selectedProject;
-			var bubbleContainers = [];
+			var projectContainers = [];
 			for (var i = 0; i < pageCount(); i++) {
-				bubbleContainers.push(i);
+				projectContainers.push(i);
 			}
 			return React.createElement(
 				'div',
-				{ ref: 'home', id: 'home', className: 'flex column one' },
+				{ ref: 'front', className: 'front main-content__child flex column one' },
 				React.createElement(
 					'div',
-					{ className: cx('welcome flex one justify-start', selectedProject >= 0 && 'hide') },
+					{ className: cx('welcome flex one justify-start', selectedProject >= 0 && 'welcome--hide') },
 					React.createElement(
 						'p',
 						null,
 						'Welcome to'
 					),
-					React.createElement('img', { className: 'logo flex align-center', src: 'wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' })
+					React.createElement('img', { className: 'welcome__img flex align-center', src: 'wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' })
 				),
-				window.innerWidth >= 720 ? bubbleContainers.map(function (i) {
+				window.innerWidth >= 720 ? projectContainers.map(function (i) {
 					var styles = { transform: 'translate(0, ' + (i - currentPage) * 100 + '%)' };
 					return React.createElement(
 						'div',
-						{ key: i, ref: 'bubbleContainer', className: 'bubble-container', style: styles },
+						{ key: i, ref: 'projectContainer', className: 'project-container', style: styles },
 						_this7.projectElements(i * 9)
 					);
 				}) : React.createElement(
 					'div',
-					{ ref: 'bubbleContainer', className: 'bubble-container' },
+					{ ref: 'projectContainer', className: 'project-container' },
 					this.projectElements()
 				),
 				React.createElement(
@@ -433,24 +426,24 @@ App.Content.Home = (function (_React$Component5) {
 		}
 	}]);
 
-	return Home;
+	return Front;
 })(React.Component);
 
-App.Content.Menu.Page = (function (_React$Component6) {
-	_inherits(Page, _React$Component6);
+App.Content.Menu.Content = (function (_React$Component6) {
+	_inherits(Content, _React$Component6);
 
-	function Page() {
+	function Content() {
 		var _Object$getPrototypeO5;
 
 		var _temp5, _this8, _ret5;
 
-		_classCallCheck(this, Page);
+		_classCallCheck(this, Content);
 
 		for (var _len5 = arguments.length, args = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
 			args[_key5] = arguments[_key5];
 		}
 
-		return _ret5 = (_temp5 = (_this8 = _possibleConstructorReturn(this, (_Object$getPrototypeO5 = Object.getPrototypeOf(Page)).call.apply(_Object$getPrototypeO5, [this].concat(args))), _this8), _this8.state = {
+		return _ret5 = (_temp5 = (_this8 = _possibleConstructorReturn(this, (_Object$getPrototypeO5 = Object.getPrototypeOf(Content)).call.apply(_Object$getPrototypeO5, [this].concat(args))), _this8), _this8.state = {
 			expanded: false
 		}, _this8.onPlayerReady = function () {
 			if (_this8.player) {
@@ -468,9 +461,9 @@ App.Content.Menu.Page = (function (_React$Component6) {
 		}, _this8.expand = function (event) {
 			_this8.setState({ expanded: true });
 		}, _this8.resize = function () {
-			var player = document.getElementById('video-showreel');
-			var content = document.getElementById('content');
-			var adminbar = document.getElementById('wpadminbar');
+			var player = $('#showreel-video')[0];
+			var content = $('.main-content')[0];
+			var adminbar = $('#wpadminbar')[0];
 
 			var container = undefined;
 			if (_this8.state.expanded) {
@@ -501,8 +494,8 @@ App.Content.Menu.Page = (function (_React$Component6) {
 			if (_this8.isShowreel()) {
 				if (iOS) {
 					var iframeAttrs = {
-						id: 'video-showreel',
-						className: 'ios',
+						id: 'showreel-video',
+						className: 'showreel-video ios',
 						width: '560',
 						height: '315',
 						src: 'https://www.youtube.com/embed/EYkz_2HchLg?controls=0&modestbranding=1',
@@ -510,12 +503,12 @@ App.Content.Menu.Page = (function (_React$Component6) {
 						allowFullScreen: 'true',
 						onClick: _this8.expand
 					};
-					elems.push(React.createElement('iframe', _extends({ key: 'video-showreel' }, iframeAttrs)));
+					elems.push(React.createElement('iframe', _extends({ key: 'showreel-video' }, iframeAttrs)));
 				} else {
-					elems.push(React.createElement('div', { key: 'video-showreel', id: 'video-showreel' }));
+					elems.push(React.createElement('div', { key: 'showreel-video', id: 'showreel-video', className: 'showreel-video' }));
 					elems.push(React.createElement(
 						'div',
-						{ key: 'showreel-info', className: 'info' },
+						{ key: 'showreel-info', className: 'menu-content__info' },
 						React.createElement(
 							'h1',
 							null,
@@ -527,14 +520,19 @@ App.Content.Menu.Page = (function (_React$Component6) {
 			} else {
 				elems.push(React.createElement(
 					'h1',
-					{ key: 'menu-name' },
+					{ key: 'menu-name', className: 'menu-content__inner-content-title' },
 					menu.name
 				));
 				elems.push(React.createElement(
 					Carousel,
 					_extends({ key: 'carousel', ref: 'carousel', className: 'carousel' }, carouselAttrs),
 					description ? description.split('\n').map(function (item, i) {
-						return React.createElement('div', { key: i, dangerouslySetInnerHTML: { __html: htmlUnescape(item) } });
+						var descriptionAttrs = {
+							key: 'description-' + i,
+							className: 'menu-content__inner-content-description',
+							dangerouslySetInnerHTML: { __html: htmlUnescape(item) }
+						};
+						return React.createElement('div', descriptionAttrs);
 					}) : null
 				));
 			}
@@ -548,20 +546,20 @@ App.Content.Menu.Page = (function (_React$Component6) {
 		}, _temp5), _possibleConstructorReturn(_this8, _ret5);
 	}
 
-	_createClass(Page, [{
+	_createClass(Content, [{
 		key: 'render',
 		value: function render() {
 			var isShowreel = this.isShowreel();
-			var classnames = cx('page flex align-center justify-center', !isShowreel && 'column', isShowreel && 'row showreel', this.state.expanded && isShowreel && 'expanded');
+			var classnames = cx('menu-content main-content__child flex align-center justify-center', !isShowreel && 'column', isShowreel && 'row showreel', this.state.expanded && isShowreel && 'menu-content--expanded');
 			return React.createElement(
 				'div',
 				{ className: classnames },
 				React.createElement(
 					'div',
-					{ className: 'inner' },
+					{ className: 'menu-content__inner' },
 					React.createElement(
 						'div',
-						{ className: 'content flex column align-center justify-center' },
+						{ className: 'menu-content__inner-content flex column align-center justify-center' },
 						this.menuPageContent()
 					)
 				)
@@ -575,7 +573,7 @@ App.Content.Menu.Page = (function (_React$Component6) {
 			}
 
 			if (!iOS) {
-				this.player = new YT.Player('video-showreel', {
+				this.player = new YT.Player('showreel-video', {
 					width: '1280',
 					height: '720',
 					videoId: 'EYkz_2HchLg',
@@ -619,7 +617,7 @@ App.Content.Menu.Page = (function (_React$Component6) {
 		}
 	}]);
 
-	return Page;
+	return Content;
 })(React.Component);
 
 var Poster = (function (_React$Component7) {
@@ -661,13 +659,13 @@ var Poster = (function (_React$Component7) {
 			_this9.setState({ hovering: state });
 			_this9.resize();
 		}, _this9.resize = function () {
-			var id = 'video-' + _this9.props.projectID;
-			var player = document.getElementById(id);
-			var content = document.getElementById('content');
-			var adminbar = document.getElementById('wpadminbar');
-			var poster = $('.poster.playing')[0];
+			var id = '#video-' + _this9.props.projectID;
+			var player = $(id)[0];
+			var content = $('.main-content')[0];
+			var adminbar = $('#wpadminbar')[0];
+			var poster = $('.project__poster--playing')[0];
 			if (!poster) {
-				poster = $('.poster.selected')[0];
+				poster = $('.project__poster--selected')[0];
 			}
 
 			var container = undefined;
@@ -683,7 +681,6 @@ var Poster = (function (_React$Component7) {
 			var minWidth = newPlayerWidth < container.offsetWidth ? newPlayerWidth : container.offsetWidth;
 			var newPlayerX = (content.offsetWidth - player.offsetWidth) * 0.5 - (poster ? poster.offsetLeft : 0);
 			var newPlayerY = 0;
-			//let newPlayerY = this.props.selected ? (content.offsetTop + adminbar.offsetHeight - window.pageYOffset) : 0;
 			if (isFinite(newPlayerX) || newPlayerX != 0) {
 				$(player).width(newPlayerWidth).height(newPlayerHeight).css({
 					left: newPlayerX,
@@ -705,7 +702,7 @@ var Poster = (function (_React$Component7) {
 			var hovering = this.state.hovering;
 			var expanded = this.state.expanded;
 			var selected = this.props.selected;
-			var classnames = cx('flex column one poster align-center justify-center', hovering && 'playing', selected && 'selected', expanded && 'expanded');
+			var classnames = cx('project__poster flex column one align-center justify-center', hovering && 'project__poster--playing', selected && 'project__poster--selected', expanded && 'project__poster--expanded');
 			var onClick = undefined,
 			    onMouseOver = undefined,
 			    onMouseOut = undefined;
@@ -744,7 +741,7 @@ var Poster = (function (_React$Component7) {
 				_extends({ ref: 'poster' }, posterAttrs),
 				iOS && !selected && React.createElement('iframe', _extends({ key: 'ios-player-unselected' }, iframeAttrs)),
 				iOS && selected && React.createElement('iframe', _extends({ key: 'ios-player-selected' }, iframeAttrs)),
-				!iOS && React.createElement('div', { id: key }),
+				!iOS && React.createElement('div', { id: key, className: 'project__poster-iframe' }),
 				this.props.selected ? React.createElement(Poster.Info, { project: project, expand: this.expand }) : null
 			);
 		}
@@ -849,18 +846,18 @@ Poster.Info = (function (_React$Component8) {
 			}
 			return React.createElement(
 				'div',
-				_extends({ className: cx('info', iOS && 'ios') }, infoAttrs),
+				_extends({ className: cx('project__poster-info', iOS && 'project__poster-info--ios') }, infoAttrs),
 				React.createElement(
 					'h1',
-					null,
+					{ className: 'project__poster-info-name' },
 					project.name
 				),
 				React.createElement(
 					'p',
-					null,
+					{ className: 'project__poster-info-description' },
 					project.description
 				),
-				React.createElement('img', { onClick: this.props.expand, className: cx('play flex align-center', iOS && 'ios'), src: 'wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' })
+				React.createElement('img', { onClick: this.props.expand, className: cx('play flex align-center', iOS && 'play--ios'), src: 'wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' })
 			);
 		}
 	}]);
@@ -868,7 +865,7 @@ Poster.Info = (function (_React$Component8) {
 	return Info;
 })(React.Component);
 
-App.Content.Home.Project = (function (_React$Component9) {
+App.Content.Front.Project = (function (_React$Component9) {
 	_inherits(Project, _React$Component9);
 
 	function Project() {
@@ -887,9 +884,9 @@ App.Content.Home.Project = (function (_React$Component9) {
 				minWidth: this.props.minWidth,
 				onClick: this.props.onClick
 			};
-			var bubbleAttrs = {};
-			if (window.innerWidth < 720) {
-				bubbleAttrs = {
+			var projectAttrs = {};
+			if (isMobile()) {
+				projectAttrs = {
 					style: {
 						transform: 'translate(0, ' + this.props.projectID * 100 + '%)'
 					}
@@ -897,14 +894,14 @@ App.Content.Home.Project = (function (_React$Component9) {
 			}
 			return React.createElement(
 				'div',
-				_extends({ className: cx('flex column bubble align-center', this.props.selected && 'selected') }, bubbleAttrs),
+				_extends({ className: cx('project flex column align-center', this.props.selected && 'project--selected') }, projectAttrs),
 				React.createElement(
 					'div',
-					{ className: 'close' },
+					{ className: 'project__close' },
 					React.createElement(
 						'span',
-						{ className: 'symbol', onClick: this.deselectProject },
-						React.createElement('img', { src: 'wp-content/themes/blacksheeplive/images/icons/close_w.png' })
+						{ className: 'project__close-symbol', onClick: this.deselectProject },
+						React.createElement('img', { className: 'project__close-symbol-img', src: 'wp-content/themes/blacksheeplive/images/icons/close_w.png' })
 					)
 				),
 				React.createElement(Poster, posterAttrs)
@@ -934,40 +931,40 @@ App.Footer = (function (_React$Component10) {
 		value: function render() {
 			return React.createElement(
 				'div',
-				{ id: 'footer', className: 'flex' },
+				{ className: 'footer flex' },
 				React.createElement(
 					'p',
-					{ className: 'copyright flex one align-center justify-start wrap' },
+					{ className: 'footer__copyright flex one align-center justify-start wrap' },
 					'COPYRIGHT (C) 2015',
-					React.createElement('img', { className: 'logo flex align-center ', src: 'wp-content/themes/blacksheeplive/images/bsl_logo_text_b.png' })
+					React.createElement('img', { className: 'footer__copyright-logo flex align-center ', src: 'wp-content/themes/blacksheeplive/images/bsl_logo_text_b.png' })
 				),
 				React.createElement(
 					'span',
-					{ className: 'flex one align-center justify-end social' },
+					{ className: 'footer__social flex one align-center justify-end' },
 					React.createElement(
 						'a',
-						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
-						React.createElement('img', { src: 'wp-content/themes/blacksheeplive/images/icons/facebook.png' })
+						{ className: 'footer__social-link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { className: 'footer__social-img', src: 'wp-content/themes/blacksheeplive/images/icons/facebook.png' })
 					),
 					React.createElement(
 						'a',
-						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
-						React.createElement('img', { src: 'wp-content/themes/blacksheeplive/images/icons/instagram.png' })
+						{ className: 'footer__social-link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { className: 'footer__social-img', src: 'wp-content/themes/blacksheeplive/images/icons/instagram.png' })
 					),
 					React.createElement(
 						'a',
-						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
-						React.createElement('img', { src: 'wp-content/themes/blacksheeplive/images/icons/linkedin.png' })
+						{ className: 'footer__social-link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { className: 'footer__social-img', src: 'wp-content/themes/blacksheeplive/images/icons/linkedin.png' })
 					),
 					React.createElement(
 						'a',
-						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
-						React.createElement('img', { src: 'wp-content/themes/blacksheeplive/images/icons/twitter.png' })
+						{ className: 'footer__social-link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { className: 'footer__social-img', src: 'wp-content/themes/blacksheeplive/images/icons/twitter.png' })
 					),
 					React.createElement(
 						'a',
-						{ className: 'link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
-						React.createElement('img', { src: 'wp-content/themes/blacksheeplive/images/icons/youtube.png' })
+						{ className: 'footer__social-link', href: 'https://www.facebook.com/BBHAsiaPac/', target: '_blank' },
+						React.createElement('img', { className: 'footer__social-img', src: 'wp-content/themes/blacksheeplive/images/icons/youtube.png' })
 					)
 				)
 			);

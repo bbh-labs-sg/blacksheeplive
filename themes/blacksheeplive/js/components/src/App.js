@@ -12,10 +12,6 @@ function isMobile() {
 	return window.innerWidth < 720;
 }
 
-function isDesktop() {
-	return window.innerWidth >= 720;
-}
-
 function pageCount() {
 	if (isMobile()) {
 		return projects.length;
@@ -86,12 +82,12 @@ class App extends React.Component {
 App.Header = class Header extends React.Component {
 	render() {
 		return (
-			<div id='header' className='flex'>
+			<div className='header flex'>
 				<div className='flex one justify-start'>
-					<a href='/'><img className='logo flex align-center' src='wp-content/themes/blacksheeplive/images/bsl_logo.png' /></a>
+					<a href='/'><img className='header-logo flex align-center' src='wp-content/themes/blacksheeplive/images/bsl_logo.png' /></a>
 				</div>
 				<div className='flex one justify-end'>
-					<a className='menu flex align-center' href='#' onClick={this.toggleMenu}>MENU</a>
+					<a className='header-menu flex align-center' href='#' onClick={this.toggleMenu}>MENU</a>
 				</div>
 			</div>
 		)
@@ -113,16 +109,16 @@ App.Content = class Content extends React.Component {
 		case null:
 			break;
 		default:
-			page = <App.Content.Menu.Page menu={menus[this.props.page]} />; break;
+			page = <App.Content.Menu.Content menu={menus[this.props.page]} />; break;
 		}
 
 		return (
-			<div id='content' className='flex one column'>
-				<App.Content.Home projects={this.props.projects} selectedProject={this.props.selectedProject} />
+			<div className='main-content flex one column'>
+				<App.Content.Front projects={this.props.projects} selectedProject={this.props.selectedProject} />
 				{ page }
-				<div className={cx('flex close justify-end', this.props.page ? '' : 'hide')}>
-					<span className='symbol' onClick={this.closePage}>
-						<img src='wp-content/themes/blacksheeplive/images/icons/close_w.png' />
+				<div className={cx('main-content__close flex justify-end', this.props.page ? '' : 'main-content__close--hide')}>
+					<span className='main-content__close-symbol' onClick={this.closePage}>
+						<img className='main-content__close-symbol-img' src='wp-content/themes/blacksheeplive/images/icons/close_w.png' />
 					</span>
 				</div>
 			</div>
@@ -143,13 +139,12 @@ App.Content.Menu = class Menu extends React.Component {
 	render() {
 		let togglePage = this.props.togglePage;
 		return (
-			<div className='flex one column menu align-center justify-center'>
-				<div className='flex column inner'>{
+			<div className='main-content__menu main-content__child flex one column align-center justify-center'>
+				<div className='main-content__menu-inner flex column'>{
 					menus ? menus.map((menu, i) => {
 						let menuAttrs = {
-							key: {i},
-							href: '#',
-							className: 'flex one item justify-center',
+							key: 'menu-' + i,
+							className: 'main-content__menu-inner-item flex one justify-center',
 							onClick: () => {
 								togglePage(i);
 							},
@@ -162,31 +157,31 @@ App.Content.Menu = class Menu extends React.Component {
 	}
 }
 
-App.Content.Home = class Home extends React.Component {
+App.Content.Front = class Front extends React.Component {
 	render() {
 		let currentPage = this.state.currentPage;
 		let selectedProject = this.props.selectedProject;
-		let bubbleContainers = [];
+		let projectContainers = [];
 		for (let i = 0; i < pageCount(); i++) {
-			bubbleContainers.push(i);
+			projectContainers.push(i);
 		}
 		return (
-			<div ref='home' id='home' className='flex column one'>
-				<div className={cx('welcome flex one justify-start', selectedProject >= 0 && 'hide')}>
+			<div ref='front' className='front main-content__child flex column one'>
+				<div className={cx('welcome flex one justify-start', selectedProject >= 0 && 'welcome--hide')}>
 					<p>Welcome to</p>
-					<img className='logo flex align-center' src='wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' />
+					<img className='welcome__img flex align-center' src='wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' />
 				</div>
 				{
 					window.innerWidth >= 720 ?
-					bubbleContainers.map((i) => {
+					projectContainers.map((i) => {
 						let styles = { transform: 'translate(0, ' + (i - currentPage) * 100 + '%)' };
 						return (
-							<div key={i} ref='bubbleContainer' className='bubble-container' style={styles}>
+							<div key={i} ref='projectContainer' className='project-container' style={styles}>
 								{ this.projectElements(i * 9) }
 							</div>
 						)
 					}) :
-					<div ref='bubbleContainer' className='bubble-container'>
+					<div ref='projectContainer' className='project-container'>
 						{ this.projectElements() }
 					</div>
 				}
@@ -231,19 +226,19 @@ App.Content.Home = class Home extends React.Component {
 				onClick: this.selectProject.bind(this, i),
 				minWidth: this.state.minWidth,
 			};
-			elems.push(<App.Content.Home.Project {...attrs} />);
+			elems.push(<App.Content.Front.Project {...attrs} />);
 		}
 		return elems;
 	}
 	onWindowResize = (event) => {
-		let home = this.refs.home;
+		let front = this.refs.front;
 
 		this.setState({
-			minWidth: Math.min(home.offsetWidth, home.offsetHeight),
+			minWidth: Math.min(front.offsetWidth, front.offsetHeight),
 		});
 
 		if (!this.hammertime) {
-			this.hammertime = new Hammer(this.refs.home);
+			this.hammertime = new Hammer(this.refs.front);
 			this.handleGesture();
 		}
 
@@ -266,7 +261,7 @@ App.Content.Home = class Home extends React.Component {
 		this.setState({ currentPage: currentPage });
 
 		if (isMobile()) {
-			this.refs.bubbleContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
+			this.refs.projectContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
 		}
 	}
 	up = () => {
@@ -278,7 +273,7 @@ App.Content.Home = class Home extends React.Component {
 		this.setState({ currentPage: currentPage });
 
 		if (isMobile()) {
-			this.refs.bubbleContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
+			this.refs.projectContainer.style.transform = 'translate(0, ' + currentPage * -100 + '%)';
 		}
 	}
 	handleGesture = () => {
@@ -312,26 +307,24 @@ App.Content.Home = class Home extends React.Component {
 		});
 	}
 	handleGestureDesktop = () => {
-		//$(window).off('wheel');
-		//this.hammertime.off('pan');
 		this.setState({ currentPage: 0 });
-		this.refs.home.style.transform = 'translate(0, 0%)';
+		this.refs.front.style.transform = 'translate(0, 0%)';
 	}
 }
 
-App.Content.Menu.Page = class Page extends React.Component {
+App.Content.Menu.Content = class Content extends React.Component {
 	render() {
 		let isShowreel = this.isShowreel();
 		let classnames = cx(
-			'page flex align-center justify-center',
+			'menu-content main-content__child flex align-center justify-center',
 			!isShowreel && 'column',
 			isShowreel && 'row showreel',
-			this.state.expanded && isShowreel && 'expanded'
+			this.state.expanded && isShowreel && 'menu-content--expanded'
 		);
 		return (
 			<div className={classnames}>
-				<div className='inner'>
-					<div className='content flex column align-center justify-center'>
+				<div className='menu-content__inner'>
+					<div className='menu-content__inner-content flex column align-center justify-center'>
 						{ this.menuPageContent() }
 					</div>
 				</div>
@@ -347,7 +340,7 @@ App.Content.Menu.Page = class Page extends React.Component {
 		}
 
 		if (!iOS) {
-			this.player = new YT.Player( 'video-showreel', {
+			this.player = new YT.Player( 'showreel-video', {
 				width: '1280',
 				height: '720',
 				videoId: 'EYkz_2HchLg',
@@ -404,9 +397,9 @@ App.Content.Menu.Page = class Page extends React.Component {
 		this.setState({ expanded: true });
 	}
 	resize = () => {
-		let player = document.getElementById('video-showreel');
-		let content = document.getElementById('content');
-		let adminbar = document.getElementById('wpadminbar');
+		let player = $('#showreel-video')[0];
+		let content = $('.main-content')[0];
+		let adminbar = $('#wpadminbar')[0];
 
 		let container;
 		if (this.state.expanded) {
@@ -438,8 +431,8 @@ App.Content.Menu.Page = class Page extends React.Component {
 		if (this.isShowreel()) {
 			if (iOS) {
 				let iframeAttrs = {
-					id: 'video-showreel',
-					className: 'ios',
+					id: 'showreel-video',
+					className: 'showreel-video ios',
 					width: '560',
 					height: '315',
 					src: 'https://www.youtube.com/embed/EYkz_2HchLg?controls=0&modestbranding=1',
@@ -447,21 +440,26 @@ App.Content.Menu.Page = class Page extends React.Component {
 					allowFullScreen: 'true',
 					onClick: this.expand,
 				};
-				elems.push( <iframe key='video-showreel' {...iframeAttrs}></iframe> );
+				elems.push( <iframe key='showreel-video' {...iframeAttrs}></iframe> );
 			} else {
-				elems.push( <div key='video-showreel' id='video-showreel'></div> );
+				elems.push( <div key='showreel-video' id='showreel-video' className='showreel-video'></div> );
 				elems.push(
-					<div key='showreel-info' className='info'>
+					<div key='showreel-info' className='menu-content__info'>
 						<h1>Showreel</h1>
 						<img onClick={this.expand} className='play flex align-center' src='wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' />
 					</div>
 				);
 			}
 		} else {
-			elems.push( <h1 key='menu-name'>{ menu.name }</h1> )
+			elems.push( <h1 key='menu-name' className='menu-content__inner-content-title'>{ menu.name }</h1> )
 			elems.push( <Carousel key='carousel' ref='carousel' className='carousel' { ...carouselAttrs }>{
 				description ? description.split('\n').map((item, i) => {
-					return <div key={i} dangerouslySetInnerHTML={{ __html: htmlUnescape(item) }} />
+					let descriptionAttrs = {
+						key: 'description-' + i,
+						className: 'menu-content__inner-content-description',
+						dangerouslySetInnerHTML: { __html: htmlUnescape(item) }, 
+					};
+					return <div {...descriptionAttrs} />
 				}) : null
 			}</Carousel> );
 		}
@@ -484,7 +482,7 @@ class Poster extends React.Component {
 		let hovering = this.state.hovering;
 		let expanded = this.state.expanded;
 		let selected = this.props.selected;
-		let classnames = cx('flex column one poster align-center justify-center', hovering && 'playing', selected && 'selected', expanded && 'expanded' );
+		let classnames = cx('project__poster flex column one align-center justify-center', hovering && 'project__poster--playing', selected && 'project__poster--selected', expanded && 'project__poster--expanded' );
 		let onClick, onMouseOver, onMouseOut;
 		if (!selected) {
 			if (!hovering) {
@@ -520,7 +518,7 @@ class Poster extends React.Component {
 			<div ref='poster' {...posterAttrs}>
 				{ iOS && !selected && <iframe key='ios-player-unselected' {...iframeAttrs}></iframe> }
 				{ iOS && selected && <iframe key='ios-player-selected' {...iframeAttrs}></iframe> }
-				{ !iOS && <div id={key} /> }
+				{ !iOS && <div id={key} className='project__poster-iframe' /> }
 				{ this.props.selected ? <Poster.Info project={project} expand={this.expand} /> : null }
 			</div>
 		);
@@ -624,13 +622,13 @@ class Poster extends React.Component {
 		this.resize();
 	}
 	resize = () => {
-		let id = 'video-' + this.props.projectID;
-		let player = document.getElementById(id);
-		let content = document.getElementById('content');
-		let adminbar = document.getElementById('wpadminbar');
-		let poster = $('.poster.playing')[0];
+		let id = '#video-' + this.props.projectID;
+		let player = $(id)[0];
+		let content = $('.main-content')[0];
+		let adminbar = $('#wpadminbar')[0];
+		let poster = $('.project__poster--playing')[0];
 		if (!poster) {
-			poster = $('.poster.selected')[0];
+			poster = $('.project__poster--selected')[0];
 		}
 
 		let container;
@@ -646,7 +644,6 @@ class Poster extends React.Component {
 		let minWidth = newPlayerWidth < container.offsetWidth ? newPlayerWidth : container.offsetWidth;
 		let newPlayerX = (content.offsetWidth - player.offsetWidth) * 0.5 - (poster ? poster.offsetLeft : 0);
 		let newPlayerY = 0;
-		//let newPlayerY = this.props.selected ? (content.offsetTop + adminbar.offsetHeight - window.pageYOffset) : 0;
 		if (isFinite(newPlayerX) || newPlayerX != 0) {
 			$(player)
 				.width(newPlayerWidth)
@@ -671,16 +668,16 @@ Poster.Info = class Info extends React.Component {
 			infoAttrs = { onClick: this.props.expand };
 		}
 		return (
-			<div className={cx('info', iOS && 'ios')} {...infoAttrs}>
-				<h1>{ project.name }</h1>
-				<p>{ project.description }</p>
-				<img onClick={this.props.expand} className={cx('play flex align-center', iOS && 'ios')} src='wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' />
+			<div className={cx('project__poster-info', iOS && 'project__poster-info--ios')} {...infoAttrs}>
+				<h1 className='project__poster-info-name'>{ project.name }</h1>
+				<p className='project__poster-info-description'>{ project.description }</p>
+				<img onClick={this.props.expand} className={cx('play flex align-center', iOS && 'play--ios')} src='wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' />
 			</div>
 		)
 	}
 }
 
-App.Content.Home.Project = class Project extends React.Component {
+App.Content.Front.Project = class Project extends React.Component {
 	render() {
 		let posterAttrs = {
 			project: this.props.project,
@@ -689,19 +686,19 @@ App.Content.Home.Project = class Project extends React.Component {
 			minWidth: this.props.minWidth,
 			onClick: this.props.onClick,
 		};
-		let bubbleAttrs = {};
-		if (window.innerWidth < 720) {
-			bubbleAttrs = {
+		let projectAttrs = {};
+		if (isMobile()) {
+			projectAttrs = {
 				style: {
 					transform: 'translate(0, ' + this.props.projectID * 100 + '%)',
 				},
 			};
 		}
 		return (
-			<div className={cx('flex column bubble align-center', this.props.selected && 'selected')} {...bubbleAttrs}>
-				<div className='close'>
-					<span className='symbol' onClick={ this.deselectProject }>
-						<img src='wp-content/themes/blacksheeplive/images/icons/close_w.png' />
+			<div className={cx('project flex column align-center', this.props.selected && 'project--selected')} {...projectAttrs}>
+				<div className='project__close'>
+					<span className='project__close-symbol' onClick={ this.deselectProject }>
+						<img className='project__close-symbol-img' src='wp-content/themes/blacksheeplive/images/icons/close_w.png' />
 					</span>
 				</div>
 				<Poster {...posterAttrs} />
@@ -716,26 +713,26 @@ App.Content.Home.Project = class Project extends React.Component {
 App.Footer = class Footer extends React.Component {
 	render() {
 		return (
-			<div id='footer' className='flex'>
-				<p className='copyright flex one align-center justify-start wrap'>
+			<div className='footer flex'>
+				<p className='footer__copyright flex one align-center justify-start wrap'>
 					COPYRIGHT (C) 2015
-					<img className='logo flex align-center ' src='wp-content/themes/blacksheeplive/images/bsl_logo_text_b.png' />
+					<img className='footer__copyright-logo flex align-center ' src='wp-content/themes/blacksheeplive/images/bsl_logo_text_b.png' />
 				</p>
-				<span className='flex one align-center justify-end social'>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
-						<img src='wp-content/themes/blacksheeplive/images/icons/facebook.png' />
+				<span className='footer__social flex one align-center justify-end'>
+					<a className='footer__social-link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img className='footer__social-img' src='wp-content/themes/blacksheeplive/images/icons/facebook.png' />
 					</a>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
-						<img src='wp-content/themes/blacksheeplive/images/icons/instagram.png' />
+					<a className='footer__social-link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img className='footer__social-img' src='wp-content/themes/blacksheeplive/images/icons/instagram.png' />
 					</a>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
-						<img src='wp-content/themes/blacksheeplive/images/icons/linkedin.png' />
+					<a className='footer__social-link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img className='footer__social-img' src='wp-content/themes/blacksheeplive/images/icons/linkedin.png' />
 					</a>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
-						<img src='wp-content/themes/blacksheeplive/images/icons/twitter.png' />
+					<a className='footer__social-link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img className='footer__social-img' src='wp-content/themes/blacksheeplive/images/icons/twitter.png' />
 					</a>
-					<a className='link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
-						<img src='wp-content/themes/blacksheeplive/images/icons/youtube.png' />
+					<a className='footer__social-link' href='https://www.facebook.com/BBHAsiaPac/' target="_blank">
+						<img className='footer__social-img' src='wp-content/themes/blacksheeplive/images/icons/youtube.png' />
 					</a>
 				</span>
 			</div>
