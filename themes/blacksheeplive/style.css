@@ -1,3 +1,16 @@
+/*
+Theme Name: BlackSheepLive
+Theme URI: https://blacksheeplive.bbh-labs.com.sg
+Author: BBH Labs
+Author URI: https://bbh-labs.com.sg/
+Description: BlackSheepLive is a theme designed specifically for the website of the digital production company BlackSheepLive.
+Version: 0.1
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: black, red, white, dark, fixed-layout, responsive-layout, custom-background, custom-colors, custom-header, custom-menu, featured-images
+Text Domain: blacksheeplive
+*/
+
 html, body, #root {
 	background: black;
 }
