@@ -123,7 +123,7 @@
 					'div',
 					{ id: 'app', className: 'flex column' },
 					React.createElement(App.Header, headerAttrs),
-					React.createElement(App.Content, contentAttrs),
+					React.createElement(App.MainContent, contentAttrs),
 					React.createElement(App.Footer, null)
 				);
 			}
@@ -198,21 +198,21 @@
 		return Header;
 	})(React.Component);
 
-	App.Content = (function (_React$Component3) {
-		_inherits(Content, _React$Component3);
+	App.MainContent = (function (_React$Component3) {
+		_inherits(MainContent, _React$Component3);
 
-		function Content() {
+		function MainContent() {
 			var _Object$getPrototypeO3;
 
 			var _temp3, _this4, _ret3;
 
-			_classCallCheck(this, Content);
+			_classCallCheck(this, MainContent);
 
 			for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
 				args[_key3] = arguments[_key3];
 			}
 
-			return _ret3 = (_temp3 = (_this4 = _possibleConstructorReturn(this, (_Object$getPrototypeO3 = Object.getPrototypeOf(Content)).call.apply(_Object$getPrototypeO3, [this].concat(args))), _this4), _this4.state = {
+			return _ret3 = (_temp3 = (_this4 = _possibleConstructorReturn(this, (_Object$getPrototypeO3 = Object.getPrototypeOf(MainContent)).call.apply(_Object$getPrototypeO3, [this].concat(args))), _this4), _this4.state = {
 				project: null
 			}, _this4.toggleMenu = function () {
 				_this4.props.togglePage('menu');
@@ -221,26 +221,26 @@
 			}, _temp3), _possibleConstructorReturn(_this4, _ret3);
 		}
 
-		_createClass(Content, [{
+		_createClass(MainContent, [{
 			key: 'render',
 			value: function render() {
 				var page = undefined;
 
 				switch (this.props.page) {
 					case 'menu':
-						page = React.createElement(App.Content.Menu, { togglePage: this.props.togglePage });break;
+						page = React.createElement(App.MainContent.Menu, { togglePage: this.props.togglePage });break;
 					case 'showreel':
-						page = React.createElement(App.Content.Showreel, null);break;
+						page = React.createElement(App.MainContent.Showreel, null);break;
 					case null:
 						break;
 					default:
-						page = React.createElement(App.Content.Menu.Content, { menu: menus[this.props.page] });break;
+						page = React.createElement(App.MainContent.Menu.Content, { menu: menus[this.props.page] });break;
 				}
 
 				return React.createElement(
 					'div',
 					{ className: 'main-content flex one column' },
-					React.createElement(App.Content.Front, { projects: this.props.projects, selectedProject: this.props.selectedProject }),
+					React.createElement(App.MainContent.Front, { projects: this.props.projects, selectedProject: this.props.selectedProject }),
 					page,
 					React.createElement(
 						'div',
@@ -255,10 +255,10 @@
 			}
 		}]);
 
-		return Content;
+		return MainContent;
 	})(React.Component);
 
-	App.Content.Menu = (function (_React$Component4) {
+	App.MainContent.Menu = (function (_React$Component4) {
 		_inherits(Menu, _React$Component4);
 
 		function Menu() {
@@ -299,7 +299,7 @@
 		return Menu;
 	})(React.Component);
 
-	App.Content.Front = (function (_React$Component5) {
+	App.MainContent.Front = (function (_React$Component5) {
 		_inherits(Front, _React$Component5);
 
 		function Front() {
@@ -336,7 +336,7 @@
 						onClick: _this6.selectProject.bind(_this6, i),
 						minWidth: _this6.state.minWidth
 					};
-					elems.push(React.createElement(App.Content.Front.Project, attrs));
+					elems.push(React.createElement(App.MainContent.Front.Project, attrs));
 				}
 				return elems;
 			}, _this6.onWindowResize = function (event) {
@@ -479,7 +479,7 @@
 		return Front;
 	})(React.Component);
 
-	App.Content.Menu.Content = (function (_React$Component6) {
+	App.MainContent.Menu.Content = (function (_React$Component6) {
 		_inherits(Content, _React$Component6);
 
 		function Content() {
@@ -725,6 +725,10 @@
 					container = $(player).parent()[0];
 				}
 
+				if (!container) {
+					return;
+				}
+
 				var newPlayerHeight = container.offsetHeight;
 				var newPlayerWidth = 16 / 9 * newPlayerHeight;
 				var maxWidth = newPlayerWidth > container.offsetWidth ? newPlayerWidth : container.offsetWidth;
@@ -761,8 +765,10 @@
 						style.background = 'url(' + project.posterURL + ') center / cover';
 					}
 					onClick = this.props.onClick;
-					onMouseOver = this.setHovering.bind(this, true);
-					onMouseOut = this.setHovering.bind(this, false);
+					if (!iOS) {
+						onMouseOver = this.setHovering.bind(this, true);
+						onMouseOut = this.setHovering.bind(this, false);
+					}
 				}
 
 				var posterAttrs = {
@@ -777,7 +783,7 @@
 				var youtubeID = project.videoURL.substring(project.videoURL.length - 11, project.videoURL.length);
 				var iframeAttrs = {
 					id: key,
-					className: 'ios',
+					className: 'ios-player',
 					width: '560',
 					height: '315',
 					src: 'https://www.youtube.com/embed/' + youtubeID,
@@ -789,8 +795,7 @@
 				return React.createElement(
 					'div',
 					_extends({ ref: 'poster' }, posterAttrs),
-					iOS && !selected && React.createElement('iframe', _extends({ key: 'ios-player-unselected' }, iframeAttrs)),
-					iOS && selected && React.createElement('iframe', _extends({ key: 'ios-player-selected' }, iframeAttrs)),
+					iOS && selected && React.createElement('iframe', iframeAttrs),
 					!iOS && React.createElement('div', { id: key, className: 'project__poster-iframe' }),
 					this.props.selected ? React.createElement(Poster.Info, { project: project, expand: this.expand }) : null
 				);
@@ -915,7 +920,7 @@
 		return Info;
 	})(React.Component);
 
-	App.Content.Front.Project = (function (_React$Component9) {
+	App.MainContent.Front.Project = (function (_React$Component9) {
 		_inherits(Project, _React$Component9);
 
 		function Project() {
@@ -30150,7 +30155,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	  Copyright (c) 2015 Jed Watson.
+	  Copyright (c) 2016 Jed Watson.
 	  Licensed under the MIT License (MIT), see
 	  http://jedwatson.github.io/classnames
 	*/
@@ -30162,7 +30167,7 @@
 		var hasOwn = {}.hasOwnProperty;
 
 		function classNames () {
-			var classes = '';
+			var classes = [];
 
 			for (var i = 0; i < arguments.length; i++) {
 				var arg = arguments[i];
@@ -30171,19 +30176,19 @@
 				var argType = typeof arg;
 
 				if (argType === 'string' || argType === 'number') {
-					classes += ' ' + arg;
+					classes.push(arg);
 				} else if (Array.isArray(arg)) {
-					classes += ' ' + classNames.apply(null, arg);
+					classes.push(classNames.apply(null, arg));
 				} else if (argType === 'object') {
 					for (var key in arg) {
 						if (hasOwn.call(arg, key) && arg[key]) {
-							classes += ' ' + key;
+							classes.push(key);
 						}
 					}
 				}
 			}
 
-			return classes.substr(1);
+			return classes.join(' ');
 		}
 
 		if (typeof module !== 'undefined' && module.exports) {

@@ -92,6 +92,7 @@ html, body, #root {
 }
 
 .project__poster-info--ios {
+	position: relative;
 	pointer-events: none;
 }
 
@@ -162,6 +163,10 @@ html, body, #root {
 
 .showreel--expanded .showreel__content {
 	background: #fb1f25 !important;
+}
+
+.ios-player {
+	position: absolute;
 }
 
 @media (min-width: 720px) {

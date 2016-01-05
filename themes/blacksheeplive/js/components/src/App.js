@@ -56,7 +56,7 @@ class App extends React.Component {
 		return (
 			<div id='app' className='flex column'>
 				<App.Header {...headerAttrs} />
-				<App.Content {...contentAttrs} />
+				<App.MainContent {...contentAttrs} />
 				<App.Footer />
 			</div>
 		)
@@ -97,24 +97,24 @@ App.Header = class Header extends React.Component {
 	}
 }
 
-App.Content = class Content extends React.Component {
+App.MainContent = class MainContent extends React.Component {
 	render() {
 		let page;
 
 		switch (this.props.page) {
 		case 'menu':
-			page = <App.Content.Menu togglePage={this.props.togglePage} />; break;
+			page = <App.MainContent.Menu togglePage={this.props.togglePage} />; break;
 		case 'showreel':
-			page = <App.Content.Showreel />; break;
+			page = <App.MainContent.Showreel />; break;
 		case null:
 			break;
 		default:
-			page = <App.Content.Menu.Content menu={menus[this.props.page]} />; break;
+			page = <App.MainContent.Menu.Content menu={menus[this.props.page]} />; break;
 		}
 
 		return (
 			<div className='main-content flex one column'>
-				<App.Content.Front projects={this.props.projects} selectedProject={this.props.selectedProject} />
+				<App.MainContent.Front projects={this.props.projects} selectedProject={this.props.selectedProject} />
 				{ page }
 				<div className={cx('main-content__close flex justify-end', this.props.page ? '' : 'main-content__close--hide')}>
 					<span className='main-content__close-symbol' onClick={this.closePage}>
@@ -135,7 +135,7 @@ App.Content = class Content extends React.Component {
 	}
 }
 
-App.Content.Menu = class Menu extends React.Component {
+App.MainContent.Menu = class Menu extends React.Component {
 	render() {
 		let togglePage = this.props.togglePage;
 		return (
@@ -157,7 +157,7 @@ App.Content.Menu = class Menu extends React.Component {
 	}
 }
 
-App.Content.Front = class Front extends React.Component {
+App.MainContent.Front = class Front extends React.Component {
 	render() {
 		let currentPage = this.state.currentPage;
 		let selectedProject = this.props.selectedProject;
@@ -226,7 +226,7 @@ App.Content.Front = class Front extends React.Component {
 				onClick: this.selectProject.bind(this, i),
 				minWidth: this.state.minWidth,
 			};
-			elems.push(<App.Content.Front.Project {...attrs} />);
+			elems.push(<App.MainContent.Front.Project {...attrs} />);
 		}
 		return elems;
 	}
@@ -316,7 +316,7 @@ App.Content.Front = class Front extends React.Component {
 	}
 }
 
-App.Content.Menu.Content = class Content extends React.Component {
+App.MainContent.Menu.Content = class Content extends React.Component {
 	render() {
 		let isShowreel = this.isShowreel();
 		let classnames = cx(
@@ -493,8 +493,10 @@ class Poster extends React.Component {
 				style.background = 'url(' + project.posterURL + ') center / cover';
 			}
 			onClick = this.props.onClick;
-			onMouseOver = this.setHovering.bind(this, true);
-			onMouseOut = this.setHovering.bind(this, false);
+			if (!iOS) {
+				onMouseOver = this.setHovering.bind(this, true);
+				onMouseOut = this.setHovering.bind(this, false);
+			}
 		}
 
 		let posterAttrs = {
@@ -509,7 +511,7 @@ class Poster extends React.Component {
 		let youtubeID = project.videoURL.substring(project.videoURL.length - 11, project.videoURL.length);
 		let iframeAttrs = {
 			id: key,
-			className: 'ios',
+			className: 'ios-player',
 			width: '560',
 			height: '315',
 			src: 'https://www.youtube.com/embed/' + youtubeID,
@@ -520,8 +522,7 @@ class Poster extends React.Component {
 		};
 		return (
 			<div ref='poster' {...posterAttrs}>
-				{ iOS && !selected && <iframe key='ios-player-unselected' {...iframeAttrs}></iframe> }
-				{ iOS && selected && <iframe key='ios-player-selected' {...iframeAttrs}></iframe> }
+				{ iOS && selected && <iframe {...iframeAttrs}></iframe> }
 				{ !iOS && <div id={key} className='project__poster-iframe' /> }
 				{ this.props.selected ? <Poster.Info project={project} expand={this.expand} /> : null }
 			</div>
@@ -642,6 +643,10 @@ class Poster extends React.Component {
 			container = $(player).parent()[0];
 		}
 
+		if (!container) {
+			return;
+		}
+
 		let newPlayerHeight = container.offsetHeight;
 		let newPlayerWidth = 16 / 9 * newPlayerHeight;
 		let maxWidth = newPlayerWidth > container.offsetWidth ? newPlayerWidth : container.offsetWidth;
@@ -681,7 +686,7 @@ Poster.Info = class Info extends React.Component {
 	}
 }
 
-App.Content.Front.Project = class Project extends React.Component {
+App.MainContent.Front.Project = class Project extends React.Component {
 	render() {
 		let posterAttrs = {
 			project: this.props.project,
