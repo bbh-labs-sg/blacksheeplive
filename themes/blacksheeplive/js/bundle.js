@@ -392,9 +392,9 @@
 					_this6.wheelY += event.originalEvent.deltaY;
 					if (Math.abs(_this6.wheelY) > 150) {
 						if (_this6.wheelY < 0) {
-							_this6.down();
-						} else if (_this6.wheelY > 0) {
 							_this6.up();
+						} else if (_this6.wheelY > 0) {
+							_this6.down();
 						}
 						_this6.wheelY = 0;
 					}

@@ -287,9 +287,9 @@ App.Content.Front = class Front extends React.Component {
 			this.wheelY += event.originalEvent.deltaY;
 			if (Math.abs(this.wheelY) > 150) {
 				if (this.wheelY < 0) {
-					this.down();
-				} else if (this.wheelY > 0) {
 					this.up();
+				} else if (this.wheelY > 0) {
+					this.down();
 				}
 				this.wheelY = 0;
 			}
