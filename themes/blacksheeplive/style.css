@@ -43,6 +43,7 @@ html, body, #root {
 
 .project-container {
 	transition: transform .4s;
+	pointer-events: none;
 }
 
 .project {

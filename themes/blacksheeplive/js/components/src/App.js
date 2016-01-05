@@ -171,6 +171,13 @@ App.Content.Front = class Front extends React.Component {
 					<p>Welcome to</p>
 					<img className='welcome__img flex align-center' src='wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' />
 				</div>
+				<div className='scroll-container flex one column align-center justify-end'>
+				{
+					projects && currentPage < pageCount() - 1 ?
+					<img className='arrow' src='wp-content/themes/blacksheeplive/images/icons/arrow_down.png' onClick={this.down} /> :
+					<img className='arrow' src='wp-content/themes/blacksheeplive/images/icons/arrow_up.png' onClick={this.up} />
+				}
+				</div>
 				{
 					window.innerWidth >= 720 ?
 					projectContainers.map((i) => {
@@ -185,13 +192,6 @@ App.Content.Front = class Front extends React.Component {
 						{ this.projectElements() }
 					</div>
 				}
-				<div className='scroll-container flex one column align-center justify-end'>
-				{
-					projects && currentPage < pageCount() - 1 ?
-					<img className='arrow' src='wp-content/themes/blacksheeplive/images/icons/arrow_down.png' onClick={this.down} /> :
-					<img className='arrow' src='wp-content/themes/blacksheeplive/images/icons/arrow_up.png' onClick={this.up} />
-				}
-				</div>
 			</div>
 		)
 	}
@@ -280,6 +280,10 @@ App.Content.Front = class Front extends React.Component {
 		// Handle Mouse Wheel / Touchpad
 		this.wheelY = 0;
 		$(window).on('wheel', (event) => {
+			if (this.props.selectedProject >= 0) {
+				return;
+			}
+
 			this.wheelY += event.originalEvent.deltaY;
 			if (Math.abs(this.wheelY) > 150) {
 				if (this.wheelY < 0) {
@@ -296,7 +300,7 @@ App.Content.Front = class Front extends React.Component {
 			direction: Hammer.DIRECTION_VERTICAL,
 		});
 		this.hammertime.on('pan', (event) => {
-			if (!event.isFinal) {
+			if (!event.isFinal || this.props.selectedProject >= 0) {
 				return;
 			}
 			if (event.deltaY > 100) {

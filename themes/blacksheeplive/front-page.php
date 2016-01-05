@@ -13,6 +13,12 @@
  */
 
 get_header(); ?>
+	<noscript>
+		<strong>Warning</strong>
+		Because your browser does not support HTML5, some elements are simulated using JScript.
+		Unfortunately your browser has disabled scripting. Please enable it in order to display this page.
+	</noscript>
+
 	<div id='root'></div>
 
 	<script type='text/javascript'>

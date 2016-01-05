@@ -385,6 +385,10 @@
 				// Handle Mouse Wheel / Touchpad
 				_this6.wheelY = 0;
 				$(window).on('wheel', function (event) {
+					if (_this6.props.selectedProject >= 0) {
+						return;
+					}
+
 					_this6.wheelY += event.originalEvent.deltaY;
 					if (Math.abs(_this6.wheelY) > 150) {
 						if (_this6.wheelY < 0) {
@@ -401,7 +405,7 @@
 					direction: Hammer.DIRECTION_VERTICAL
 				});
 				_this6.hammertime.on('pan', function (event) {
-					if (!event.isFinal) {
+					if (!event.isFinal || _this6.props.selectedProject >= 0) {
 						return;
 					}
 					if (event.deltaY > 100) {
@@ -440,6 +444,11 @@
 						),
 						React.createElement('img', { className: 'welcome__img flex align-center', src: 'wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' })
 					),
+					React.createElement(
+						'div',
+						{ className: 'scroll-container flex one column align-center justify-end' },
+						projects && currentPage < pageCount() - 1 ? React.createElement('img', { className: 'arrow', src: 'wp-content/themes/blacksheeplive/images/icons/arrow_down.png', onClick: this.down }) : React.createElement('img', { className: 'arrow', src: 'wp-content/themes/blacksheeplive/images/icons/arrow_up.png', onClick: this.up })
+					),
 					window.innerWidth >= 720 ? projectContainers.map(function (i) {
 						var styles = { transform: 'translate(0, ' + (i - currentPage) * 100 + '%)' };
 						return React.createElement(
@@ -451,11 +460,6 @@
 						'div',
 						{ ref: 'projectContainer', className: 'project-container' },
 						this.projectElements()
-					),
-					React.createElement(
-						'div',
-						{ className: 'scroll-container flex one column align-center justify-end' },
-						projects && currentPage < pageCount() - 1 ? React.createElement('img', { className: 'arrow', src: 'wp-content/themes/blacksheeplive/images/icons/arrow_down.png', onClick: this.down }) : React.createElement('img', { className: 'arrow', src: 'wp-content/themes/blacksheeplive/images/icons/arrow_up.png', onClick: this.up })
 					)
 				);
 			}
