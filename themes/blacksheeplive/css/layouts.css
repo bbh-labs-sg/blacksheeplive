@@ -121,8 +121,8 @@ html, body, #root {
 	z-index: 9999;
 }
 
-.project__poster-info-p {
-	max-width: 450px;
+.project__poster-info-description {
+	max-width: 360px;
 }
 
 .project__poster--expanded .project__poster-info {
