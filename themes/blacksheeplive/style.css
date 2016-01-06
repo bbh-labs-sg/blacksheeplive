@@ -169,6 +169,10 @@ html, body, #root {
 	position: absolute;
 }
 
+.arrow {
+	cursor: pointer;
+}
+
 @media (min-width: 720px) {
 	.project:nth-child(1):not(.project--selected) .project__poster { transform: translate(-32vw, 10vh) scale(0.2) }
 	.project:nth-child(2):not(.project--selected) .project__poster { transform: translate(-27vw, -20vh) scale(0.3) }
