@@ -446,8 +446,9 @@
 					),
 					React.createElement(
 						'div',
-						{ className: 'scroll-container flex one column align-center justify-end' },
-						projects && currentPage < pageCount() - 1 ? React.createElement('img', { className: 'arrow', src: 'wp-content/themes/blacksheeplive/images/icons/arrow_down.png', onClick: this.down }) : React.createElement('img', { className: 'arrow', src: 'wp-content/themes/blacksheeplive/images/icons/arrow_up.png', onClick: this.up })
+						{ className: 'scroll-container flex one row align-end justify-center' },
+						projects && currentPage < pageCount() - 1 ? React.createElement('img', { className: 'arrow', src: 'wp-content/themes/blacksheeplive/images/icons/arrow_down.png', onClick: this.down }) : null,
+						projects && currentPage > 0 ? React.createElement('img', { className: 'arrow', src: 'wp-content/themes/blacksheeplive/images/icons/arrow_up.png', onClick: this.up }) : null
 					),
 					window.innerWidth >= 720 ? projectContainers.map(function (i) {
 						var styles = { transform: 'translate(0, ' + (i - currentPage) * 100 + '%)' };

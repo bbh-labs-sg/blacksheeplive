@@ -171,11 +171,16 @@ App.MainContent.Front = class Front extends React.Component {
 					<p>Welcome to</p>
 					<img className='welcome__img flex align-center' src='wp-content/themes/blacksheeplive/images/bsl_logo_text_w.png' />
 				</div>
-				<div className='scroll-container flex one column align-center justify-end'>
+				<div className='scroll-container flex one row align-end justify-center'>
 				{
 					projects && currentPage < pageCount() - 1 ?
 					<img className='arrow' src='wp-content/themes/blacksheeplive/images/icons/arrow_down.png' onClick={this.down} /> :
-					<img className='arrow' src='wp-content/themes/blacksheeplive/images/icons/arrow_up.png' onClick={this.up} />
+					null
+				}
+				{
+					projects && currentPage > 0 ?
+					<img className='arrow' src='wp-content/themes/blacksheeplive/images/icons/arrow_up.png' onClick={this.up} /> :
+					null
 				}
 				</div>
 				{
