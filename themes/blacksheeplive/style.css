@@ -86,6 +86,8 @@ html, body, #root {
 }
 
 .project__poster-info {
+	background-color: black;
+	background-color: rgba(0, 0, 0, 0.5);
 	opacity: 1;
 	text-align: center;
 	transition: opacity .4s;

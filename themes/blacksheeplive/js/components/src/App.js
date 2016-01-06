@@ -677,7 +677,7 @@ Poster.Info = class Info extends React.Component {
 			infoAttrs = { onClick: this.props.expand };
 		}
 		return (
-			<div className={cx('project__poster-info', iOS && 'project__poster-info--ios')} {...infoAttrs}>
+			<div className={cx('project__poster-info flex column one align-center justify-center', iOS && 'project__poster-info--ios')} {...infoAttrs}>
 				<h1 className='project__poster-info-name'>{ project.name }</h1>
 				<p className='project__poster-info-description'>{ project.description }</p>
 				<img onClick={this.props.expand} className={cx('play flex align-center', iOS && 'play--ios')} src='wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' />
@@ -706,9 +706,9 @@ App.MainContent.Front.Project = class Project extends React.Component {
 		return (
 			<div className={cx('project flex column align-center', this.props.selected && 'project--selected')} {...projectAttrs}>
 				<div className='project__close'>
-					<span className='project__close-symbol' onClick={ this.deselectProject }>
+					<div className='project__close-symbol' onClick={ this.deselectProject }>
 						<img className='project__close-symbol-img' src='wp-content/themes/blacksheeplive/images/icons/close_w.png' />
-					</span>
+					</div>
 				</div>
 				<Poster {...posterAttrs} />
 			</div>

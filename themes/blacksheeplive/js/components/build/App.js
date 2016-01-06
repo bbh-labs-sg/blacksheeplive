@@ -855,7 +855,7 @@ Poster.Info = (function (_React$Component8) {
 			}
 			return React.createElement(
 				'div',
-				_extends({ className: cx('project__poster-info', iOS && 'project__poster-info--ios') }, infoAttrs),
+				_extends({ className: cx('project__poster-info flex column one align-center justify-center', iOS && 'project__poster-info--ios') }, infoAttrs),
 				React.createElement(
 					'h1',
 					{ className: 'project__poster-info-name' },
@@ -908,7 +908,7 @@ App.MainContent.Front.Project = (function (_React$Component9) {
 					'div',
 					{ className: 'project__close' },
 					React.createElement(
-						'span',
+						'div',
 						{ className: 'project__close-symbol', onClick: this.deselectProject },
 						React.createElement('img', { className: 'project__close-symbol-img', src: 'wp-content/themes/blacksheeplive/images/icons/close_w.png' })
 					)
