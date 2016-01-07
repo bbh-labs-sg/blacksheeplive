@@ -29,12 +29,8 @@ function pageCount() {
 	return parseInt((projects.length / 9).toFixed(0)) + 1;
 }
 
-function htmlEscape(str) {
-	return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
 function htmlUnescape(value) {
-	return String(value).replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+	return String(value).replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, "<br/><br/>").replace(/&#x2F;/g, '/').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 }
 
 var App = (function (_React$Component) {
@@ -857,16 +853,8 @@ Poster.Info = (function (_React$Component8) {
 			return React.createElement(
 				'div',
 				_extends({ className: cx('project__poster-info flex column one align-center justify-center', iOS && 'project__poster-info--ios') }, infoAttrs),
-				React.createElement(
-					'h1',
-					{ className: 'project__poster-info-name' },
-					project.name
-				),
-				React.createElement(
-					'p',
-					{ className: 'project__poster-info-description' },
-					project.description
-				),
+				React.createElement('h1', { className: 'project__poster-info-name', dangerouslySetInnerHTML: { __html: htmlUnescape(project.name) } }),
+				React.createElement('p', { className: 'project__poster-info-description', dangerouslySetInnerHTML: { __html: htmlUnescape(project.description) } }),
 				React.createElement('img', { onClick: this.props.expand, className: cx('play flex align-center', iOS && 'play--ios'), src: 'wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' })
 			);
 		}

@@ -19,19 +19,12 @@ function pageCount() {
 	return parseInt((projects.length / 9).toFixed(0)) + 1;
 }
 
-function htmlEscape(str) {
-	return String(str)
-		.replace(/&/g, '&amp;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#39;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;');
-}
-
 function htmlUnescape(value){
 	return String(value)
 		.replace(/&quot;/g, '"')
 		.replace(/&#39;/g, "'")
+		.replace(/&nbsp;/g, "<br/><br/>")
+		.replace(/&#x2F;/g, '/')
 		.replace(/&lt;/g, '<')
 		.replace(/&gt;/g, '>')
 		.replace(/&amp;/g, '&');
@@ -683,8 +676,8 @@ Poster.Info = class Info extends React.Component {
 		}
 		return (
 			<div className={cx('project__poster-info flex column one align-center justify-center', iOS && 'project__poster-info--ios')} {...infoAttrs}>
-				<h1 className='project__poster-info-name'>{ project.name }</h1>
-				<p className='project__poster-info-description'>{ project.description }</p>
+				<h1 className='project__poster-info-name' dangerouslySetInnerHTML={{ __html: htmlUnescape(project.name) }}></h1>
+				<p className='project__poster-info-description' dangerouslySetInnerHTML={{ __html: htmlUnescape(project.description) }}></p>
 				<img onClick={this.props.expand} className={cx('play flex align-center', iOS && 'play--ios')} src='wp-content/themes/blacksheeplive/images/icons/play_icon_w.png' />
 			</div>
 		)
